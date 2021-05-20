@@ -1,0 +1,95 @@
+﻿<catel:UserControl x:Class="SSMLEditor.Views.RibbonView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:localviews="clr-namespace:SSMLEditor.Views"
+                   xmlns:catel="http://schemas.catelproject.com"
+                   xmlns:fluent="urn:fluent-ribbon"
+                   xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
+                   xmlns:orchestra="http://schemas.wildgums.com/orchestra"
+                   xmlns:local="clr-namespace:SSMLEditor"
+                   xmlns:orctheming="http://schemas.wildgums.com/orc/theming"
+                   mc:Ignorable="d"
+                   d:DesignHeight="300"
+                   d:DesignWidth="300">
+
+    <fluent:Ribbon x:Name="ribbon"
+                   IsQuickAccessToolBarVisible="False"
+                   CanCustomizeRibbon="False"
+                   AutomaticStateManagement="False">
+        <fluent:Ribbon.Menu>
+            <fluent:Backstage Header="File">
+                <fluent:BackstageTabControl>
+                    <fluent:BackstageTabItem Header="Open">
+                        <localviews:OpenFileView />
+                    </fluent:BackstageTabItem>
+
+                    <fluent:Button Header="Save"
+                                   Command="{catel:CommandManagerBinding File.Save}" />
+
+                    <fluent:Button Header="Save As"
+                                   Command="{catel:CommandManagerBinding File.SaveAs}" />
+                </fluent:BackstageTabControl>
+            </fluent:Backstage>
+        </fluent:Ribbon.Menu>
+
+        <fluent:Ribbon.Tabs>
+            <fluent:RibbonTabItem Header="View">
+                <fluent:RibbonGroupBox Header="Project">
+                    <fluent:Button Header="Convert current"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Comment}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Copy}" />
+
+                    <fluent:Button Header="Convert all"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Comments}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Copy}" />
+                </fluent:RibbonGroupBox>
+                
+                <!--<fluent:RibbonGroupBox Header="Edit">
+                    <fluent:Button Header="Copy"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Copy}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Copy}" />
+
+                    <fluent:Button Header="Cut"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Cut}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Cut}" />
+
+                    <fluent:Button Header="Paste"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Paste}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Paste}" />
+
+                    <fluent:Button Header="Undo"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.MailReply}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Undo}" />
+
+                    <fluent:Button Header="Redo"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.MailForward}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.Redo}" />
+
+                    <fluent:Button x:Name="FindAndReplaceButton" Header="Find and replace"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Search}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Edit.FindReplace}" />
+
+                    <fluent:SplitButton Header="Quick Format" LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.AlignJustify}, FontFamily=FontAwesome}" IsEnabled="{Binding ElementName=FindAndReplaceButton, Path=IsEnabled}">
+                        <fluent:MenuItem Header="Remove blank lines" Icon="{orctheming:FontImage {x:Static local:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveBlankLines}" />
+                        <fluent:MenuItem Header="Remove duplicate lines" Icon="{orctheming:FontImage {x:Static local:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveDuplicateLines}" />
+                        <fluent:MenuItem Header="Trim whitespaces" Icon="{orctheming:FontImage {x:Static local:FontAwesome.AlignJustify}}" Command="{catel:CommandManagerBinding Edit.TrimWhitespaces}" />
+                    </fluent:SplitButton>
+                </fluent:RibbonGroupBox>-->
+
+                <fluent:RibbonGroupBox Header="Settings">
+                    <fluent:Button Header="Settings"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Cog}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Settings.General}" />
+
+                    <fluent:SplitButton Header="Shortcuts"
+                                        LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.KeyboardO}, FontFamily=FontAwesome}"
+                                        Command="{Binding ShowKeyboardMappings}">
+                        <orchestra:KeyboardMappingsOverviewView />
+                    </fluent:SplitButton>
+                </fluent:RibbonGroupBox>
+            </fluent:RibbonTabItem>
+        </fluent:Ribbon.Tabs>
+    </fluent:Ribbon>
+</catel:UserControl>
