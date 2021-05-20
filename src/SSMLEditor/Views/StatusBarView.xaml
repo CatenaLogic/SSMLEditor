@@ -27,34 +27,6 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel x:Name="stackPanel">
-            <StackPanel>
-                <Separator Margin="3,0,3,0" Width="{Binding ElementName=stackPanel, Path=ActualHeight}">
-                    <Separator.LayoutTransform>
-                        <RotateTransform Angle="90" />
-                    </Separator.LayoutTransform>
-                </Separator>
-
-                <TextBlock Text="Line "/>
-                <TextBlock Text="{Binding Line}"/>
-
-                <TextBlock Text="Column "/>
-                <TextBlock Text="{Binding Column}"/>
-
-                <Separator Margin="3,0,3,0" Width="{Binding ElementName=stackPanel, Path=ActualHeight}">
-                    <Separator.LayoutTransform>
-                        <RotateTransform Angle="90" />
-                    </Separator.LayoutTransform>
-                </Separator>
-
-                <TextBlock FontWeight="Bold" Text="{Binding Heading}"/>
-
-                <Separator Margin="3,0,3,0" Width="{Binding ElementName=stackPanel, Path=ActualHeight}">
-                    <Separator.LayoutTransform>
-                        <RotateTransform Angle="90" />
-                    </Separator.LayoutTransform>
-                </Separator>
-            </StackPanel>
-
             <StackPanel Visibility="{Binding IsUpdatedInstalled, Converter={StaticResource BooleanToCollapsingVisibilityConverter}}">
                 <Image Width="16" Height="16" Source="{orctheming:FontImage {x:Static local:FontAwesome.Download}}" 
                     ToolTip="Update is installed, restart to enable new features" />
