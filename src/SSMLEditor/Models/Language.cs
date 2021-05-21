@@ -1,6 +1,7 @@
 ﻿namespace SSMLEditor
 {
     using System.Globalization;
+    using Newtonsoft.Json;
 
     public class Language
     {
@@ -8,6 +9,12 @@
 
         public CultureInfo Culture { get; set; }
 
+        [JsonIgnore]
         public string Content { get; set; }
+
+        public override string ToString()
+        {
+            return $"{RelativeFileName} | {Culture?.TwoLetterISOLanguageName}";
+        }
     }
 }

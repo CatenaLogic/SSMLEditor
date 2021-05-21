@@ -22,14 +22,14 @@
             <fluent:Backstage Header="File">
                 <fluent:BackstageTabControl>
                     <fluent:BackstageTabItem Header="Open">
-                        <localviews:OpenFileView />
+                        <localviews:OpenProjectView />
                     </fluent:BackstageTabItem>
 
                     <fluent:Button Header="Save"
-                                   Command="{catel:CommandManagerBinding File.Save}" />
+                                   Command="{catel:CommandManagerBinding Project.Save}" />
 
-                    <fluent:Button Header="Save As"
-                                   Command="{catel:CommandManagerBinding File.SaveAs}" />
+                    <!--<fluent:Button Header="Save As"
+                                   Command="{catel:CommandManagerBinding Project.SaveAs}" />-->
                 </fluent:BackstageTabControl>
             </fluent:Backstage>
         </fluent:Ribbon.Menu>
@@ -39,11 +39,11 @@
                 <fluent:RibbonGroupBox Header="Project">
                     <fluent:Button Header="Convert current"
                                    LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Comment}, FontFamily=FontAwesome}"
-                                   Command="{catel:CommandManagerBinding Edit.Copy}" />
+                                   Command="{catel:CommandManagerBinding TTS.Generate}" />
 
                     <fluent:Button Header="Convert all"
                                    LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Comments}, FontFamily=FontAwesome}"
-                                   Command="{catel:CommandManagerBinding Edit.Copy}" />
+                                   Command="{catel:CommandManagerBinding TTS.GenerateAll}" />
                 </fluent:RibbonGroupBox>
                 
                 <!--<fluent:RibbonGroupBox Header="Edit">

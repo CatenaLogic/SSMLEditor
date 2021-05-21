@@ -43,23 +43,7 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Grid.Row="1" Header="User data options">
-            <orccontrols:StackGrid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <Button Content="Open data directory..." Command="{Binding OpenApplicationDataDirectory}" />
-                <Button Content="Create user data backup" Command="{Binding BackupUserData}" />
-            </orccontrols:StackGrid>
-        </GroupBox>
-
-        <GroupBox Grid.Row="2" Header="Editor options">
+        <!--<GroupBox Grid.Row="2" Header="Editor options">
             <orccontrols:StackGrid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -76,7 +60,7 @@
 
                 <CheckBox Grid.Row="1" IsChecked="{Binding AutoSaveEditor}" Content="Auto save every minute" />
             </orccontrols:StackGrid>
-        </GroupBox>
+        </GroupBox>-->
 
     </Grid>
 

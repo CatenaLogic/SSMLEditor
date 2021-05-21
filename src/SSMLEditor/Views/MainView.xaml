@@ -11,27 +11,27 @@
                    xmlns:orctheming="http://schemas.wildgums.com/orc/theming"
                    mc:Ignorable="d" MinWidth="800">
 
-    <orccontrols:StackGrid>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <views:EditorsView Grid.RowSpan="2"
+                           Grid.Column="0" />
 
-        
-    </orccontrols:StackGrid>
+        <views:TextToSpeechProviderView Grid.Row="0"
+                                        Grid.Column="1" />
+
+        <views:VideoView Grid.Row="1"
+                         Grid.Column="1" />
+
+    </Grid>
 
 </catel:UserControl>
 

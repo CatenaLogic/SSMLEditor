@@ -15,13 +15,10 @@
         public Project(string location, string title)
             : base(location, title)
         {
-            Languages = new List<Language>();
-            Video = new Video();
+            ProjectRoot = new ProjectRoot();
         }
 
-        public List<Language> Languages { get; private set; }
-
-        public Video Video { get; private set; } 
+        public ProjectRoot ProjectRoot { get; private set; }
 
         public bool Equals(Project other)
         {

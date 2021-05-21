@@ -1,0 +1,15 @@
+{
+  "Languages": [
+    {
+      "RelativeFileName": "en/Demo.ssml",
+      "Culture": "en-US"
+    },
+    {
+      "RelativeFileName": "nl/Demo.ssml",
+      "Culture": "nl-NL"
+    }
+  ],
+  "Video": {
+    "RelativeFileName": "Demo.mp4"
+  }
+}

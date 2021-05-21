@@ -1,29 +1,55 @@
 ﻿namespace SSMLEditor.ProjectManagement
 {
+    using System.IO;
     using System.Threading.Tasks;
     using Catel;
-    using Catel.Threading;
+    using Catel.Logging;
+    using Newtonsoft.Json;
     using Orc.FileSystem;
     using Orc.ProjectManagement;
 
     public class ProjectWriter : ProjectWriterBase<Project>
     {
-        private readonly IFileService _fileService;
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-        public ProjectWriter(IFileService fileService)
+        private readonly IFileService _fileService;
+        private readonly IDirectoryService _directoryService;
+
+        public ProjectWriter(IFileService fileService, IDirectoryService directoryService)
         {
             Argument.IsNotNull(() => fileService);
+            Argument.IsNotNull(() => directoryService);
 
             _fileService = fileService;
+            _directoryService = directoryService;
         }
 
-        protected override Task<bool> WriteToLocationAsync(Project project, string location)
+        protected override async Task<bool> WriteToLocationAsync(Project project, string location)
         {
-            // TODO: Write all separate files and ssmlx
+            var jsonSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
 
-            //_fileService.WriteAllText(location, project.Text);
+            var json = JsonConvert.SerializeObject(project.ProjectRoot, jsonSettings);
 
-            return TaskHelper<bool>.FromResult(true);
+            await _fileService.WriteAllTextAsync(location, json);
+
+            var directory = Path.GetDirectoryName(location);
+
+            foreach (var language in project.ProjectRoot.Languages)
+            {
+                Log.Debug($"Saving project language '{language}'");
+
+                var languageFileName = Path.Combine(directory, language.RelativeFileName);
+                var languageDirectory = Path.GetDirectoryName(languageFileName);
+
+                _directoryService.Create(languageDirectory);
+
+                await _fileService.WriteAllTextAsync(languageFileName, language.Content);
+            }
+
+            return true;
         }
     }
 }

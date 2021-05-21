@@ -8,7 +8,13 @@
     {
         string Name { get; }
 
-        IEnumerable<Voice> GetVoices();
+        TtsProperty this[string propertyName] { get; }
+
+        List<TtsProperty> Properties { get; }
+
+        Task<IEnumerable<TtsLanguage>> GetLanguagesAsync();
+
+        Task<IEnumerable<TtsVoice>> GetVoicesAsync(TtsLanguage language);
 
         Task<Stream> ExecuteAsync(string ssml);
     }

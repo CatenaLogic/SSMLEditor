@@ -19,6 +19,8 @@
     using MethodTimer;
     using Fluent;
     using SSMLEditor.Views;
+    using Orc.SelectionManagement;
+    using SSMLEditor.Providers;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
     {
@@ -80,6 +82,9 @@
 
         private void RegisterTypes()
         {
+            _serviceLocator.RegisterType<ISelectionManager<ITextToSpeechProvider>, SelectionManager<ITextToSpeechProvider>>();
+            _serviceLocator.RegisterType<ISelectionManager<Language>, SelectionManager<Language>>();
+
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
             _serviceLocator.RegisterType<IInitialProjectLocationService, InitialProjectLocationService>();
@@ -107,13 +112,12 @@
 
         private void InitializeCommands()
         {
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.File), "Close");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.File), "Open");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.File), "Save");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.File), "SaveAs");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Close));
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Open));
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Save));
 
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.File), "OpenInTextEditor");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.File), "OpenInExcel");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.TTS), nameof(Commands.TTS.Generate));
+            _commandManager.CreateCommandWithGesture(typeof(Commands.TTS), nameof(Commands.TTS.GenerateAll));
 
             //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Undo");
             //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Redo");
@@ -127,9 +131,9 @@
             //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveDuplicateLines");
             //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "TrimWhitespaces");
 
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), "General");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), nameof(Commands.Settings.General));
 
-            _commandManager.CreateCommandWithGesture(typeof(Commands.Help), "About");
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Help), nameof(Commands.Help.About));
         }
 
         private void InitializeWatchers()

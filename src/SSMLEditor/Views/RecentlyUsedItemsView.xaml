@@ -29,7 +29,7 @@
                       Visibility="{Binding PinnedItems, Converter={catel:CollectionToCollapsingVisibilityConverter}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <orchestra:RibbonBackstageButton Command="{catel:CommandManagerBinding File.Open}"
+                    <orchestra:RibbonBackstageButton Command="{catel:CommandManagerBinding Project.Open}"
                                                      CommandParameter="{Binding Name}" ToolTip="{Binding Name}" ShowBorder="False">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -76,7 +76,7 @@
                       Visibility="{Binding RecentlyUsedItems, Converter={catel:CollectionToCollapsingVisibilityConverter}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <orchestra:RibbonBackstageButton Command="{catel:CommandManagerBinding File.Open}"
+                    <orchestra:RibbonBackstageButton Command="{catel:CommandManagerBinding Project.Open}"
                                                      CommandParameter="{Binding Name}" 
                                                      ToolTip="{Binding Name}" 
                                                      ShowBorder="False">
