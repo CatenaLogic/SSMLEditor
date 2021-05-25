@@ -13,6 +13,14 @@
             return project.GetFullPath(language.RelativeFileName);
         }
 
+        public static string GetFullPath(this Project project, Video video)
+        {
+            Argument.IsNotNull(() => project);
+            Argument.IsNotNull(() => video);
+
+            return project.GetFullPath(video.RelativeFileName);
+        }
+
         public static string GetFullPath(this Project project, string relativeFileName)
         {
             Argument.IsNotNull(() => project);
