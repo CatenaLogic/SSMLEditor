@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using MethodTimer;
     using Microsoft.CognitiveServices.Speech;
+    using Newtonsoft.Json;
 
     public class AzureCognitiveServices : TextToSpeechProviderBase
     {
@@ -29,16 +30,18 @@
             SubscriptionKey = "";
             ServiceRegion = "";
 #endif
+
+            Name = "Azure Cognitive Services";
         }
 
-        public override string Name => "Azure Cognitive Services";
-
+        [JsonIgnore]
         public string SubscriptionKey
         {
             get { return this["SubscriptionKey"].Value; }
             set { this["SubscriptionKey"].Value = value; }
         }
 
+        [JsonIgnore]
         public string ServiceRegion
         {
             get { return this["ServiceRegion"].Value; }

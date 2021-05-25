@@ -1,0 +1,26 @@
+﻿<catel:UserControl x:Class="SSMLEditor.Wizards.AddProvider.Views.ProviderWizardPageView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:catel="http://schemas.catelproject.com"
+                   xmlns:orccontrols="http://schemas.wildgums.com/orc/controls">
+
+    <orccontrols:StackGrid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ComboBox ItemsSource="{Binding Providers}"
+                  SelectedItem="{Binding SelectedProvider}"
+                  DisplayMemberPath="Name" />
+    </orccontrols:StackGrid>
+
+</catel:UserControl>
+

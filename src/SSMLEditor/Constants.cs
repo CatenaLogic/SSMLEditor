@@ -44,6 +44,12 @@
             public static readonly InputGesture GeneralInputGesture = new InputGesture(Key.S, ModifierKeys.Alt | ModifierKeys.Control);
         }
 
+        public static class Providers
+        {
+            public const string Manage = "Providers.Manage";
+            public static readonly InputGesture ManageInputGesture = null;
+        }
+
         public static class TTS
         {
             public const string Generate = "TTS.Generate";

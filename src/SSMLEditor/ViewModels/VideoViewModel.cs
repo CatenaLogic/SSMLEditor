@@ -109,6 +109,11 @@
 
         private async Task OnProjectManagerProjectClosedAsync(object sender, ProjectEventArgs e)
         {
+            if (IsClosing || IsClosed)
+            {
+                return;
+            }
+
             UpdateProject();
         }
 

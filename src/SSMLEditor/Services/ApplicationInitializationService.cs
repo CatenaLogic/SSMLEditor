@@ -57,6 +57,9 @@
                 ImprovePerformanceAsync,
                 CheckForUpdatesAsync
             });
+
+            var textToSpeechProviderService = _serviceLocator.ResolveType<ITextToSpeechProviderService>();
+            await textToSpeechProviderService.LoadAsync();
         }
 
         public override async Task InitializeAfterCreatingShellAsync()
@@ -116,20 +119,10 @@
             _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Open));
             _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Save));
 
+            _commandManager.CreateCommandWithGesture(typeof(Commands.Providers), nameof(Commands.Providers.Manage));
+
             _commandManager.CreateCommandWithGesture(typeof(Commands.TTS), nameof(Commands.TTS.Generate));
             _commandManager.CreateCommandWithGesture(typeof(Commands.TTS), nameof(Commands.TTS.GenerateAll));
-
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Undo");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Redo");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Copy");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Paste");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "Cut");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DeleteLine");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "DuplicateLine");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "FindReplace");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveBlankLines");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "RemoveDuplicateLines");
-            //_commandManager.CreateCommandWithGesture(typeof(Commands.Edit), "TrimWhitespaces");
 
             _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), nameof(Commands.Settings.General));
 

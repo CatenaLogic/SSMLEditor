@@ -56,11 +56,14 @@
                 {
                     using (var stream = await ttsProvider.ExecuteAsync(ssmlContent))
                     {
-                        var fileName = project.GetFullPath(language);
+                        stream.Position = 0L;
+
+                        var fileName = project.GetFullAudioPath(language);
 
                         using (var fileStream = _fileService.Create(fileName))
                         {
                             await stream.CopyToAsync(fileStream);
+                            await fileStream.FlushAsync();
                         }
                     }
                 }

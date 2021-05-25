@@ -13,6 +13,18 @@
             return project.GetFullPath(language.RelativeFileName);
         }
 
+        public static string GetFullAudioPath(this Project project, Language language)
+        {
+            Argument.IsNotNull(() => project);
+            Argument.IsNotNull(() => language);
+
+            var fileName = project.GetFullPath(language.RelativeFileName);
+
+            fileName = Path.ChangeExtension(fileName, ".wav");
+
+            return fileName;
+        }
+
         public static string GetFullPath(this Project project, Video video)
         {
             Argument.IsNotNull(() => project);

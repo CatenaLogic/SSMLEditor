@@ -25,10 +25,7 @@
         <views:EditorsView Grid.RowSpan="2"
                            Grid.Column="0" />
 
-        <views:TextToSpeechProviderView Grid.Row="0"
-                                        Grid.Column="1" />
-
-        <views:VideoView Grid.Row="1"
+        <views:VideoView Grid.RowSpan="2"
                          Grid.Column="1" />
 
     </Grid>

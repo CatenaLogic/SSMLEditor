@@ -45,38 +45,18 @@
                                    LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Comments}, FontFamily=FontAwesome}"
                                    Command="{catel:CommandManagerBinding TTS.GenerateAll}" />
                 </fluent:RibbonGroupBox>
-                
-                <!--<fluent:RibbonGroupBox Header="Edit">
-                    <fluent:Button Header="Copy"
-                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Copy}, FontFamily=FontAwesome}"
-                                   Command="{catel:CommandManagerBinding Edit.Copy}" />
 
-                    <fluent:Button Header="Cut"
-                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Cut}, FontFamily=FontAwesome}"
-                                   Command="{catel:CommandManagerBinding Edit.Cut}" />
+                <fluent:RibbonGroupBox Header="Providers">
+                    <fluent:ComboBox Header="Selected"
+                                     ItemsSource="{Binding AvailableProviders}"
+                                     SelectedItem="{Binding SelectedProvider}"
+                                     IsEditable="False"
+                                     DisplayMemberPath="Name"/>
 
-                    <fluent:Button Header="Paste"
-                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Paste}, FontFamily=FontAwesome}"
-                                   Command="{catel:CommandManagerBinding Edit.Paste}" />
-
-                    <fluent:Button Header="Undo"
-                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.MailReply}, FontFamily=FontAwesome}"
-                                   Command="{catel:CommandManagerBinding Edit.Undo}" />
-
-                    <fluent:Button Header="Redo"
-                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.MailForward}, FontFamily=FontAwesome}"
-                                   Command="{catel:CommandManagerBinding Edit.Redo}" />
-
-                    <fluent:Button x:Name="FindAndReplaceButton" Header="Find and replace"
-                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Search}, FontFamily=FontAwesome}"
-                                   Command="{catel:CommandManagerBinding Edit.FindReplace}" />
-
-                    <fluent:SplitButton Header="Quick Format" LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.AlignJustify}, FontFamily=FontAwesome}" IsEnabled="{Binding ElementName=FindAndReplaceButton, Path=IsEnabled}">
-                        <fluent:MenuItem Header="Remove blank lines" Icon="{orctheming:FontImage {x:Static local:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveBlankLines}" />
-                        <fluent:MenuItem Header="Remove duplicate lines" Icon="{orctheming:FontImage {x:Static local:FontAwesome.Remove}}" Command="{catel:CommandManagerBinding Edit.RemoveDuplicateLines}" />
-                        <fluent:MenuItem Header="Trim whitespaces" Icon="{orctheming:FontImage {x:Static local:FontAwesome.AlignJustify}}" Command="{catel:CommandManagerBinding Edit.TrimWhitespaces}" />
-                    </fluent:SplitButton>
-                </fluent:RibbonGroupBox>-->
+                    <fluent:Button Header="Manage..."
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Language}, FontFamily=FontAwesome}"
+                                   Command="{catel:CommandManagerBinding Providers.Manage}" />
+                </fluent:RibbonGroupBox>
 
                 <fluent:RibbonGroupBox Header="Settings">
                     <fluent:Button Header="Settings"

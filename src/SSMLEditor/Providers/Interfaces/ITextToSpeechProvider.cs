@@ -17,5 +17,7 @@
         Task<IEnumerable<TtsVoice>> GetVoicesAsync(TtsLanguage language);
 
         Task<Stream> ExecuteAsync(string ssml);
+
+        void RemoveDuplicateProperties();
     }
 }

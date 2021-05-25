@@ -1,32 +1,75 @@
 ﻿namespace SSMLEditor.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Catel;
     using Catel.MVVM;
+    using Orc.SelectionManagement;
+    using SSMLEditor.Providers;
+    using SSMLEditor.Services;
 
     public class TextToSpeechProviderViewModel : ViewModelBase
     {
-        public TextToSpeechProviderViewModel(/* dependency injection here */)
+        private readonly ISelectionManager<ITextToSpeechProvider> _textToSpeechProviderSelectionManager;
+        private readonly ITextToSpeechProviderService _textToSpeechProviderService;
+
+        public TextToSpeechProviderViewModel(ISelectionManager<ITextToSpeechProvider> textToSpeechProviderSelectionManager, ITextToSpeechProviderService textToSpeechProviderService)
         {
+            Argument.IsNotNull(() => textToSpeechProviderSelectionManager);
+            Argument.IsNotNull(() => textToSpeechProviderService);
+
+            _textToSpeechProviderSelectionManager = textToSpeechProviderSelectionManager;
+            _textToSpeechProviderService = textToSpeechProviderService;
         }
 
-        public override string Title { get { return "View model title"; } }
+        public List<ITextToSpeechProvider> AvailableProviders { get; private set; }
 
-        // TODO: Register models with the vmpropmodel codesnippet
-        // TODO: Register view model properties with the vmprop or vmpropviewmodeltomodel codesnippets
-        // TODO: Register commands with the vmcommand or vmcommandwithcanexecute codesnippets
+        public ITextToSpeechProvider SelectedProvider { get; set; }
+
+        public List<TtsProperty> Properties { get; private set; }
 
         protected override async Task InitializeAsync()
         {
             await base.InitializeAsync();
 
-            // TODO: subscribe to events here
+            AvailableProviders = _textToSpeechProviderService.GetAvailableProviders().ToList();
+            SelectedProvider = _textToSpeechProviderSelectionManager.GetSelectedItem() ?? AvailableProviders.FirstOrDefault();
+
+            _textToSpeechProviderSelectionManager.SelectionChanged += OnTextToSpeechProviderSelectionManagerSelectionChanged;
+
+            Update();
         }
 
         protected override async Task CloseAsync()
         {
-            // TODO: unsubscribe from events here
+            _textToSpeechProviderSelectionManager.SelectionChanged -= OnTextToSpeechProviderSelectionManagerSelectionChanged;
 
             await base.CloseAsync();
+        }
+
+        private void OnTextToSpeechProviderSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
+        {
+            Update();
+        }
+
+        private void OnSelectedProviderChanged()
+        {
+            _textToSpeechProviderSelectionManager.Replace(SelectedProvider);
+        }
+
+        private void Update()
+        {
+            var properties = new List<TtsProperty>();
+
+            var provider = _textToSpeechProviderSelectionManager.GetSelectedItem();
+            if (provider is not null)
+            {
+                properties.AddRange(provider.Properties);
+            }
+
+            Properties = properties;
         }
     }
 }

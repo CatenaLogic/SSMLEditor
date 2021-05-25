@@ -50,7 +50,7 @@
 
         private void UpdateSelectionState()
         {
-            _hasSelectedItem = _ttsProviderSelectionManager.GetSelectedItem() is null;
+            _hasSelectedItem = _ttsProviderSelectionManager.GetSelectedItem() is not null;
         }
     }
 }
