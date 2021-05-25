@@ -51,12 +51,21 @@
 
         private async Task OnProjectManagerSavingAsync(object sender, ProjectCancelEventArgs e)
         {
-            UpdateLanguage();
+            //UpdateLanguage();
         }
 
-        private void UpdateLanguage()
+        public void MarkRichDocumentAsChanged()
         {
-            // TODO: Convert ssml document to language
+            // TODO: Update ssml based on rich document
+        }
+
+        public void MarkSsmlDocumentAsChanged()
+        {
+            var document = SsmlDocument;
+            if (document is not null)
+            {
+                Language.Content = new TextRange(document.ContentStart, document.ContentEnd).Text;
+            }
         }
 
         private void UpdateRichDocument()

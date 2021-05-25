@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Views
 {
+    using SSMLEditor.ViewModels;
 
     public partial class EditorView
     {
@@ -10,12 +11,12 @@
 
         private void OnRichDocumentTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-
+            (ViewModel as EditorViewModel)?.MarkRichDocumentAsChanged();
         }
 
         private void OnSsmlDocumentTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-
+            (ViewModel as EditorViewModel)?.MarkSsmlDocumentAsChanged();
         }
     }
 }
