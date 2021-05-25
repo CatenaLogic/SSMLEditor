@@ -7,5 +7,15 @@
         {
             InitializeComponent();
         }
+
+        private void OnRichDocumentTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+        }
+
+        private void OnSsmlDocumentTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+        }
     }
 }

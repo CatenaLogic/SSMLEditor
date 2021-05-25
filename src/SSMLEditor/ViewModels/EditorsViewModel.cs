@@ -26,6 +26,8 @@
 
         public List<Language> Languages { get; private set; }
 
+        public Language SelectedLanguage { get; set; }
+
         protected override async Task InitializeAsync()
         {
             await base.InitializeAsync();
@@ -48,7 +50,7 @@
 
         private void OnLanguageSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<Language> e)
         {
-            
+            UpdateTabs();
         }
 
         private async Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs e)
@@ -59,6 +61,11 @@
         private async Task OnProjectClosedAsync(object sender, ProjectEventArgs e)
         {
             UpdateTabs();
+        }
+
+        private void OnSelectedLanguageChanged()
+        {
+            _languageSelectionManager.Replace(SelectedLanguage);
         }
 
         private void UpdateTabs()
@@ -72,6 +79,7 @@
             }
 
             Languages = languages;
+            SelectedLanguage = _languageSelectionManager.GetSelectedItem() ?? Languages.FirstOrDefault();
         }
     }
 }

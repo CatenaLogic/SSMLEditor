@@ -6,13 +6,28 @@
                    xmlns:views="clr-namespace:SSMLEditor.Views">
 
     <Grid>
-        <orccontrols:TabControl ItemsSource="{Binding Languages}">
-            <orccontrols:TabControl.ItemTemplate>
+        <TabControl ItemsSource="{Binding Languages}"
+                    SelectedItem="{Binding SelectedLanguage}">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}"
+                       BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Setter Property="Header"
+                            Value="{Binding ShortName}" />
+                </Style>
+            </TabControl.ItemContainerStyle>
+
+            <!--<TabControl.ItemTemplate>
                 <DataTemplate>
-                    <views:EditorView DataContext="{Binding Language}" />
+                    <TextBlock Text="{Binding ShortName}" />
                 </DataTemplate>
-            </orccontrols:TabControl.ItemTemplate>
-        </orccontrols:TabControl>
+            </TabControl.ItemTemplate>-->
+
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <views:EditorView DataContext="{Binding }" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
-    
+
 </catel:UserControl>

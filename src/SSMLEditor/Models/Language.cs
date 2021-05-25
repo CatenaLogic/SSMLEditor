@@ -10,6 +10,12 @@
         public CultureInfo Culture { get; set; }
 
         [JsonIgnore]
+        public string ShortName
+        {
+            get { return Culture.TwoLetterISOLanguageName; }
+        }
+
+        [JsonIgnore]
         public string Content { get; set; }
 
         public override string ToString()

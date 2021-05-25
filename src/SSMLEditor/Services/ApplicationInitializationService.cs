@@ -88,10 +88,10 @@
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
             _serviceLocator.RegisterType<IInitialProjectLocationService, InitialProjectLocationService>();
+            _serviceLocator.RegisterType<ITextToSpeechProviderService, TextToSpeechProviderService>();
+            _serviceLocator.RegisterType<ISsmlConverterService, SsmlConverterService>();
 
             _serviceLocator.RegisterType<IProjectInitializer, FileProjectInitializer>();
-            
-            _serviceLocator.RegisterTypeAndInstantiate<ProjectManagementCloseApplicationWatcher>();
         }
 
         private void InitializeFonts()
@@ -140,6 +140,7 @@
         {
             _serviceLocator.RegisterTypeAndInstantiate<RecentlyUsedItemsProjectWatcher>();
             _serviceLocator.RegisterTypeAndInstantiate<MainWindowTitleProjectWatcher>();
+            _serviceLocator.RegisterTypeAndInstantiate<ProjectManagementCloseApplicationWatcher>();
         }
 
         [Time]
