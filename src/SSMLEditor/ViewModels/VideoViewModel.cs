@@ -33,6 +33,8 @@
 
         public Uri VideoUri { get; private set; }
 
+        public Uri AudioUri { get; private set; }
+
         public double Position { get; set; }
 
         public bool IsPlaying { get; private set; }
@@ -47,11 +49,16 @@
                 return false;
             }
 
+            if (AudioUri is null)
+            {
+                return false;
+            }
+
             if (IsPlaying)
             {
                 return false;
             }
-            
+
             return true;
         }
 
@@ -90,6 +97,7 @@
 
             _projectManager.ProjectActivatedAsync += OnProjectManagerProjectActivedAsync;
             _projectManager.ProjectClosedAsync += OnProjectManagerProjectClosedAsync;
+            _languageSelectionManager.SelectionChanged += OnLanguageSelectionManagerSelectionChanged;
 
             UpdateProject();
         }
@@ -98,6 +106,7 @@
         {
             _projectManager.ProjectActivatedAsync -= OnProjectManagerProjectActivedAsync;
             _projectManager.ProjectClosedAsync -= OnProjectManagerProjectClosedAsync;
+            _languageSelectionManager.SelectionChanged -= OnLanguageSelectionManagerSelectionChanged;
 
             await base.CloseAsync();
         }
@@ -109,17 +118,25 @@
 
         private async Task OnProjectManagerProjectClosedAsync(object sender, ProjectEventArgs e)
         {
-            if (IsClosing || IsClosed)
-            {
-                return;
-            }
+            UpdateProject();
+        }
+
+        private void OnLanguageSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<Language> e)
+        {
+            Pause.Execute();
 
             UpdateProject();
         }
 
         private void UpdateProject()
         {
+            if (IsClosing || IsClosed)
+            {
+                return;
+            }
+
             Uri videoUri = null;
+            Uri audioUri = null;
 
             var project = _projectManager.GetActiveProject<Project>();
             if (project is not null)
@@ -130,9 +147,21 @@
                 {
                     videoUri = new Uri(videoFileName, UriKind.RelativeOrAbsolute);
                 }
+
+                var language = _languageSelectionManager.GetSelectedItem();
+                if (language is not null)
+                {
+                    var audioFileName = project.GetFullAudioPath(language);
+
+                    if (_fileService.Exists(audioFileName))
+                    {
+                        audioUri = new Uri(audioFileName, UriKind.RelativeOrAbsolute);
+                    }
+                }
             }
 
             VideoUri = videoUri;
+            AudioUri = audioUri;
 
             if (IsPlaying && videoUri is null)
             {

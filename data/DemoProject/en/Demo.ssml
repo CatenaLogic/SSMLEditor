@@ -1,5 +1,9 @@
 <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
     <voice name="en-US-JennyNeural">
-        <prosody rate="0%" pitch="0%">This is a cactus. First it shows up on the right, then on the left.</prosody>
+        <prosody rate="0%" pitch="0%">This is a cactus. 
+<break time="1s"/> 
+First it shows up on the right. 
+<break time="1s"/> 
+Then on the left.</prosody>
     </voice>
 </speak>
