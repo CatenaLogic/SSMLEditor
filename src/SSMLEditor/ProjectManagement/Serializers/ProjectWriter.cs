@@ -47,6 +47,8 @@
                 _directoryService.Create(languageDirectory);
 
                 await _fileService.WriteAllTextAsync(languageFileName, language.Content);
+
+                language.OriginalContent = language.Content;
             }
 
             return true;

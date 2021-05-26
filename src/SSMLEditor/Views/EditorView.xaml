@@ -2,7 +2,8 @@
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:catel="http://schemas.catelproject.com"
-                   xmlns:orccontrols="http://schemas.wildgums.com/orc/controls">
+                   xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
+                   xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
 
     <orccontrols:StackGrid>
         <Grid.RowDefinitions>
@@ -28,10 +29,10 @@
         </GroupBox>
 
         <GroupBox Header="SSML Editor">
-            <orccontrols:BindableRichTextBox AcceptsReturn="True"
-                                             AcceptsTab="True"
-                                             BindableDocument="{Binding SsmlDocument}"
-                                             TextChanged="OnSsmlDocumentTextChanged" />
+            <avalonedit:TextEditor x:Name="SsmlTextEditor"
+                                   TextChanged="OnSsmlDocumentTextChanged"
+                                   SyntaxHighlighting="XML"
+                                   Margin="6,4,6,4" />
         </GroupBox>
     </orccontrols:StackGrid>
 

@@ -12,7 +12,7 @@
                 <Style TargetType="{x:Type TabItem}"
                        BasedOn="{StaticResource {x:Type TabItem}}">
                     <Setter Property="Header"
-                            Value="{Binding ShortName}" />
+                            Value="{Binding Status}" />
                 </Style>
             </TabControl.ItemContainerStyle>
 

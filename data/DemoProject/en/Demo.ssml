@@ -3,7 +3,7 @@
         <prosody rate="0%" pitch="0%">This is a cactus. 
 <break time="1s"/> 
 First it shows up on the right. 
-<break time="1s"/> 
+<break time="500ms"/> 
 Then on the left.</prosody>
     </voice>
 </speak>

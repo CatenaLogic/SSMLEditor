@@ -30,7 +30,7 @@
 
         public FlowDocument RichDocument { get; private set; }
 
-        public FlowDocument SsmlDocument { get; private set; }
+        public string SsmlDocument { get; set; }
 
         protected override async Task InitializeAsync()
         {
@@ -39,7 +39,6 @@
             _projectManager.ProjectSavingAsync += OnProjectManagerSavingAsync;
 
             UpdateSsmlDocument();
-            UpdateRichDocument();
         }
 
         protected override async Task CloseAsync()
@@ -51,7 +50,7 @@
 
         private async Task OnProjectManagerSavingAsync(object sender, ProjectCancelEventArgs e)
         {
-            //UpdateLanguage();
+            
         }
 
         public void MarkRichDocumentAsChanged()
@@ -59,13 +58,10 @@
             // TODO: Update ssml based on rich document
         }
 
-        public void MarkSsmlDocumentAsChanged()
+        public void MarkSsmlDocumentAsChanged(string text)
         {
-            var document = SsmlDocument;
-            if (document is not null)
-            {
-                Language.Content = new TextRange(document.ContentStart, document.ContentEnd).Text;
-            }
+            Language.Content = SsmlDocument;
+            SsmlDocument = text;
         }
 
         private void UpdateRichDocument()
@@ -94,14 +90,13 @@
                 x => x.Instance._isUpdating = true,
                 x => x.Instance._isUpdating = false))
             {
-                var doc = new FlowDocument();
-
-                var p = new Paragraph(new Run(Language.Content ?? string.Empty));
-                p.FontSize = 16;
-                doc.Blocks.Add(p);
-
-                SsmlDocument = doc;
+                SsmlDocument = Language.Content ?? string.Empty;
             }
+        }
+
+        private void OnSsmlDocumentChanged()
+        {
+            UpdateRichDocument();
         }
     }
 }

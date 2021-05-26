@@ -57,6 +57,7 @@
                     }
 
                     language.Content = await _fileService.ReadAllTextAsync(languageFileName);
+                    language.OriginalContent = language.Content;
                 }
 
                 return project;
