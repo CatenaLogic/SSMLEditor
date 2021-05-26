@@ -10,8 +10,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageId>SSMLEditor</PackageId>
     <Title>SSML Editor</Title>
-    <Description>SSML Editor.</Description>
-    <PackageTags>ssml editor</PackageTags>
+    <Description>SSML Editor to synchronize video and Text to Speech (TTS) translations.</Description>
+    <PackageTags>ssml azure cognitive tts text speech editor</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>
