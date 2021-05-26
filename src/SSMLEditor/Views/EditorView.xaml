@@ -2,15 +2,17 @@
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:catel="http://schemas.catelproject.com"
+                   xmlns:local="clr-namespace:SSMLEditor"
                    xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
-                   xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
+                   xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                   xmlns:orctheming="http://schemas.wildgums.com/orc/theming">
 
     <orccontrols:StackGrid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <GroupBox Header="Visual editor">
             <orccontrols:StackGrid>
                 <Grid.RowDefinitions>
@@ -29,10 +31,41 @@
         </GroupBox>
 
         <GroupBox Header="SSML Editor">
-            <avalonedit:TextEditor x:Name="SsmlTextEditor"
-                                   TextChanged="OnSsmlDocumentTextChanged"
-                                   SyntaxHighlighting="XML"
-                                   Margin="6,4,6,4" />
+            <orccontrols:StackGrid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <WrapPanel Orientation="Horizontal">
+                    <orccontrols:DropDownButton ToolTip="Emphasis">
+                        <orccontrols:DropDownButton.Content>
+                            <Viewbox Margin="4">
+                                <Image Source="{orctheming:FontImage {x:Static local:FontAwesome.VolumeUp}, FontFamily=FontAwesome}" />
+                            </Viewbox>
+                        </orccontrols:DropDownButton.Content>
+                        <orccontrols:DropDownButton.DropDown>
+                            <ContextMenu x:Name="SsmlEmphasisContextMenu" />
+                        </orccontrols:DropDownButton.DropDown>
+                    </orccontrols:DropDownButton>
+
+                    <orccontrols:DropDownButton ToolTip="Break">
+                        <orccontrols:DropDownButton.Content>
+                            <Viewbox Margin="4">
+                                <Image Source="{orctheming:FontImage {x:Static local:FontAwesome.Pause}, FontFamily=FontAwesome}" />
+                            </Viewbox>
+                        </orccontrols:DropDownButton.Content>
+                        <orccontrols:DropDownButton.DropDown>
+                            <ContextMenu x:Name="SsmlBreakContextMenu" />
+                        </orccontrols:DropDownButton.DropDown>
+                    </orccontrols:DropDownButton>
+                </WrapPanel>
+                
+                <avalonedit:TextEditor x:Name="SsmlTextEditor"
+                                       TextChanged="OnSsmlDocumentTextChanged"
+                                       SyntaxHighlighting="XML"
+                                       Margin="6,4,6,4" />
+            </orccontrols:StackGrid>
         </GroupBox>
     </orccontrols:StackGrid>
 
