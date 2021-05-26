@@ -3,11 +3,13 @@
     using System.IO;
     using System.Threading.Tasks;
     using Catel;
+    using Catel.Messaging;
     using Catel.MVVM;
     using Catel.Services;
     using Orc.FileSystem;
     using Orc.ProjectManagement;
     using Orc.SelectionManagement;
+    using SSMLEditor.Messaging;
     using SSMLEditor.Providers;
 
     public class TTSGenerateCommandContainer : TTSCommandContainerBase
@@ -15,18 +17,21 @@
         private readonly ISelectionManager<Language> _languageSelectionManager;
         private readonly IPleaseWaitService _pleaseWaitService;
         private readonly IFileService _fileService;
+        private readonly IMessageMediator _messageMediator;
 
         public TTSGenerateCommandContainer(ICommandManager commandManager, IProjectManager projectManager,
             ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, ISelectionManager<Language> languageSelectionManager,
-            IPleaseWaitService pleaseWaitService, IFileService fileService)
+            IPleaseWaitService pleaseWaitService, IFileService fileService, IMessageMediator messageMediator)
             : base(Commands.TTS.Generate, commandManager, projectManager, ttsProviderSelectionManager)
         {
             Argument.IsNotNull(() => languageSelectionManager);
             Argument.IsNotNull(() => pleaseWaitService);
+            Argument.IsNotNull(() => messageMediator);
 
             _languageSelectionManager = languageSelectionManager;
             _pleaseWaitService = pleaseWaitService;
             _fileService = fileService;
+            _messageMediator = messageMediator;
         }
 
         protected override async Task ExecuteAsync(object parameter)
@@ -54,6 +59,8 @@
             {
                 using (_pleaseWaitService.PushInScope())
                 {
+                    _messageMediator.SendMessage(new TTSGenerating(language));
+
                     using (var stream = await ttsProvider.ExecuteAsync(ssmlContent))
                     {
                         stream.Position = 0L;
@@ -66,6 +73,8 @@
                             await fileStream.FlushAsync();
                         }
                     }
+
+                    _messageMediator.SendMessage(new TTSGenerated(language));
                 }
             }
         }

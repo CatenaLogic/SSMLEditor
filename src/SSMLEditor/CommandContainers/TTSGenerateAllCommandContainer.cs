@@ -4,28 +4,33 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Catel;
+    using Catel.Messaging;
     using Catel.MVVM;
     using Catel.Services;
     using Orc.FileSystem;
     using Orc.ProjectManagement;
     using Orc.SelectionManagement;
+    using SSMLEditor.Messaging;
     using SSMLEditor.Providers;
 
     public class TTSGenerateAllCommandContainer : TTSCommandContainerBase
     {
         private readonly IPleaseWaitService _pleaseWaitService;
         private readonly IFileService _fileService;
+        private readonly IMessageMediator _messageMediator;
 
         public TTSGenerateAllCommandContainer(ICommandManager commandManager, IProjectManager projectManager,
             ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager,
-            IPleaseWaitService pleaseWaitService, IFileService fileService)
+            IPleaseWaitService pleaseWaitService, IFileService fileService, IMessageMediator messageMediator)
             : base(Commands.TTS.GenerateAll, commandManager, projectManager, ttsProviderSelectionManager)
         {
             Argument.IsNotNull(() => pleaseWaitService);
             Argument.IsNotNull(() => fileService);
+            Argument.IsNotNull(() => messageMediator);
 
             _pleaseWaitService = pleaseWaitService;
             _fileService = fileService;
+            _messageMediator = messageMediator;
         }
 
         protected override async Task ExecuteAsync(object parameter)
@@ -54,6 +59,8 @@
                     var ssmlContent = language.Content;
                     if (!string.IsNullOrWhiteSpace(ssmlContent))
                     {
+                        _messageMediator.SendMessage(new TTSGenerating(language));
+
                         using (var stream = await ttsProvider.ExecuteAsync(ssmlContent))
                         {
                             stream.Position = 0L;
@@ -66,6 +73,8 @@
                                 await fileStream.FlushAsync();
                             }
                         }
+
+                        _messageMediator.SendMessage(new TTSGenerated(language));
                     }
                 }
             }
