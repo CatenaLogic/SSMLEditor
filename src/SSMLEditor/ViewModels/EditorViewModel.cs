@@ -64,7 +64,7 @@
 
         public void MarkSsmlDocumentAsChanged(string text)
         {
-            Language.Content = SsmlDocument;
+            Language.Content = text;
             SsmlDocument = text;
         }
 

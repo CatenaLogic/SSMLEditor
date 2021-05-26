@@ -4,12 +4,15 @@
     using System.Globalization;
     using System.IO;
     using System.Threading.Tasks;
+    using Catel.Logging;
     using MethodTimer;
     using Microsoft.CognitiveServices.Speech;
     using Newtonsoft.Json;
 
     public class AzureCognitiveServices : TextToSpeechProviderBase
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         public AzureCognitiveServices()
         {
             Properties.Add(new TtsProperty
@@ -111,40 +114,6 @@
                 }
             }
 
-            //voices.Add(new Voice
-            //{
-            //    Id = "en-US-JennyNeural",
-            //    Name = "Jenny (Neural)",
-            //    Language = new CultureInfo("en-US"),
-            //    IsNeural = true,
-            //});
-
-            //voices.Add(new Voice
-            //{
-            //    Id = "en-US-GuyNeural",
-            //    Name = "Guy (Neural)",
-            //    Language = new CultureInfo("en-US"),
-            //    IsNeural = true,
-            //});
-
-            //voices.Add(new Voice
-            //{
-            //    Id = "nl-NL-ColetteNeural",
-            //    Name = "Colette (Neural)",
-            //    Language = new CultureInfo("nl-NL"),
-            //    IsNeural = true,
-            //});
-
-            //voices.Add(new Voice
-            //{
-            //    Id = "nl-NL-MaartenNeural",
-            //    Name = "Maarten (Neural)",
-            //    Language = new CultureInfo("nl-NL"),
-            //    IsNeural = true,
-            //});
-
-            // TODO: Add voices
-
             return voices;
         }
 
@@ -156,6 +125,11 @@
             using (var synthesizer = new SpeechSynthesizer(config, null))
             {
                 var result = await synthesizer.SpeakSsmlAsync(ssml);
+
+                if (result.Reason == ResultReason.Canceled)
+                {
+                    throw Log.ErrorAndCreateException<SSMLEditorException>($"Failed to convert text to speech");
+                }
 
                 var memoryStream = new MemoryStream();
 

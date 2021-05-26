@@ -1,9 +1,9 @@
 <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
     <voice name="en-US-JennyNeural">
-        <prosody rate="0%" pitch="0%">This is a cactus. 
+        <prosody rate="0%" pitch="0%">This is a <emphasis level="moderate">cactus</emphasis>. 
 <break time="1s"/> 
 First it shows up on the right. 
-<break time="500ms"/> 
+<break time="1.5s" strength="weak" />
 Then on the left.</prosody>
     </voice>
 </speak>

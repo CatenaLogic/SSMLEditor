@@ -15,9 +15,17 @@
                    d:DesignWidth="300">
 
     <fluent:Ribbon x:Name="ribbon"
-                   IsQuickAccessToolBarVisible="False"
+                   IsQuickAccessToolBarVisible="True"
                    CanCustomizeRibbon="False"
                    AutomaticStateManagement="False">
+        <fluent:Ribbon.QuickAccessItems>
+            <fluent:QuickAccessMenuItem IsCheckable="True">
+                <fluent:Button Header="Save"
+                               Command="{catel:CommandManagerBinding Project.Save}"
+                               Icon="{orctheming:FontImage {x:Static local:FontAwesome.Save}, FontFamily=FontAwesome}" />
+            </fluent:QuickAccessMenuItem>
+        </fluent:Ribbon.QuickAccessItems>
+
         <fluent:Ribbon.Menu>
             <fluent:Backstage Header="File">
                 <fluent:BackstageTabControl>
@@ -26,7 +34,9 @@
                     </fluent:BackstageTabItem>
 
                     <fluent:Button Header="Save"
-                                   Command="{catel:CommandManagerBinding Project.Save}" />
+                                   Command="{catel:CommandManagerBinding Project.Save}"
+                                   Icon="{orctheming:FontImage {x:Static local:FontAwesome.Save}, FontFamily=FontAwesome}"
+                                   LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Save}, FontFamily=FontAwesome}" />
 
                     <!--<fluent:Button Header="Save As"
                                    Command="{catel:CommandManagerBinding Project.SaveAs}" />-->
@@ -51,7 +61,7 @@
                                      ItemsSource="{Binding AvailableProviders}"
                                      SelectedItem="{Binding SelectedProvider}"
                                      IsEditable="False"
-                                     DisplayMemberPath="Name"/>
+                                     DisplayMemberPath="Name" />
 
                     <fluent:Button Header="Manage..."
                                    LargeIcon="{orctheming:FontImage {x:Static local:FontAwesome.Language}, FontFamily=FontAwesome}"

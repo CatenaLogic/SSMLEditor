@@ -72,22 +72,35 @@
 
         private void AddEmphasis(EmphasisOption emphasisOption)
         {
-            var offset = SsmlTextEditor.CaretOffset;
-            if (offset < 0)
+            var startIndex = SsmlTextEditor.SelectionStart;
+            if (startIndex < 0)
             {
-                offset = SsmlTextEditor.Document.TextLength - 1;
+                startIndex = SsmlTextEditor.CaretOffset;
+                if (startIndex < 0)
+                {
+                    startIndex = SsmlTextEditor.Document.TextLength - 1;
+                }
             }
 
-            var text = $"<emphasis";
+            var endIndex = startIndex + SsmlTextEditor.SelectionLength;
+            if (endIndex < startIndex)
+            {
+                endIndex = startIndex;
+            }
+
+            var startText = $"<emphasis";
 
             if (!string.IsNullOrWhiteSpace(emphasisOption.Level))
             {
-                text += $" level=\"{emphasisOption.Level}\"";
+                startText += $" level=\"{emphasisOption.Level}\"";
             }
 
-            text += " />";
+            startText += ">";
 
-            SsmlTextEditor.Document.Insert(offset, text);
+            var endText = "</emphasis>";
+
+            SsmlTextEditor.Document.Insert(endIndex, endText);
+            SsmlTextEditor.Document.Insert(startIndex, startText);
         }
 
         private void AddBreakOptions()
