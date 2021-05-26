@@ -6,7 +6,6 @@
   <PropertyGroup>
     <Authors>catenalogic</Authors>
     <PackageProjectUrl>https://github.com/catenalogic/ssmleditor</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/CatenaLogic/SSMLEditor/blob/develop/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/catenalogic/ssmleditor</RepositoryUrl>
   </PropertyGroup>
    
