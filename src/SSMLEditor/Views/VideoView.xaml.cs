@@ -60,7 +60,7 @@
                 }
 
                 // Pause so the media actually gets loaded
-                VideoMediaElement.Pause();
+                UpdateMediaElements(x => x.Pause());
             }
             else if (e.HasPropertyChanged(nameof(VideoViewModel.Position)))
             {
@@ -70,12 +70,13 @@
                 }
 
                 var vm = (VideoViewModel)ViewModel;
-                VideoMediaElement.Position = TimeSpan.FromSeconds(vm.Position);
+
+                UpdateMediaElements(x => x.Position = TimeSpan.FromSeconds(vm.Position));
 
                 if (!vm.IsPlaying)
                 {
                     // Pause so the media actually gets loaded to the new position
-                    VideoMediaElement.Pause();
+                    UpdateMediaElements(x => x.Pause());
                 }
             }
             else if (e.HasPropertyChanged(nameof(VideoViewModel.IsPlaying)))
