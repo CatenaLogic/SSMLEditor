@@ -18,10 +18,7 @@
             Argument.IsNotNull(() => project);
             Argument.IsNotNull(() => language);
 
-            var fileName = project.GetFullPath(language.RelativeFileName);
-
-            fileName = Path.ChangeExtension(fileName, ".wav");
-
+            var fileName = project.GetFullPath(language.OutputRelativeFileName);
             return fileName;
         }
 
