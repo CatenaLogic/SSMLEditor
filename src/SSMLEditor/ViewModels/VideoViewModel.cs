@@ -1,6 +1,8 @@
 ﻿namespace SSMLEditor.ViewModels
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Logging;
@@ -10,6 +12,7 @@
     using Orc.ProjectManagement;
     using Orc.SelectionManagement;
     using SSMLEditor.Messaging;
+    using SSMLEditor.Providers;
 
     public class VideoViewModel : ViewModelBase
     {
@@ -43,11 +46,21 @@
 
         public Uri AudioUri { get; private set; }
 
+        public Uri BaseAudioUri { get; private set; }
+
         public TimeSpan Position { get; set; }
 
         public TimeSpan TotalDuration { get; set; }
 
         public bool IsPlaying { get; private set; }
+
+        public bool EnableBaseAudioTrack { get; set; }
+
+        public bool CanSelectedBaseAudioTrack { get; set; }
+
+        public List<Language> AvailableBaseAudioTracks { get; private set; }
+
+        public Language SelectedBaseAudioTrack { get; set; }
 
         #region Commands
         public TaskCommand Play { get; private set; }
@@ -127,12 +140,19 @@
 
         private async Task OnProjectManagerProjectActivedAsync(object sender, ProjectUpdatedEventArgs e)
         {
+            if (e.NewProject is null)
+            {
+                // Don't support for now
+                return;
+            }
+
             UpdateProject();
         }
 
         private async Task OnProjectManagerProjectClosedAsync(object sender, ProjectEventArgs e)
         {
-            UpdateProject();
+            // Don't support for now
+            //UpdateProject();
         }
 
         private void OnLanguageSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<Language> e)
@@ -140,6 +160,16 @@
             Pause.Execute();
 
             UpdateProject();
+        }
+
+        private void OnSelectedBaseAudioTrackChanged()
+        {
+            UpdateBaseAudio();
+        }
+
+        private void OnEnableBaseAudioTrackChanged()
+        {
+            UpdateBaseAudio();
         }
 
         private void OnTTSGenerating(TTSGenerating message)
@@ -161,6 +191,47 @@
 
                 UpdateProject();
             }
+        }
+
+        private void UpdateBaseAudio()
+        {
+            Uri baseAudioUri = null;
+
+            var availableBaseAudioTracks = new List<Language>();
+
+            var project = _projectManager.GetActiveProject<Project>();
+            if (project is not null)
+            {
+                availableBaseAudioTracks.AddRange(from x in project.ProjectRoot.Languages
+                                                  orderby x.Culture.DisplayName
+                                                  select x);
+
+                var selectedBaseAudioTrack = SelectedBaseAudioTrack ?? availableBaseAudioTracks.FirstOrDefault();
+                if (selectedBaseAudioTrack is not null)
+                {
+                    var audioFileName = project.GetFullAudioPath(selectedBaseAudioTrack);
+
+                    if (_fileService.Exists(audioFileName))
+                    {
+                        baseAudioUri = new Uri(audioFileName, UriKind.RelativeOrAbsolute);
+                    }
+                }
+            }
+
+            AvailableBaseAudioTracks = availableBaseAudioTracks;
+            CanSelectedBaseAudioTrack = AvailableBaseAudioTracks.Count > 0;
+
+            if (SelectedBaseAudioTrack is null)
+            {
+                SelectedBaseAudioTrack = availableBaseAudioTracks.FirstOrDefault();
+            }
+
+            if (!EnableBaseAudioTrack)
+            {
+                baseAudioUri = null;
+            }
+
+            BaseAudioUri = baseAudioUri;
         }
 
         private void UpdateProject()
@@ -197,6 +268,8 @@
 
             VideoUri = videoUri;
             AudioUri = audioUri;
+
+            UpdateBaseAudio();
 
             if (IsPlaying && videoUri is null)
             {

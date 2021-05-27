@@ -33,6 +33,10 @@
             <MediaElement x:Name="AudioMediaElement"
                           Source="{Binding AudioUri}"
                           LoadedBehavior="Manual" />
+
+            <MediaElement x:Name="BaseAudioMediaElement"
+                          Source="{Binding BaseAudioUri}"
+                          LoadedBehavior="Manual" />
         </Grid>
 
         <!-- Progress slider -->
@@ -52,6 +56,7 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -80,6 +85,15 @@
                        ContentStringFormat="{}{0:mm}:{0:ss}.{0:fff}" />
                 <Label Content="/" />
                 <Label Content="{Binding TotalDuration}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding EnableBaseAudioTrack}" 
+                          Content="Use base audio track: "
+                          IsEnabled="{Binding CanSelectedBaseAudioTrack}" />
+                <ComboBox ItemsSource="{Binding AvailableBaseAudioTracks}"
+                          SelectedItem="{Binding SelectedBaseAudioTrack}"
+                          DisplayMemberPath="Culture.DisplayName" />
             </StackPanel>
         </orccontrols:StackGrid>
 

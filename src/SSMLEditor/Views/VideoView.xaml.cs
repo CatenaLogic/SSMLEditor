@@ -79,6 +79,16 @@
                     UpdateMediaElements(x => x.Pause());
                 }
             }
+            else if (e.HasPropertyChanged(nameof(VideoViewModel.BaseAudioUri)))
+            {
+                var vm = (VideoViewModel)ViewModel;
+                if (vm.IsPlaying && vm.BaseAudioUri is not null)
+                {
+                    // Ensure that base audio starts playing on the right position
+                    BaseAudioMediaElement.Position = VideoMediaElement.Position;
+                    BaseAudioMediaElement.Play();
+                }
+            }
             else if (e.HasPropertyChanged(nameof(VideoViewModel.IsPlaying)))
             {
                 var vm = (VideoViewModel)ViewModel;
@@ -180,10 +190,17 @@
             var elements = new[]
             {
                 VideoMediaElement,
-                AudioMediaElement
+                AudioMediaElement,
+                BaseAudioMediaElement
             };
 
-            elements.ForEach(x => action(x));
+            elements.ForEach(x =>
+            {
+                if (x.Source is not null)
+                {
+                    action(x);
+                }
+            });
         }
     }
 }
