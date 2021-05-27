@@ -22,7 +22,7 @@
 
             _positionDispatcherTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(500)
+                Interval = TimeSpan.FromMilliseconds(200)
             };
 
             _positionUpdateDispatcherTimer = new DispatcherTimer
