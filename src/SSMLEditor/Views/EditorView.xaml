@@ -9,18 +9,18 @@
 
     <orccontrols:StackGrid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <!--<RowDefinition Height="*" />-->
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <GroupBox Header="Visual editor">
+        <!--<GroupBox Header="Visual editor">
             <orccontrols:StackGrid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- Toolbar -->
+                --><!-- Toolbar --><!--
                 <Label Content="{Binding Title}" />
 
                 <orccontrols:BindableRichTextBox AcceptsReturn="True"
@@ -28,7 +28,7 @@
                                                  BindableDocument="{Binding RichDocument}"
                                                  TextChanged="OnRichDocumentTextChanged" />
             </orccontrols:StackGrid>
-        </GroupBox>
+        </GroupBox>-->
 
         <GroupBox Header="SSML Editor">
             <orccontrols:StackGrid>
