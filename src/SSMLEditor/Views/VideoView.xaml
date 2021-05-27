@@ -26,7 +26,7 @@
                       LoadedBehavior="Manual"
                       MediaOpened="OnMediaOpened"
                       MediaFailed="OnMediaFailed"
-                      MediaEnded="OnMediaEnded"/>
+                      MediaEnded="OnMediaEnded" />
 
         <!-- Current audio track -->
         <Grid>
@@ -46,24 +46,43 @@
         </Grid>
 
         <!-- Controls -->
-        <StackPanel Orientation="Horizontal">
-            <StackPanel.Resources>
-                <Style TargetType="Button"
-                       BasedOn="{StaticResource {x:Type Button}}">
-                    <Setter Property="Width"
-                            Value="42" />
-                    <Setter Property="Height"
-                            Value="42" />
-                </Style>
-            </StackPanel.Resources>
+        <orccontrols:StackGrid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <Button Command="{Binding Play}"
-                    Content=">"
-                    Visibility="{Binding IsPlaying, Converter={catel:BooleanToCollapsingVisibilityConverter}, ConverterParameter=True}" />
-            <Button Command="{Binding Pause}"
-                    Content="||"
-                    Visibility="{Binding IsPlaying, Converter={catel:BooleanToCollapsingVisibilityConverter}}" />
-        </StackPanel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button"
+                           BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Width"
+                                Value="42" />
+                        <Setter Property="Height"
+                                Value="42" />
+                    </Style>
+                </StackPanel.Resources>
+
+                <Button Command="{Binding Play}"
+                        Content=">"
+                        Visibility="{Binding IsPlaying, Converter={catel:BooleanToCollapsingVisibilityConverter}, ConverterParameter=True}" />
+                <Button Command="{Binding Pause}"
+                        Content="||"
+                        Visibility="{Binding IsPlaying, Converter={catel:BooleanToCollapsingVisibilityConverter}}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding Position}"
+                       ContentStringFormat="{}{0:mm}:{0:ss}.{0:fff}" />
+                <Label Content="/" />
+                <Label Content="{Binding TotalDuration}" />
+            </StackPanel>
+        </orccontrols:StackGrid>
+
     </orccontrols:StackGrid>
 
 </catel:UserControl>

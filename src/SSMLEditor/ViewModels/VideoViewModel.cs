@@ -43,7 +43,9 @@
 
         public Uri AudioUri { get; private set; }
 
-        public double Position { get; set; }
+        public TimeSpan Position { get; set; }
+
+        public TimeSpan TotalDuration { get; set; }
 
         public bool IsPlaying { get; private set; }
 

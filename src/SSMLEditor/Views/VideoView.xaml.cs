@@ -71,7 +71,7 @@
 
                 var vm = (VideoViewModel)ViewModel;
 
-                UpdateMediaElements(x => x.Position = TimeSpan.FromSeconds(vm.Position));
+                UpdateMediaElements(x => x.Position = vm.Position);
 
                 if (!vm.IsPlaying)
                 {
@@ -102,11 +102,11 @@
                 return;
             }
 
-            var position = VideoMediaElement.Position.TotalSeconds;
+            var position = VideoMediaElement.Position;
 
             _isAppUpdatingSlider = true;
 
-            ProgressSlider.SetCurrentValue(Slider.ValueProperty, position);
+            ProgressSlider.SetCurrentValue(Slider.ValueProperty, position.TotalSeconds);
 
             _isAppUpdatingSlider = false;
 
@@ -126,7 +126,7 @@
             var vm = ViewModel as VideoViewModel;
             if (vm is not null)
             {
-                vm.Position = ProgressSlider.Value;
+                vm.Position = TimeSpan.FromSeconds(ProgressSlider.Value);
             }
 
             _isUserUpdatingSlider = false;
@@ -155,7 +155,10 @@
 
         private void OnMediaOpened(object sender, System.Windows.RoutedEventArgs e)
         {
-            ProgressSlider.SetCurrentValue(RangeBase.MaximumProperty, VideoMediaElement.NaturalDuration.TimeSpan.TotalSeconds);
+            var duration = VideoMediaElement.NaturalDuration.TimeSpan;
+
+            ((VideoViewModel)ViewModel).TotalDuration = duration;
+            ProgressSlider.SetCurrentValue(RangeBase.MaximumProperty, duration.TotalSeconds);
         }
 
         private void OnMediaFailed(object sender, System.Windows.ExceptionRoutedEventArgs e)
