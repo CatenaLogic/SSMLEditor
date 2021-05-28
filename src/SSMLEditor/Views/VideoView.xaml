@@ -56,9 +56,10 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal">
@@ -79,6 +80,8 @@
                         Content="||"
                         Visibility="{Binding IsPlaying, Converter={catel:BooleanToCollapsingVisibilityConverter}}" />
             </StackPanel>
+
+            <orccontrols:EmptyCell />
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="{Binding Position}"
