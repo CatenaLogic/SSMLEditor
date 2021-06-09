@@ -20,7 +20,9 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                --><!-- Toolbar --><!--
+                -->
+        <!-- Toolbar -->
+        <!--
                 <Label Content="{Binding Title}" />
 
                 <orccontrols:BindableRichTextBox AcceptsReturn="True"
@@ -60,11 +62,17 @@
                         </orccontrols:DropDownButton.DropDown>
                     </orccontrols:DropDownButton>
                 </WrapPanel>
-                
+
                 <avalonedit:TextEditor x:Name="SsmlTextEditor"
                                        TextChanged="OnSsmlDocumentTextChanged"
                                        SyntaxHighlighting="XML"
-                                       Margin="6,4,6,4" />
+                                       MouseMove="OnMouseMove"
+                                       Margin="6,4,6,4">
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="EditorToolTip"
+                                 IsOpen="False" />
+                    </ToolTipService.ToolTip>
+                </avalonedit:TextEditor>
             </orccontrols:StackGrid>
         </GroupBox>
     </orccontrols:StackGrid>

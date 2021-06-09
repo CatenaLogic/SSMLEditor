@@ -88,6 +88,7 @@
             _serviceLocator.RegisterType<ISelectionManager<ITextToSpeechProvider>, SelectionManager<ITextToSpeechProvider>>();
             _serviceLocator.RegisterType<ISelectionManager<Language>, SelectionManager<Language>>();
 
+            _serviceLocator.RegisterType<IAnalyzerService, AnalyzerService>();
             _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
             _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
             _serviceLocator.RegisterType<IInitialProjectLocationService, InitialProjectLocationService>();

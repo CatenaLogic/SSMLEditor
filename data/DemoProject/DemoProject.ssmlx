@@ -2,10 +2,12 @@
   "Languages": [
     {
       "RelativeFileName": "en/Demo.ssml",
+      "OutputRelativeFileName": "en/Demo.wav",
       "Culture": "en-US"
     },
     {
       "RelativeFileName": "nl/Demo.ssml",
+      "OutputRelativeFileName": "nl/Demo.wav",
       "Culture": "nl-NL"
     }
   ],
