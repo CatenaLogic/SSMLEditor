@@ -1,19 +1,17 @@
 ﻿namespace SSMLEditor.Views
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Design;
     using System.Linq;
-    using System.Text;
     using System.Threading;
-    using System.Threading.Tasks;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Media;
     using Catel.IoC;
+    using Catel.Logging;
     using Catel.MVVM;
-    using ICSharpCode.AvalonEdit;
-    using ICSharpCode.AvalonEdit.Rendering;
     using SSMLEditor.Analyzers;
     using SSMLEditor.AvalonEdit;
     using SSMLEditor.Services;
@@ -21,6 +19,8 @@
 
     public partial class EditorView
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private readonly IAnalyzerService _analyzerService;
 
         private CancellationTokenSource _cancellationTokenSource;
@@ -74,36 +74,43 @@
             var newCancellationTokenSource = new CancellationTokenSource();
             _cancellationTokenSource = newCancellationTokenSource;
 
-            // TODO: optimize replacing the validation
-            _textMarkerService.RemoveAll(x => true);
-
-            var newAnalyzerResults = new List<AnalyzerResult>();
-
-            await foreach (var analyzerResult in _analyzerService.AnalyzeAsync(documentText, newCancellationTokenSource.Token))
+            try
             {
-                newAnalyzerResults.Add(analyzerResult);
-            }
+                // TODO: optimize replacing the validation
+                _textMarkerService.RemoveAll(x => true);
 
-            if (!newCancellationTokenSource.IsCancellationRequested)
-            {
-                foreach (var analyzerResult in newAnalyzerResults)
+                var newAnalyzerResults = new List<AnalyzerResult>();
+
+                await foreach (var analyzerResult in _analyzerService.AnalyzeAsync(documentText, newCancellationTokenSource.Token))
                 {
-                    var marker = _textMarkerService.Create(analyzerResult.StartIndex, analyzerResult.Length);
+                    newAnalyzerResults.Add(analyzerResult);
+                }
 
-                    marker.MarkerTypes = TextMarkerTypes.SquigglyUnderline;
-                    marker.Tag = analyzerResult;
-
-                    switch (analyzerResult.ResultType)
+                if (!newCancellationTokenSource.IsCancellationRequested)
+                {
+                    foreach (var analyzerResult in newAnalyzerResults)
                     {
-                        case AnalyzerResultType.Error:
-                            marker.MarkerColor = Colors.Red;
-                            break;
+                        var marker = _textMarkerService.Create(analyzerResult.StartIndex, analyzerResult.Length);
 
-                        case AnalyzerResultType.Warning:
-                            marker.MarkerColor = Colors.Orange;
-                            break;
+                        marker.MarkerTypes = TextMarkerTypes.SquigglyUnderline;
+                        marker.Tag = analyzerResult;
+
+                        switch (analyzerResult.ResultType)
+                        {
+                            case AnalyzerResultType.Error:
+                                marker.MarkerColor = Colors.Red;
+                                break;
+
+                            case AnalyzerResultType.Warning:
+                                marker.MarkerColor = Colors.Orange;
+                                break;
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to analyze document");
             }
         }
 
