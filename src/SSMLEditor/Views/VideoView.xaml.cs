@@ -5,6 +5,7 @@
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Threading;
+    using Catel;
     using Catel.Collections;
     using SSMLEditor.ViewModels;
 
@@ -114,16 +115,17 @@
 
             var position = VideoMediaElement.Position;
 
-            _isAppUpdatingSlider = true;
-
-            ProgressSlider.SetCurrentValue(Slider.ValueProperty, position.TotalSeconds);
-
-            _isAppUpdatingSlider = false;
-
-            var vm = ViewModel as VideoViewModel;
-            if (vm is not null)
+            using (new DisposableToken<VideoView>(this,
+                x => _isAppUpdatingSlider = true,
+                x => _isAppUpdatingSlider = false))
             {
-                vm.Position = position;
+                ProgressSlider.SetCurrentValue(Slider.ValueProperty, position.TotalSeconds);
+
+                var vm = ViewModel as VideoViewModel;
+                if (vm is not null)
+                {
+                    vm.Position = position;
+                }
             }
         }
 
@@ -131,15 +133,16 @@
         {
             _positionUpdateDispatcherTimer.Stop();
 
-            _isUserUpdatingSlider = true;
-
-            var vm = ViewModel as VideoViewModel;
-            if (vm is not null)
+            using (new DisposableToken<VideoView>(this,
+                x => _isUserUpdatingSlider = true,
+                x => _isUserUpdatingSlider = false))
             {
-                vm.Position = TimeSpan.FromSeconds(ProgressSlider.Value);
+                var vm = ViewModel as VideoViewModel;
+                if (vm is not null)
+                {
+                    vm.Position = TimeSpan.FromSeconds(ProgressSlider.Value);
+                }
             }
-
-            _isUserUpdatingSlider = false;
         }
 
         private void OnDragStarted(object sender, DragStartedEventArgs e)
