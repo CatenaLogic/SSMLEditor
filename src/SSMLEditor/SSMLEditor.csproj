@@ -67,7 +67,7 @@
     <PackageReference Include="Orc.SelectionManagement" Version="4.1.0" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="4.1.0" />
     <PackageReference Include="Orc.Wizard" Version="4.6.0" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="6.4.3" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
