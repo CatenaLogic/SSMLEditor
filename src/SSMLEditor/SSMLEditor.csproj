@@ -35,7 +35,7 @@
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
-    <PackageReference Include="Catel.MVVM" Version="5.12.19" />
+    <PackageReference Include="Catel.MVVM" Version="5.12.20" />
     <PackageReference Include="Catel.Fody" Version="4.7.0" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
