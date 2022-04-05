@@ -124,18 +124,19 @@
 
             using (var synthesizer = new SpeechSynthesizer(config, null))
             {
-                var result = await synthesizer.SpeakSsmlAsync(ssml);
-
-                if (result.Reason == ResultReason.Canceled)
+                using (var result = await synthesizer.SpeakSsmlAsync(ssml))
                 {
-                    throw Log.ErrorAndCreateException<SSMLEditorException>($"Failed to convert text to speech");
+                    if (result.Reason == ResultReason.Canceled)
+                    {
+                        throw Log.ErrorAndCreateException<SSMLEditorException>($"Failed to convert text to speech");
+                    }
+
+                    var memoryStream = new MemoryStream();
+
+                    await memoryStream.WriteAsync(result.AudioData);
+
+                    return memoryStream;
                 }
-
-                var memoryStream = new MemoryStream();
-
-                await memoryStream.WriteAsync(result.AudioData);
-
-                return memoryStream;
             }
         }
     }
