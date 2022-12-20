@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Wizards.AddProvider.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Catel;
@@ -14,7 +15,7 @@
             ITextToSpeechProviderService textToSpeechProviderService)
             : base(wizardPage)
         {
-            Argument.IsNotNull(() => textToSpeechProviderService);
+            ArgumentNullException.ThrowIfNull(textToSpeechProviderService);
 
             Providers = textToSpeechProviderService.GetAvailableProviders().ToList();
             SelectedProvider = Providers.FirstOrDefault();

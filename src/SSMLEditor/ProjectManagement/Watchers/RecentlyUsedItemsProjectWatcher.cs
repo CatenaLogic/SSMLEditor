@@ -14,7 +14,7 @@
         public RecentlyUsedItemsProjectWatcher(IProjectManager projectManager, IRecentlyUsedItemsService recentlyUsedItemsService)
             : base(projectManager)
         {
-            Argument.IsNotNull(() => recentlyUsedItemsService);
+            ArgumentNullException.ThrowIfNull(recentlyUsedItemsService);
 
             _recentlyUsedItemsService = recentlyUsedItemsService;
         }

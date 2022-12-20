@@ -8,6 +8,7 @@
     using Orc.ProjectManagement;
     using Orchestra;
     using Services;
+    using System;
 
     public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase
     {
@@ -16,8 +17,8 @@
 
         public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IPleaseWaitService pleaseWaitService)
         {
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(projectManager);
+            ArgumentNullException.ThrowIfNull(pleaseWaitService);
 
             _projectManager = projectManager;
             _pleaseWaitService = pleaseWaitService;

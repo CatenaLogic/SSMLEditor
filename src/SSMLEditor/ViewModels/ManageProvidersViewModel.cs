@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Catel;
@@ -21,9 +22,9 @@
         public ManageProvidersViewModel(ITextToSpeechProviderService textToSpeechProviderService,
             IWizardService wizardService, ITypeFactory typeFactory)
         {
-            Argument.IsNotNull(() => textToSpeechProviderService);
-            Argument.IsNotNull(() => wizardService);
-            Argument.IsNotNull(() => typeFactory);
+            ArgumentNullException.ThrowIfNull(textToSpeechProviderService);
+            ArgumentNullException.ThrowIfNull(wizardService);
+            ArgumentNullException.ThrowIfNull(typeFactory);
 
             _textToSpeechProviderService = textToSpeechProviderService;
             _wizardService = wizardService;

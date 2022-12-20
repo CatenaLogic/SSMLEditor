@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.ProjectManagement
 {
+    using System;
     using System.IO;
     using System.Threading.Tasks;
     using Catel;
@@ -17,8 +18,8 @@
 
         public ProjectWriter(IFileService fileService, IDirectoryService directoryService)
         {
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => directoryService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(directoryService);
 
             _fileService = fileService;
             _directoryService = directoryService;

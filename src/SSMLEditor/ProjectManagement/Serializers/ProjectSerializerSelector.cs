@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.ProjectManagement
 {
+    using System;
     using Catel;
     using Catel.IoC;
     using Orc.ProjectManagement;
@@ -10,7 +11,7 @@
 
         public ProjectSerializerSelector(ITypeFactory typeFactory)
         {
-            Argument.IsNotNull(() => typeFactory);
+            ArgumentNullException.ThrowIfNull(typeFactory);
 
             _typeFactory = typeFactory;
         }

@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Services
 {
+    using System;
     using Catel;
     using Catel.Reflection;
     using Orc.ProjectManagement;
@@ -12,7 +13,7 @@
 
         public MainWindowTitleService(IProjectManager projectManager)
         {
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _projectManager = projectManager;
 

@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.ProjectManagement
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Orc.ProjectManagement;
@@ -12,7 +13,7 @@
         public MainWindowTitleProjectWatcher(IProjectManager projectManager, IMainWindowTitleService mainWindowTitleService)
             : base(projectManager)
         {
-            Argument.IsNotNull(() => mainWindowTitleService);
+            ArgumentNullException.ThrowIfNull(mainWindowTitleService);
 
             _mainWindowTitleService = mainWindowTitleService;
         }

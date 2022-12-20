@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Logging;
@@ -19,8 +20,8 @@
             IWizardService wizardService)
             : base(Commands.Providers.Manage, commandManager)
         {
-            Argument.IsNotNull(() => uiVisualizerService);
-            Argument.IsNotNull(() => wizardService);
+            ArgumentNullException.ThrowIfNull(uiVisualizerService);
+            ArgumentNullException.ThrowIfNull(wizardService);
 
             _uiVisualizerService = uiVisualizerService;
             _wizardService = wizardService;

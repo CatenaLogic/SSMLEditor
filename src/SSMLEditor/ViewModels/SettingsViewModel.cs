@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Catel;
@@ -19,10 +20,10 @@
         public SettingsViewModel(IConfigurationService configurationService, IManageAppDataService manageAppDataService, 
             IUpdateService updateService, IOpenFileService openFileService)
         {
-            Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => manageAppDataService);
-            Argument.IsNotNull(() => updateService);
-            Argument.IsNotNull(() => openFileService);
+            ArgumentNullException.ThrowIfNull(configurationService);
+            ArgumentNullException.ThrowIfNull(manageAppDataService);
+            ArgumentNullException.ThrowIfNull(updateService);
+            ArgumentNullException.ThrowIfNull(openFileService);
 
             _configurationService = configurationService;
             _manageAppDataService = manageAppDataService;

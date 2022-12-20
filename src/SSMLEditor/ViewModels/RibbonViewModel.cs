@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -24,10 +25,10 @@
         public RibbonViewModel(IUIVisualizerService uiVisualizerService, IProjectManager projectManager,
             ISelectionManager<ITextToSpeechProvider> textToSpeechProviderSelectionManager, ITextToSpeechProviderService textToSpeechProviderService)
         {
-            Argument.IsNotNull(() => uiVisualizerService);
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => textToSpeechProviderSelectionManager);
-            Argument.IsNotNull(() => textToSpeechProviderSelectionManager);
+            ArgumentNullException.ThrowIfNull(uiVisualizerService);
+            ArgumentNullException.ThrowIfNull(projectManager);
+            ArgumentNullException.ThrowIfNull(textToSpeechProviderSelectionManager);
+            ArgumentNullException.ThrowIfNull(textToSpeechProviderSelectionManager);
 
             _uiVisualizerService = uiVisualizerService;
             _projectManager = projectManager;

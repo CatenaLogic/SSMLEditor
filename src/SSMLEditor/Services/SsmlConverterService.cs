@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Services
 {
+    using System;
     using System.Text;
     using System.Windows.Documents;
     using Catel;
@@ -8,7 +9,7 @@
     {
         public string ConvertToSsml(FlowDocument flowDocument)
         {
-            Argument.IsNotNull(() => flowDocument);
+            ArgumentNullException.ThrowIfNull(flowDocument);
 
             var stringBuilder = new StringBuilder();
 

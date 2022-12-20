@@ -28,11 +28,11 @@
             IFileService fileService, IMessageMediator messageMediator, INotificationService notificationService)
             : base(commandName, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => ttsProviderSelectionManager);
-            Argument.IsNotNull(() => pleaseWaitService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => messageMediator);
-            Argument.IsNotNull(() => notificationService);
+            ArgumentNullException.ThrowIfNull(ttsProviderSelectionManager);
+            ArgumentNullException.ThrowIfNull(pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(messageMediator);
+            ArgumentNullException.ThrowIfNull(notificationService);
 
             _ttsProviderSelectionManager = ttsProviderSelectionManager;
             _pleaseWaitService = pleaseWaitService;

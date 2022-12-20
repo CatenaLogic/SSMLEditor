@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.ProjectManagement
 {
+    using System;
     using System.IO;
     using System.Threading.Tasks;
     using Catel;
@@ -18,8 +19,8 @@
 
         public ProjectReader(IFileService fileService, INotificationService notificationService)
         {
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => notificationService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(notificationService);
 
             _fileService = fileService;
             _notificationService = notificationService;

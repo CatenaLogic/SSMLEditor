@@ -21,9 +21,9 @@
             IFileService fileService, IPleaseWaitService pleaseWaitService)
             : base(Commands.Project.Open, commandManager, projectManager)
         {
-            Argument.IsNotNull(() => openFileService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(openFileService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(pleaseWaitService);
 
             _openFileService = openFileService;
             _fileService = fileService;

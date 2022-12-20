@@ -20,10 +20,10 @@
         public RecentlyUsedItemsViewModel(IRecentlyUsedItemsService recentlyUsedItemsService, IFileService fileService, 
             IMessageService messageService, IProcessService processService)
         {
-            Argument.IsNotNull(() => recentlyUsedItemsService);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => messageService);
-            Argument.IsNotNull(() => processService);
+            ArgumentNullException.ThrowIfNull(recentlyUsedItemsService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(messageService);
+            ArgumentNullException.ThrowIfNull(processService);
 
             _recentlyUsedItemsService = recentlyUsedItemsService;
             _fileService = fileService;

@@ -12,7 +12,7 @@
 
         public TextMarker(TextMarkerService service, int startOffset, int length)
         {
-            Argument.IsNotNull(() => service);
+            ArgumentNullException.ThrowIfNull(service);
 
             _service = service;
             StartOffset = startOffset;

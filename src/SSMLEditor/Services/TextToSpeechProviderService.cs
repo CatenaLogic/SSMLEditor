@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -21,8 +22,8 @@
 
         public TextToSpeechProviderService(IFileService fileService, IAppDataService appDataService)
         {
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => appDataService);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(appDataService);
 
             _fileService = fileService;
             _appDataService = appDataService;

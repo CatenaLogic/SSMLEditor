@@ -17,9 +17,9 @@
 
         public EditorViewModel(Language language, IProjectManager projectManager, ISsmlConverterService ssmlConverterService)
         {
-            Argument.IsNotNull(() => language);
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => ssmlConverterService);
+            ArgumentNullException.ThrowIfNull(language);
+            ArgumentNullException.ThrowIfNull(projectManager);
+            ArgumentNullException.ThrowIfNull(ssmlConverterService);
 
             Language = language;
             _projectManager = projectManager;

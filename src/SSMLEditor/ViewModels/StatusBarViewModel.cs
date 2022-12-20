@@ -19,9 +19,9 @@
 
         public StatusBarViewModel(IProjectManager projectManager, IConfigurationService configurationService, IUpdateService updateService)
         {
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => configurationService);
-            Argument.IsNotNull(() => updateService);
+            ArgumentNullException.ThrowIfNull(projectManager);
+            ArgumentNullException.ThrowIfNull(configurationService);
+            ArgumentNullException.ThrowIfNull(updateService);
 
             _projectManager = projectManager;
             _configurationService = configurationService;

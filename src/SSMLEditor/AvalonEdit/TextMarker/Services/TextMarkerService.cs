@@ -18,7 +18,7 @@
 
         public TextMarkerService(TextDocument document)
         {
-            Argument.IsNotNull(() => document);
+            ArgumentNullException.ThrowIfNull(document);
 
             _document = document;
             _markers = new TextSegmentCollection<TextMarker>(document);
@@ -63,7 +63,7 @@
 
         public void RemoveAll(Predicate<ITextMarker> predicate)
         {
-            Argument.IsNotNull(() => predicate);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             if (_markers is not null)
             {
@@ -79,7 +79,7 @@
 
         public void Remove(ITextMarker marker)
         {
-            Argument.IsNotNull(() => marker);
+            ArgumentNullException.ThrowIfNull(marker);
 
             var m = marker as TextMarker;
 
@@ -161,8 +161,8 @@
 
         public void Draw(TextView textView, DrawingContext drawingContext)
         {
-            Argument.IsNotNull(() => textView);
-            Argument.IsNotNull(() => drawingContext);
+            ArgumentNullException.ThrowIfNull(textView);
+            ArgumentNullException.ThrowIfNull(drawingContext);
 
             if (_markers is null || !textView.VisualLinesValid)
             {

@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Services
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Logging;
@@ -14,8 +15,8 @@
 
         public InitialProjectLocationService(ICommandLineService commandLineService, ICommandLineParser commandLineParser)
         {
-            Argument.IsNotNull(() => commandLineService);
-            Argument.IsNotNull(() => commandLineParser);
+            ArgumentNullException.ThrowIfNull(commandLineService);
+            ArgumentNullException.ThrowIfNull(commandLineParser);
 
             _commandLineService = commandLineService;
             _commandLineParser = commandLineParser;

@@ -17,8 +17,8 @@
 
         public EditorsViewModel(ISelectionManager<Language> languageSelectionManager, IProjectManager projectManager)
         {
-            Argument.IsNotNull(() => languageSelectionManager);
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(languageSelectionManager);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _languageSelectionManager = languageSelectionManager;
             _projectManager = projectManager;

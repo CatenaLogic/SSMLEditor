@@ -30,8 +30,8 @@
             });
 
 #if DEBUG
-            SubscriptionKey = "";
-            ServiceRegion = "";
+            SubscriptionKey = string.Empty;
+            ServiceRegion = string.Empty;
 #endif
 
             Name = "Azure Cognitive Services";

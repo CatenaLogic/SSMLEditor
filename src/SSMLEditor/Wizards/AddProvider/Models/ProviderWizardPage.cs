@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Wizards.AddProvider
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -12,7 +13,7 @@
     {
         public ProviderWizardPage(ITextToSpeechProviderService textToSpeechProviderService)
         {
-            Argument.IsNotNull(() => textToSpeechProviderService);
+            ArgumentNullException.ThrowIfNull(textToSpeechProviderService);
 
             Providers = textToSpeechProviderService.GetAvailableProviders().ToList();
             SelectedProvider = Providers.FirstOrDefault();

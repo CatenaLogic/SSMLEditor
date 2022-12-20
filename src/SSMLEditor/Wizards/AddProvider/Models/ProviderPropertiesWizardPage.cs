@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Wizards.AddProvider
 {
+    using System;
     using System.Collections.Generic;
     using Catel;
     using Orc.Wizard;
@@ -10,7 +11,7 @@
     {
         public ProviderPropertiesWizardPage(ITextToSpeechProviderService textToSpeechProviderService)
         {
-            Argument.IsNotNull(() => textToSpeechProviderService);
+            ArgumentNullException.ThrowIfNull(textToSpeechProviderService);
 
             Title = "Properties";
             Description = "Update the provider properties";

@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.MVVM;
@@ -13,7 +14,7 @@
         protected ProjectCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager)
             : base(commandName, commandManager)
         {
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _commandManager = commandManager;
             _projectManager = projectManager;

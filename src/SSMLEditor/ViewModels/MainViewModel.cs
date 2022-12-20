@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.ViewModels
 {
+    using System;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Fody;
@@ -13,7 +14,7 @@
 
         public MainViewModel(IProjectManager projectManager)
         {
-            Argument.IsNotNull(() => projectManager);
+            ArgumentNullException.ThrowIfNull(projectManager);
 
             _projectManager = projectManager;
         }

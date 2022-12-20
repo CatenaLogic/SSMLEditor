@@ -35,9 +35,9 @@
         #region Constructors
         public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IPleaseWaitService pleaseWaitService)
         {
-            Argument.IsNotNull(() => serviceLocator);
-            Argument.IsNotNull(() => commandManager);
-            Argument.IsNotNull(() => pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(serviceLocator);
+            ArgumentNullException.ThrowIfNull(commandManager);
+            ArgumentNullException.ThrowIfNull(pleaseWaitService);
 
             _serviceLocator = serviceLocator;
             _commandManager = commandManager;
@@ -160,9 +160,7 @@
                 var projectManager = _serviceLocator.ResolveType<IProjectManager>();
                 if (projectManager is null)
                 {
-                    const string error = "Failed to resolve project manager";
-                    Log.Error(error);
-                    throw new Exception(error);
+                    throw Log.ErrorAndCreateException<Exception>("Failed to resolve project manager");
                 }
 
                 await projectManager.InitializeAsync();

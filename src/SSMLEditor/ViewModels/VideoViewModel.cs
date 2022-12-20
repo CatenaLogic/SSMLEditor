@@ -26,10 +26,10 @@
         public VideoViewModel(IProjectManager projectManager, ISelectionManager<Language> languageSelectionManager,
             IFileService fileService, IMessageMediator messageMediator)
         {
-            Argument.IsNotNull(() => projectManager);
-            Argument.IsNotNull(() => languageSelectionManager);
-            Argument.IsNotNull(() => fileService);
-            Argument.IsNotNull(() => messageMediator);
+            ArgumentNullException.ThrowIfNull(projectManager);
+            ArgumentNullException.ThrowIfNull(languageSelectionManager);
+            ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(messageMediator);
 
             _projectManager = projectManager;
             _languageSelectionManager = languageSelectionManager;
