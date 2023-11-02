@@ -52,7 +52,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Build" Version="17.7.2" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.7.2" />
-    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.32.1" />
+    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.33.0" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
