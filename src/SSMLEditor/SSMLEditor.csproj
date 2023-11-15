@@ -65,7 +65,7 @@
     <PackageReference Include="Orc.Squirrel.Xaml" Version="4.2.0" />
     <PackageReference Include="Orc.Wizard" Version="4.8.3" />
     <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="6.8.1" />
-    <PackageReference Include="System.Security.Permissions" Version="6.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" />
