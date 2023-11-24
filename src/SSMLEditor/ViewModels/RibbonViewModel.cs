@@ -76,7 +76,7 @@
         {
             Project = (Project)e.NewProject;
 
-            return TaskHelper.Completed;
+            return Task.CompletedTask;
         }
 
         private void OnTextToSpeechProviderSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)

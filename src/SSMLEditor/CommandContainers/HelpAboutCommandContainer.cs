@@ -10,7 +10,7 @@
         {
         }
 
-        protected override Task ExecuteAsync(object parameter)
+        public override Task ExecuteAsync(object parameter)
         {
             return base.ExecuteAsync(parameter);
         }

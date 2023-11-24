@@ -45,7 +45,7 @@
             await base.InitializeAsync();
 
             IsUpdateSystemAvailable = _updateService.IsUpdateSystemAvailable;
-            CheckForUpdates = _updateService.CheckForUpdates;
+            CheckForUpdates = _updateService.IsCheckForUpdatesEnabled;
             AvailableUpdateChannels = new List<UpdateChannel>(_updateService.AvailableChannels);
             UpdateChannel = _updateService.CurrentChannel;
 
@@ -55,7 +55,7 @@
 
         protected override async Task<bool> SaveAsync()
         {
-            _updateService.CheckForUpdates = CheckForUpdates;
+            _updateService.IsCheckForUpdatesEnabled = CheckForUpdates;
             _updateService.CurrentChannel = UpdateChannel;
 
             //_configurationService.SetRoamingValue(Configuration.CustomEditor, CustomEditor);

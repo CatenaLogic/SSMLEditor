@@ -18,27 +18,28 @@
     using SSMLEditor.Views;
     using Orc.SelectionManagement;
     using SSMLEditor.Providers;
+    using System.Collections.Generic;
 
     public class ApplicationInitializationService : ApplicationInitializationServiceBase
     {
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         private readonly ICommandManager _commandManager;
-        private readonly IPleaseWaitService _pleaseWaitService;
+        private readonly IBusyIndicatorService _busyIndicatorService;
 
         private readonly IServiceLocator _serviceLocator;
         #endregion
 
         #region Constructors
-        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IPleaseWaitService pleaseWaitService)
+        public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IBusyIndicatorService busyIndicatorService)
         {
             ArgumentNullException.ThrowIfNull(serviceLocator);
             ArgumentNullException.ThrowIfNull(commandManager);
-            ArgumentNullException.ThrowIfNull(pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
 
             _serviceLocator = serviceLocator;
             _commandManager = commandManager;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
         }
         #endregion
 
@@ -50,10 +51,13 @@
             InitializeCommands();
             InitializeWatchers();
 
-            await TaskHelper.RunAndWaitAsync(new Func<Task>[] {
-                ImprovePerformanceAsync,
-                CheckForUpdatesAsync
-            });
+            var tasks = new List<Task>
+            {
+                Task.Run(ImprovePerformanceAsync),
+                Task.Run(CheckForUpdatesAsync)
+            };
+
+            await Task.WhenAll(tasks);
 
             var textToSpeechProviderService = _serviceLocator.ResolveType<ITextToSpeechProviderService>();
             await textToSpeechProviderService.LoadAsync();
@@ -140,7 +144,7 @@
             Log.Info("Checking for updates");
 
             var updateService = _serviceLocator.ResolveType<IUpdateService>();
-            updateService.Initialize(SSMLEditor.Settings.Application.AutomaticUpdates.AvailableChannels, 
+            await updateService.InitializeAsync(SSMLEditor.Settings.Application.AutomaticUpdates.AvailableChannels, 
                 SSMLEditor.Settings.Application.AutomaticUpdates.DefaultChannel,
                 SSMLEditor.Settings.Application.AutomaticUpdates.CheckForUpdatesDefaultValue);
 
@@ -152,7 +156,7 @@
 
         protected async Task LoadProjectAsync()
         {
-            using (_pleaseWaitService.PushInScope())
+            using (_busyIndicatorService.PushInScope())
             {
                 var projectManager = _serviceLocator.ResolveType<IProjectManager>();
                 if (projectManager is null)

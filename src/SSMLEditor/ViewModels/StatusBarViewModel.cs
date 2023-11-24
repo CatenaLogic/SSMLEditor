@@ -69,7 +69,7 @@
         {
             var updateInfo = string.Empty;
 
-            var checkForUpdates = _updateService.CheckForUpdates;
+            var checkForUpdates = _updateService.IsCheckForUpdatesEnabled;
             if (!_updateService.IsUpdateSystemAvailable || !checkForUpdates)
             {
                 updateInfo = "Automatic updates are disabled";
@@ -88,10 +88,10 @@
             var activeProject = args.NewProject;
             if (activeProject is null)
             {
-                return TaskHelper.Completed;
+                return Task.CompletedTask;
             }
 
-            return TaskHelper.Completed;
+            return Task.CompletedTask;
         }
     }
 }

@@ -10,20 +10,20 @@
     public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase
     {
         private readonly IProjectManager _projectManager;
-        private readonly IPleaseWaitService _pleaseWaitService;
+        private readonly IBusyIndicatorService _busyIndicatorService;
 
-        public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IPleaseWaitService pleaseWaitService)
+        public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService)
         {
             ArgumentNullException.ThrowIfNull(projectManager);
-            ArgumentNullException.ThrowIfNull(pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
 
             _projectManager = projectManager;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
         }
 
         protected override async Task<bool> ClosingAsync()
         {
-            using (_pleaseWaitService.PushInScope())
+            using (_busyIndicatorService.PushInScope())
             {
                 var projects = _projectManager.Projects.OfType<Project>().OrderByDescending(x => x.IsDirty).ToArray();
 
@@ -37,7 +37,7 @@
                         return false;
                     }
 
-                    _pleaseWaitService.UpdateStatus(i, projects.Length);
+                    _busyIndicatorService.UpdateStatus(i, projects.Length);
                 }
             }
 

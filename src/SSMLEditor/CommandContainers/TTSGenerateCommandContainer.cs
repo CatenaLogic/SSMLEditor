@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using Catel.Messaging;
     using Catel.MVVM;
+    using Catel.Services;
     using Orc.FileSystem;
     using Orc.Notifications;
     using Orc.ProjectManagement;
@@ -15,14 +16,14 @@
 
         public TTSGenerateCommandContainer(ICommandManager commandManager, IProjectManager projectManager,
             ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, ISelectionManager<Language> languageSelectionManager,
-            IPleaseWaitService pleaseWaitService, IFileService fileService, IMessageMediator messageMediator,
+            IBusyIndicatorService busyIndicatorService, IFileService fileService, IMessageMediator messageMediator,
             INotificationService notificationService)
-            : base(Commands.TTS.Generate, commandManager, projectManager, ttsProviderSelectionManager, pleaseWaitService, fileService, messageMediator, notificationService)
+            : base(Commands.TTS.Generate, commandManager, projectManager, ttsProviderSelectionManager, busyIndicatorService, fileService, messageMediator, notificationService)
         {
             _languageSelectionManager = languageSelectionManager;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             var project = _projectManager.GetActiveProject<Project>();
             if (project is null)

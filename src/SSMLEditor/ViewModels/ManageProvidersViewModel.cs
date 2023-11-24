@@ -47,7 +47,7 @@
         private async Task OnAddExecuteAsync()
         {
             var wizard = _typeFactory.CreateInstance<AddProviderWizard>();
-            if (await _wizardService.ShowWizardAsync(wizard) ?? false)
+            if ((await _wizardService.ShowWizardAsync(wizard)).DialogResult ?? false)
             {
                 Providers.Add(wizard.Provider);
             }

@@ -21,7 +21,9 @@
 
             var items = new List<TInterface>();
 
+#pragma warning disable IDISP001 // Dispose created
             var typeFactory = this.GetTypeFactory();
+#pragma warning restore IDISP001 // Dispose created
 
             var types = TypeCache.GetTypes(x => x.ImplementsInterfaceEx<TInterface>() && !x.IsAbstractEx());
 

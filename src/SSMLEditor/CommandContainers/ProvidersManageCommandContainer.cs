@@ -26,7 +26,7 @@
             _wizardService = wizardService;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             await _uiVisualizerService.ShowDialogAsync<ManageProvidersViewModel>();
         }

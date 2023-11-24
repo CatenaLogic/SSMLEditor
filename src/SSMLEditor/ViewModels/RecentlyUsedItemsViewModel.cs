@@ -7,6 +7,7 @@
     using Catel.MVVM;
     using Catel.Services;
     using Orc.FileSystem;
+    using Orchestra;
     using Orchestra.Services;
 
     public class RecentlyUsedItemsViewModel : ViewModelBase

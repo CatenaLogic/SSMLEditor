@@ -15,7 +15,7 @@
     public abstract class TTSCommandContainerBase : ProjectCommandContainerBase
     {
         protected readonly ISelectionManager<ITextToSpeechProvider> _ttsProviderSelectionManager;
-        protected readonly IPleaseWaitService _pleaseWaitService;
+        protected readonly IBusyIndicatorService _busyIndicatorService;
         protected readonly IFileService _fileService;
         protected readonly IMessageMediator _messageMediator;
         protected readonly INotificationService _notificationService;
@@ -23,18 +23,18 @@
         private bool _hasSelectedItem;
 
         protected TTSCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager,
-            ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, IPleaseWaitService pleaseWaitService, 
+            ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, IBusyIndicatorService busyIndicatorService, 
             IFileService fileService, IMessageMediator messageMediator, INotificationService notificationService)
             : base(commandName, commandManager, projectManager)
         {
             ArgumentNullException.ThrowIfNull(ttsProviderSelectionManager);
-            ArgumentNullException.ThrowIfNull(pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
             ArgumentNullException.ThrowIfNull(fileService);
             ArgumentNullException.ThrowIfNull(messageMediator);
             ArgumentNullException.ThrowIfNull(notificationService);
 
             _ttsProviderSelectionManager = ttsProviderSelectionManager;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
             _fileService = fileService;
             _messageMediator = messageMediator;
             _notificationService = notificationService;
@@ -51,7 +51,7 @@
             InvalidateCommand();
         }
 
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (!base.CanExecute(parameter))
             {
@@ -61,7 +61,7 @@
             return _hasSelectedItem;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             await _projectManager.CloseAsync();
         }
@@ -76,7 +76,7 @@
             var ssmlContent = language.Content;
             if (!string.IsNullOrWhiteSpace(ssmlContent))
             {
-                using (_pleaseWaitService.PushInScope())
+                using (_busyIndicatorService.PushInScope())
                 {
                     _messageMediator.SendMessage(new TTSGenerating(language));
 

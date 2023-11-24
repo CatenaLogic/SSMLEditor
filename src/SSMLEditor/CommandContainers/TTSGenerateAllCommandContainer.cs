@@ -15,14 +15,14 @@
     {
         public TTSGenerateAllCommandContainer(ICommandManager commandManager, IProjectManager projectManager,
             ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager,
-            IPleaseWaitService pleaseWaitService, IFileService fileService, IMessageMediator messageMediator,
+            IBusyIndicatorService busyIndicatorService, IFileService fileService, IMessageMediator messageMediator,
             INotificationService notificationService)
             : base(Commands.TTS.GenerateAll, commandManager, projectManager, ttsProviderSelectionManager,
-                  pleaseWaitService, fileService, messageMediator, notificationService)
+                  busyIndicatorService, fileService, messageMediator, notificationService)
         {
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             var project = _projectManager.GetActiveProject<Project>();
             if (project is null)
@@ -36,12 +36,12 @@
                 return;
             }
 
-            using (_pleaseWaitService.PushInScope())
+            using (_busyIndicatorService.PushInScope())
             {
                 var languages = project.ProjectRoot.Languages.ToList();
                 for (var i = 0; i < languages.Count; i++)
                 {
-                    _pleaseWaitService.UpdateStatus(i + 1, languages.Count);
+                    _busyIndicatorService.UpdateStatus(i + 1, languages.Count);
 
                     var language = languages[i];
 

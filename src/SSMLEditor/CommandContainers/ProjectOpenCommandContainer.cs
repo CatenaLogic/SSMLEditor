@@ -14,27 +14,27 @@
 
         private readonly IFileService _fileService;
         private readonly IOpenFileService _openFileService;
-        private readonly IPleaseWaitService _pleaseWaitService;
+        private readonly IBusyIndicatorService _busyIndicatorService;
 
         public ProjectOpenCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IOpenFileService openFileService,
-            IFileService fileService, IPleaseWaitService pleaseWaitService)
+            IFileService fileService, IBusyIndicatorService busyIndicatorService)
             : base(Commands.Project.Open, commandManager, projectManager)
         {
             ArgumentNullException.ThrowIfNull(openFileService);
             ArgumentNullException.ThrowIfNull(fileService);
-            ArgumentNullException.ThrowIfNull(pleaseWaitService);
+            ArgumentNullException.ThrowIfNull(busyIndicatorService);
 
             _openFileService = openFileService;
             _fileService = fileService;
-            _pleaseWaitService = pleaseWaitService;
+            _busyIndicatorService = busyIndicatorService;
         }
 
-        protected override bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             return true;
         }
 
-        protected override async Task ExecuteAsync(object parameter)
+        public override async Task ExecuteAsync(object parameter)
         {
             try
             {
@@ -57,7 +57,7 @@
 
                 if (!string.IsNullOrWhiteSpace(location))
                 {
-                    using (_pleaseWaitService.PushInScope())
+                    using (_busyIndicatorService.PushInScope())
                     {
                         await _projectManager.LoadAsync(location);
                     }
