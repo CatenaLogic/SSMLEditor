@@ -1,6 +1,6 @@
-<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows7.0</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows7.0</TargetFrameworks>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <SelfContained>true</SelfContained>
@@ -35,7 +35,7 @@
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-    <PackageReference Include="Catel.MVVM" Version="5.12.22" />
+    <PackageReference Include="Catel.MVVM" Version="6.0.0-alpha1311" />
     <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
@@ -56,16 +56,15 @@
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Orc.CommandLine" Version="4.2.0" />
-    <PackageReference Include="Orc.Controls" Version="4.8.0" />
-    <PackageReference Include="Orc.LogViewer" Version="4.3.0" />
-    <PackageReference Include="Orc.Notifications" Version="4.3.1" />
-    <PackageReference Include="Orc.ProjectManagement" Version="4.4.0" />
-    <PackageReference Include="Orc.SelectionManagement" Version="4.2.1" />
-    <PackageReference Include="Orc.Squirrel.Xaml" Version="4.2.0" />
-    <PackageReference Include="Orc.Wizard" Version="4.8.3" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="6.8.1" />
-    <PackageReference Include="System.Security.Permissions" Version="6.0.0" />
+    <PackageReference Include="Orc.CommandLine" Version="5.0.0-alpha0291" />
+    <PackageReference Include="Orc.Controls" Version="5.0.0-alpha0482" />
+    <PackageReference Include="Orc.LogViewer" Version="5.0.0-alpha0329" />
+    <PackageReference Include="Orc.Notifications" Version="5.0.0-alpha0420" />
+    <PackageReference Include="Orc.ProjectManagement" Version="5.0.0-alpha0369" />
+    <PackageReference Include="Orc.SelectionManagement" Version="5.0.0-alpha0399" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.0.0-alpha0395" />
+    <PackageReference Include="Orc.Wizard" Version="5.0.0-alpha0458" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.0.0-alpha0430" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" />
