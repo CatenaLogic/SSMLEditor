@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using Catel;
     using Orc.Wizard;
     using SSMLEditor.Providers;
     using SSMLEditor.Services;

@@ -1,10 +1,7 @@
 ﻿namespace SSMLEditor.ViewModels
 {
     using System.Threading.Tasks;
-    using Catel;
-    using Catel.IoC;
     using Catel.MVVM;
-    using Catel.Threading;
     using Orc.ProjectManagement;
     using Orchestra;
     using Orc.Squirrel;

@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Logging;
     using Catel.Messaging;
     using Catel.MVVM;
@@ -12,7 +11,6 @@
     using Orc.ProjectManagement;
     using Orc.SelectionManagement;
     using SSMLEditor.Messaging;
-    using SSMLEditor.Providers;
 
     public class VideoViewModel : ViewModelBase
     {

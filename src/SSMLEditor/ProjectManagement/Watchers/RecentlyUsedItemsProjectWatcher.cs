@@ -2,9 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Catel;
     using Orc.ProjectManagement;
-    using Orchestra.Models;
     using Orchestra.Services;
 
     public class RecentlyUsedItemsProjectWatcher : ProjectWatcherBase

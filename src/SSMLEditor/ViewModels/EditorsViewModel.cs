@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.MVVM;
     using Orc.ProjectManagement;
     using Orc.SelectionManagement;

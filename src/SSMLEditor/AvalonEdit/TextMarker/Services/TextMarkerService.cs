@@ -7,7 +7,6 @@
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Threading;
-    using Catel;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Rendering;
 

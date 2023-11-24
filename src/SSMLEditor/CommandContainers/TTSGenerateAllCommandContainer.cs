@@ -1,9 +1,7 @@
 ﻿namespace SSMLEditor
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Messaging;
     using Catel.MVVM;
     using Catel.Services;
@@ -11,7 +9,6 @@
     using Orc.Notifications;
     using Orc.ProjectManagement;
     using Orc.SelectionManagement;
-    using SSMLEditor.Messaging;
     using SSMLEditor.Providers;
 
     public class TTSGenerateAllCommandContainer : TTSCommandContainerBase

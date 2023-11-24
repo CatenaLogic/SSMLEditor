@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Logging;
     using Catel.MVVM;
     using Catel.Reflection;

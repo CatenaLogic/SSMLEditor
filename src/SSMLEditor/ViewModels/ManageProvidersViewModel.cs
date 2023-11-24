@@ -3,11 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Collections;
     using Catel.IoC;
     using Catel.MVVM;
-    using Catel.Services;
     using Orc.Wizard;
     using SSMLEditor.Providers;
     using SSMLEditor.Services;

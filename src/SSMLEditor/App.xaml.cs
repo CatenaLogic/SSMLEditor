@@ -1,10 +1,7 @@
 ﻿namespace SSMLEditor
 {
-    using System;
     using System.Diagnostics;
     using System.Windows;
-    using Catel.ApiCop;
-    using Catel.ApiCop.Listeners;
     using Catel.IoC;
     using Catel.Logging;
     using Orchestra.Services;

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Catel;
     using Orc.Wizard;
     using SSMLEditor.Providers;
     using SSMLEditor.Services;

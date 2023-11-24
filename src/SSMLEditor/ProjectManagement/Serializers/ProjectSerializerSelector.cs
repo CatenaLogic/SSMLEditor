@@ -1,7 +1,6 @@
 ﻿namespace SSMLEditor.ProjectManagement
 {
     using System;
-    using Catel;
     using Catel.IoC;
     using Orc.ProjectManagement;
 

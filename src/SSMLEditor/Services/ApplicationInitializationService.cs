@@ -4,15 +4,12 @@
     using System.Threading.Tasks;
     using System.Windows.Media;
     using Catel;
-    using Catel.Data;
     using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
     using Catel.Services;
-    using Catel.Threading;
     using Catel.Windows.Controls;
     using Orc.ProjectManagement;
-    using Orchestra.Markup;
     using Orchestra.Services;
     using ProjectManagement;
     using Orc.Squirrel;

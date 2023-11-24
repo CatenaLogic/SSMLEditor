@@ -1,7 +1,6 @@
 ﻿namespace SSMLEditor
 {
     using System;
-    using System.Collections.Generic;
     using Orc.ProjectManagement;
 
     public sealed class Project : ProjectBase, IProject, IEquatable<Project>

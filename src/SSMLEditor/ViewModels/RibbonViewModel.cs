@@ -4,11 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.MVVM;
     using Catel.Reflection;
     using Catel.Services;
-    using Catel.Threading;
     using Orc.ProjectManagement;
     using Orc.SelectionManagement;
     using Orchestra.ViewModels;

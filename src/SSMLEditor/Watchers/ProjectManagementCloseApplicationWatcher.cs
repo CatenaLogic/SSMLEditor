@@ -2,12 +2,9 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Services;
-    using Orchestra.Models;
     using Orc.ProjectManagement;
     using Orchestra;
-    using Services;
     using System;
 
     public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase

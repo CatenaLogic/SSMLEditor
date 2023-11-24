@@ -2,9 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Catel;
-    using Catel.Fody;
-    using Catel.IoC;
     using Catel.MVVM;
     using Orc.ProjectManagement;
 

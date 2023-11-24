@@ -5,7 +5,6 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Logging;
     using Catel.Services;
     using Newtonsoft.Json;

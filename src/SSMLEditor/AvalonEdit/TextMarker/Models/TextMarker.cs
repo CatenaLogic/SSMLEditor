@@ -3,7 +3,6 @@
     using System;
     using System.Windows;
     using System.Windows.Media;
-    using Catel;
     using ICSharpCode.AvalonEdit.Document;
 
     public sealed class TextMarker : TextSegment, ITextMarker

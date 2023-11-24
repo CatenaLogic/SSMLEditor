@@ -2,7 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Logging;
     using Orc.CommandLine;
 

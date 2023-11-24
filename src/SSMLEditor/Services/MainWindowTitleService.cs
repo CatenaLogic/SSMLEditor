@@ -1,7 +1,6 @@
 ﻿namespace SSMLEditor.Services
 {
     using System;
-    using Catel;
     using Catel.Reflection;
     using Orc.ProjectManagement;
 

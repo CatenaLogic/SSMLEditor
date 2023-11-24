@@ -3,7 +3,6 @@
     using System.Threading.Tasks;
     using Catel.Messaging;
     using Catel.MVVM;
-    using Catel.Services;
     using Orc.FileSystem;
     using Orc.Notifications;
     using Orc.ProjectManagement;

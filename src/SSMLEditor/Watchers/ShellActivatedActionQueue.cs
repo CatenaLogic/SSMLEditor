@@ -1,7 +1,6 @@
 ﻿namespace SSMLEditor
 {
     using System;
-    using Catel;
     using Orchestra;
 
     public class ShellActivatedActionQueue : ApplicationWatcherBase

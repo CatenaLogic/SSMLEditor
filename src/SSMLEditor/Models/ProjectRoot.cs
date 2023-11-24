@@ -1,8 +1,6 @@
 ﻿namespace SSMLEditor
 {
-    using System;
     using System.Collections.Generic;
-    using Orc.ProjectManagement;
 
     public class ProjectRoot
     {

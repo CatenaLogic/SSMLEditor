@@ -2,7 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Messaging;
     using Catel.MVVM;
     using Catel.Services;

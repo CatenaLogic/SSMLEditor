@@ -3,7 +3,6 @@
     using System;
     using System.Text;
     using System.Windows.Documents;
-    using Catel;
 
     public class SsmlConverterService : ISsmlConverterService
     {

@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
-    using Catel;
     using Catel.Logging;
     using Newtonsoft.Json;
     using Orc.FileSystem;
