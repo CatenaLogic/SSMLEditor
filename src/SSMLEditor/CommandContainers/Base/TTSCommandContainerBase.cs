@@ -68,7 +68,7 @@
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await _projectManager.CloseAsync();
+            await _projectManager.CloseActiveProjectAsync();
         }
 
         private void UpdateSelectionState()
