@@ -16,9 +16,10 @@
 
         public TTSGenerateCommandContainer(ICommandManager commandManager, IProjectManager projectManager,
             ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, ISelectionManager<Language> languageSelectionManager,
-            IBusyIndicatorService busyIndicatorService, IFileService fileService, IMessageMediator messageMediator,
-            INotificationService notificationService)
-            : base(Commands.TTS.Generate, commandManager, projectManager, ttsProviderSelectionManager, busyIndicatorService, fileService, messageMediator, notificationService)
+            IBusyIndicatorService busyIndicatorService, IFileService fileService, IDirectoryService directoryService,
+            IMessageMediator messageMediator, INotificationService notificationService)
+            : base(Commands.TTS.Generate, commandManager, projectManager, ttsProviderSelectionManager, busyIndicatorService, 
+                  fileService, directoryService, messageMediator, notificationService)
         {
             _languageSelectionManager = languageSelectionManager;
         }

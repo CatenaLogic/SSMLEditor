@@ -1,6 +1,7 @@
 ﻿namespace SSMLEditor
 {
     using System;
+    using System.IO;
     using System.Threading.Tasks;
     using Catel.Messaging;
     using Catel.MVVM;
@@ -17,6 +18,7 @@
         protected readonly ISelectionManager<ITextToSpeechProvider> _ttsProviderSelectionManager;
         protected readonly IBusyIndicatorService _busyIndicatorService;
         protected readonly IFileService _fileService;
+        private readonly IDirectoryService _directoryService;
         protected readonly IMessageMediator _messageMediator;
         protected readonly INotificationService _notificationService;
 
@@ -24,18 +26,21 @@
 
         protected TTSCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager,
             ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, IBusyIndicatorService busyIndicatorService, 
-            IFileService fileService, IMessageMediator messageMediator, INotificationService notificationService)
+            IFileService fileService, IDirectoryService directoryService, IMessageMediator messageMediator, 
+            INotificationService notificationService)
             : base(commandName, commandManager, projectManager)
         {
             ArgumentNullException.ThrowIfNull(ttsProviderSelectionManager);
             ArgumentNullException.ThrowIfNull(busyIndicatorService);
             ArgumentNullException.ThrowIfNull(fileService);
+            ArgumentNullException.ThrowIfNull(directoryService);
             ArgumentNullException.ThrowIfNull(messageMediator);
             ArgumentNullException.ThrowIfNull(notificationService);
 
             _ttsProviderSelectionManager = ttsProviderSelectionManager;
             _busyIndicatorService = busyIndicatorService;
             _fileService = fileService;
+            _directoryService = directoryService;
             _messageMediator = messageMediator;
             _notificationService = notificationService;
 
@@ -87,6 +92,9 @@
                             stream.Position = 0L;
 
                             var fileName = project.GetFullAudioPath(language);
+
+                            var directory = Path.GetDirectoryName(fileName);
+                            _directoryService.Create(directory);
 
                             using (var fileStream = _fileService.Create(fileName))
                             {

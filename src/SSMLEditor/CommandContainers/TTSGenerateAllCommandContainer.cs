@@ -15,10 +15,10 @@
     {
         public TTSGenerateAllCommandContainer(ICommandManager commandManager, IProjectManager projectManager,
             ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager,
-            IBusyIndicatorService busyIndicatorService, IFileService fileService, IMessageMediator messageMediator,
-            INotificationService notificationService)
+            IBusyIndicatorService busyIndicatorService, IFileService fileService, IDirectoryService directoryService, 
+            IMessageMediator messageMediator, INotificationService notificationService)
             : base(Commands.TTS.GenerateAll, commandManager, projectManager, ttsProviderSelectionManager,
-                  busyIndicatorService, fileService, messageMediator, notificationService)
+                  busyIndicatorService, fileService, directoryService, messageMediator, notificationService)
         {
         }
 
