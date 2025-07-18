@@ -34,10 +34,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-    <PackageReference Include="Catel.MVVM" Version="6.0.7" />
-    <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all">
+    <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+    <PackageReference Include="Catel.MVVM" Version="6.1.4" />
+    <PackageReference Include="Catel.Fody" Version="4.10.0" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
@@ -52,21 +53,21 @@
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Build" Version="17.12.6" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.12.6" />
-    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.43.0" />
+    <PackageReference Include="Microsoft.Build" Version="17.14.8" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.8" />
+    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.45.0" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Orc.CommandLine" Version="5.0.0" />
-    <PackageReference Include="Orc.Controls" Version="5.2.0" />
-    <PackageReference Include="Orc.LogViewer" Version="5.0.0" />
+    <PackageReference Include="Orc.Controls" Version="5.3.1" />
+    <PackageReference Include="Orc.LogViewer" Version="5.1.1" />
     <PackageReference Include="Orc.Notifications" Version="5.1.0" />
     <PackageReference Include="Orc.ProjectManagement" Version="5.1.2" />
     <PackageReference Include="Orc.SelectionManagement" Version="5.1.2" />
-    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.0.0" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.1.1" />
     <PackageReference Include="Orc.Wizard" Version="5.1.1" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.1.0" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.2.2" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" />

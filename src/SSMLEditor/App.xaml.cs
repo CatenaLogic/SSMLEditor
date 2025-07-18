@@ -7,7 +7,8 @@
     using Orchestra.Services;
     using Orchestra.Views;
     using Orc.Squirrel;
-
+	using Velopack;
+	
     public partial class App : Application
     {
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
@@ -16,6 +17,10 @@
 
         public App()
         {
+            // Keep here, even though we have it in module initializer. But in case module
+            // initializer is not called we still want to initialize velopack.
+            VelopackApp.Build().Run();
+
             _stopwatch = new Stopwatch();
             _stopwatch.Start();
         }
@@ -28,7 +33,9 @@
             LogManager.AddDebugListener(true);
 #endif
 
+#pragma warning disable CS0618 // Type or member is obsolete
             await SquirrelHelper.HandleSquirrelAutomaticallyAsync();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             var serviceLocator = ServiceLocator.Default;
             var shellService = serviceLocator.ResolveType<IShellService>();

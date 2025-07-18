@@ -10,6 +10,9 @@ Parameters["RepositoryUrl"] = string.Format("https://github.com/{0}/{1}", GetBui
 Parameters["StartYear"] = "2021";
 Parameters["UseVisualStudioPrerelease"] = "false";
 
+Parameters["SquirrelEnabled"] = "false";
+Parameters["VelopackEnabled"] = "true";
+
 // Note: the rest of the variables should be coming from the build server,
 // see `/deployment/cake/*-variables.cake` for customization options
 // 
@@ -24,9 +27,9 @@ Parameters["UseVisualStudioPrerelease"] = "false";
 // DEFINE COMPONENTS TO BUILD / PACKAGE
 //=======================================================
 
-Tools.Add(string.Format("{0}", GetBuildServerVariable("SolutionName")));
+Tools.Add("SSMLEditor");
 
-TestProjects.Add(string.Format("{0}.Tests", GetBuildServerVariable("SolutionName")));
+TestProjects.Add("SSMLEditor.Tests");
 
 //=======================================================
 // REQUIRED INITIALIZATION, DO NOT CHANGE
