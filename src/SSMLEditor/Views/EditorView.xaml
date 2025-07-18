@@ -5,7 +5,8 @@
                    xmlns:local="clr-namespace:SSMLEditor"
                    xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
                    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
-                   xmlns:orctheming="http://schemas.wildgums.com/orc/theming">
+                   xmlns:orctheming="http://schemas.wildgums.com/orc/theming"
+                   xmlns:xamlbehaviors="http://schemas.microsoft.com/xaml/behaviors">
 
     <orccontrols:StackGrid>
         <Grid.RowDefinitions>
@@ -40,22 +41,20 @@
                 </Grid.RowDefinitions>
 
                 <WrapPanel Orientation="Horizontal">
-                    <orccontrols:DropDownButton ToolTip="Emphasis">
+                    <orccontrols:DropDownButton ToolTip="Emphasis"
+                                                MaxWidth="32">
                         <orccontrols:DropDownButton.Content>
-                            <Viewbox Margin="4">
-                                <Image Source="{orctheming:FontImage {x:Static local:FontAwesome.VolumeUp}, FontFamily=FontAwesome}" />
-                            </Viewbox>
+                            <Image Source="{orctheming:FontImage {x:Static local:FontAwesome.VolumeUp}, FontFamily=FontAwesome}" />
                         </orccontrols:DropDownButton.Content>
                         <orccontrols:DropDownButton.DropDown>
                             <ContextMenu x:Name="SsmlEmphasisContextMenu" />
                         </orccontrols:DropDownButton.DropDown>
                     </orccontrols:DropDownButton>
 
-                    <orccontrols:DropDownButton ToolTip="Break">
+                    <orccontrols:DropDownButton ToolTip="Break"
+                                                MaxWidth="32">
                         <orccontrols:DropDownButton.Content>
-                            <Viewbox Margin="4">
-                                <Image Source="{orctheming:FontImage {x:Static local:FontAwesome.Pause}, FontFamily=FontAwesome}" />
-                            </Viewbox>
+                            <Image Source="{orctheming:FontImage {x:Static local:FontAwesome.Pause}, FontFamily=FontAwesome}" />
                         </orccontrols:DropDownButton.Content>
                         <orccontrols:DropDownButton.DropDown>
                             <ContextMenu x:Name="SsmlBreakContextMenu" />
