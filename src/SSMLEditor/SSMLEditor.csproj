@@ -70,7 +70,7 @@
     <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.2.2" />
   </ItemGroup>
 
-  <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" />
-  <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.mat.props" />
-  <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.tools.props" />
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props')" />
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.mat.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.mat.props')" />
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.tools.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.tools.props')" />
 </Project>
