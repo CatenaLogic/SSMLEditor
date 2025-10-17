@@ -40,7 +40,7 @@
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all">
+    <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -53,9 +53,7 @@
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Build" Version="17.14.8" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.8" />
-    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.45.0" />
+    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.46.0" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
@@ -65,9 +63,9 @@
     <PackageReference Include="Orc.Notifications" Version="5.1.0" />
     <PackageReference Include="Orc.ProjectManagement" Version="5.1.2" />
     <PackageReference Include="Orc.SelectionManagement" Version="5.1.2" />
-    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.1.1" />
+    <PackageReference Include="Orc.Squirrel.Xaml" Version="5.1.2" />
     <PackageReference Include="Orc.Wizard" Version="5.1.1" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.2.2" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="7.2.3" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props')" />
