@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="SSMLEditor.Tests/SSMLEditor.Tests.csproj" />
+    <Project Path="SSMLEditor/SSMLEditor.csproj" />
+  </Folder>
+</Solution>
