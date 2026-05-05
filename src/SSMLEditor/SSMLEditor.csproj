@@ -55,7 +55,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.49.1" />
     <PackageReference Include="Orc.CommandLine" Version="5.0.0" />
-    <PackageReference Include="Orc.Controls" Version="5.3.1" />
+    <PackageReference Include="Orc.Controls" Version="5.4.1" />
     <PackageReference Include="Orc.LogViewer" Version="5.1.1" />
     <PackageReference Include="Orc.Notifications" Version="5.1.0" />
     <PackageReference Include="Orc.ProjectManagement" Version="5.1.2" />
