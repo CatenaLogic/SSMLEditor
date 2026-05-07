@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Catel;
 using Catel.Logging;
 using Catel.MVVM;
 using Catel.Services;
@@ -30,6 +31,7 @@ public class ApplicationInitializationService : ApplicationInitializationService
 
     #region Constructors
     public ApplicationInitializationService(IServiceProvider serviceProvider, ICommandManager commandManager, IBusyIndicatorService busyIndicatorService)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(serviceProvider);
         ArgumentNullException.ThrowIfNull(commandManager);
@@ -99,18 +101,18 @@ public class ApplicationInitializationService : ApplicationInitializationService
 
     private void InitializeCommands()
     {
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Close));
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Open));
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Save));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Project), nameof(Commands.Project.Close));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Project), nameof(Commands.Project.Open));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Project), nameof(Commands.Project.Save));
 
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Providers), nameof(Commands.Providers.Manage));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Providers), nameof(Commands.Providers.Manage));
 
-        _commandManager.CreateCommandWithGesture(typeof(Commands.TTS), nameof(Commands.TTS.Generate));
-        _commandManager.CreateCommandWithGesture(typeof(Commands.TTS), nameof(Commands.TTS.GenerateAll));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.TTS), nameof(Commands.TTS.Generate));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.TTS), nameof(Commands.TTS.GenerateAll));
 
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), nameof(Commands.Settings.General));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Settings), nameof(Commands.Settings.General));
 
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Help), nameof(Commands.Help.About));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Help), nameof(Commands.Help.About));
     }
 
     private void InitializeWatchers()

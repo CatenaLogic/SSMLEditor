@@ -12,7 +12,9 @@ public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherB
     private readonly IProjectManager _projectManager;
     private readonly IBusyIndicatorService _busyIndicatorService;
 
-    public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService)
+    public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService,
+        IMessageService messageService, IDispatcherService dispatcherService, IMainWindowService mainWindowService)
+        : base(messageService, dispatcherService, mainWindowService)
     {
         ArgumentNullException.ThrowIfNull(projectManager);
         ArgumentNullException.ThrowIfNull(busyIndicatorService);

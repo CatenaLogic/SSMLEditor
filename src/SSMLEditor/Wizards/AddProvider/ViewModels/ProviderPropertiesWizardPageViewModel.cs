@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor.Wizards.AddProvider.ViewModels;
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Orc.Wizard;
@@ -8,8 +9,8 @@ using SSMLEditor.Wizards.AddProvider;
 
 public class ProviderPropertiesWizardPageViewModel : WizardPageViewModelBase<ProviderPropertiesWizardPage>
 {
-    public ProviderPropertiesWizardPageViewModel(ProviderPropertiesWizardPage wizardPage)
-        : base(wizardPage)
+    public ProviderPropertiesWizardPageViewModel(ProviderPropertiesWizardPage wizardPage, IServiceProvider serviceProvider)
+        : base(wizardPage, serviceProvider)
     {
 
     }

@@ -10,13 +10,13 @@ public class MainWindowTitleService : IMainWindowTitleService
     private readonly IProjectManager _projectManager;
     private readonly ShellActivatedActionQueue _shellActivatedActionQueue;
 
-    public MainWindowTitleService(IProjectManager projectManager)
+    public MainWindowTitleService(IProjectManager projectManager, ShellActivatedActionQueue shellActivatedActionQueue)
     {
         ArgumentNullException.ThrowIfNull(projectManager);
+        ArgumentNullException.ThrowIfNull(shellActivatedActionQueue);
 
         _projectManager = projectManager;
-
-        _shellActivatedActionQueue = new ShellActivatedActionQueue();
+        _shellActivatedActionQueue = shellActivatedActionQueue;
 
         _defaulTitle = AssemblyHelper.GetEntryAssembly().Title();
     }

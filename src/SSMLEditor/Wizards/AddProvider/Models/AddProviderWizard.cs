@@ -11,9 +11,9 @@ public class AddProviderWizard : WizardBase
     {
         Title = "Add provider"; 
 
-        this.AddPage<ProviderWizardPage>();
-        this.AddPage<ProviderPropertiesWizardPage>();
-        this.AddPage<SummaryWizardPage>();
+        this.AddPage<ProviderWizardPage>(serviceProvider);
+        this.AddPage<ProviderPropertiesWizardPage>(serviceProvider);
+        this.AddPage<SummaryWizardPage>(serviceProvider);
 
         MinSize = new System.Windows.Size(800, 600);
         MaxSize = new System.Windows.Size(1000, 800);

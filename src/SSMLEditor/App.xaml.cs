@@ -42,16 +42,11 @@ public partial class App : Application
                 services.AddOrcAutomation();
                 services.AddOrcControls();
                 services.AddOrcFileSystem();
-                services.AddOrcFilterBuilder();
-                services.AddOrcFilterBuilderXaml();
-                services.AddOrcMetadata();
                 services.AddOrcSerializationJson();
                 services.AddOrcSquirrel();
                 services.AddOrcSquirrelXaml();
                 services.AddOrcSystemInfo();
                 services.AddOrcTheming();
-                services.AddOrcWorkspaceManagement();
-                services.AddOrcWorkspaceManagementXaml();
                 services.AddOrchestraCore();
                 services.AddOrchestraShellRibbonFluent();
 
@@ -70,29 +65,6 @@ public partial class App : Application
                 services.AddTransient<ProjectReader>();
                 services.AddTransient<ProjectWriter>();
 
-                services.AddSingleton<IConfigurationInitializationService, ConfigurationInitializationService>();
-                services.AddSingleton<IFilterCustomizationService, FilterCustomizationService>();
-
-                services.AddSingleton<ILogReaderService, LogReaderService>();
-                services.AddSingleton<IFileNodeService, FileNodeService>();
-                services.AddSingleton<Services.IFilterService, Services.FilterService>();
-                services.AddSingleton<IRegexService, RegexService>();
-                services.AddSingleton<IFileBrowserConfigurationService, FileBrowserConfigurationService>();
-                services.AddSingleton<IFileSystemService, FileSystemService>();
-                services.AddSingleton<IFileBrowserService, FileBrowserService>();
-                services.AddSingleton<IFileSystemWatchingService, FileSystemWatchingService>();
-                services.AddSingleton<ILogTableService, LogTableService>();
-                services.AddSingleton<INavigationNodeCacheService, NavigationNodeCacheService>();
-                services.AddSingleton<ILogTableConfigurationService, LogTableConfigurationService>();
-
-                services.AddSingleton<NavigatorConfigurationSynchronizer>();
-                services.AddSingleton<TimestampVisibilityConfigurationSynchronizer>();
-
-                services.AddSingleton<IWorkspaceInitializer, WorkspaceInitializer>();
-                services.AddSingleton<IWorkspaceProvider, FilterWorkspaceProvider>();
-
-                services.AddSingleton<FileBrowserModel>();
-                services.AddSingleton<UnhandledExceptionWatcher>();
                 services.AddSingleton<RecentlyUsedItemsProjectWatcher>();
                 services.AddSingleton<MainWindowTitleProjectWatcher>();
                 services.AddSingleton<ProjectManagementCloseApplicationWatcher>();
@@ -118,8 +90,6 @@ public partial class App : Application
 
         var configurationService = serviceProvider.GetRequiredService<IConfigurationService>();
         await configurationService.LoadAsync();
-
-        serviceProvider.CreateTypesThatMustBeConstructedAtStartup();
 
         var languageService = serviceProvider.GetRequiredService<ILanguageService>();
 

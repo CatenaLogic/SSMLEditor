@@ -7,6 +7,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 using Catel;
 using Catel.Collections;
+using Catel.MVVM;
+using Catel.Services;
 using SSMLEditor.ViewModels;
 
 public partial class VideoView
@@ -17,7 +19,8 @@ public partial class VideoView
     private bool _isUserUpdatingSlider;
     private bool _isAppUpdatingSlider;
 
-    public VideoView()
+    public VideoView(IServiceProvider serviceProvider, IViewModelWrapperService viewModelWrapperService, IDataContextSubscriptionService dataContextSubscriptionService)
+        : base(serviceProvider, viewModelWrapperService, dataContextSubscriptionService)
     {
         InitializeComponent();
 
