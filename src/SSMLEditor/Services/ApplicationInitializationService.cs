@@ -67,7 +67,7 @@ public class ApplicationInitializationService : ApplicationInitializationService
         var shellWindow = System.Windows.Application.Current.MainWindow as RibbonWindow;
 
         var windowCommands = new WindowCommands();
-        windowCommands.Items.Add(new WindowCommandsView());
+        windowCommands.Items.Add(_serviceProvider.GetRequiredService<WindowCommandsView>());
         shellWindow.WindowCommands = windowCommands;
 
         var mainWindowTitleService = _serviceProvider.GetRequiredService<IMainWindowTitleService>();

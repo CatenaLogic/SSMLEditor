@@ -68,6 +68,7 @@ public partial class App : Application
                 services.AddSingleton<RecentlyUsedItemsProjectWatcher>();
                 services.AddSingleton<MainWindowTitleProjectWatcher>();
                 services.AddSingleton<ProjectManagementCloseApplicationWatcher>();
+                services.AddTransient<WindowCommandsView>();
                 services.AddTransient<AddProviderWizard>();
 
                 services.AddLogging(x =>
