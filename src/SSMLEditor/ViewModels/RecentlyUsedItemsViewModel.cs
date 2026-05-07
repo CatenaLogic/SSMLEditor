@@ -8,7 +8,6 @@ using Catel.MVVM;
 using Catel.Services;
 using Orc.FileSystem;
 using Orchestra;
-using Orchestra.Services;
 
 public class RecentlyUsedItemsViewModel : ViewModelBase
 {
@@ -17,8 +16,9 @@ public class RecentlyUsedItemsViewModel : ViewModelBase
     private readonly IMessageService _messageService;
     private readonly IProcessService _processService;
 
-    public RecentlyUsedItemsViewModel(IRecentlyUsedItemsService recentlyUsedItemsService, IFileService fileService, 
+    public RecentlyUsedItemsViewModel(IServiceProvider serviceProvider, IRecentlyUsedItemsService recentlyUsedItemsService, IFileService fileService, 
         IMessageService messageService, IProcessService processService)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(recentlyUsedItemsService);
         ArgumentNullException.ThrowIfNull(fileService);
@@ -30,9 +30,9 @@ public class RecentlyUsedItemsViewModel : ViewModelBase
         _messageService = messageService;
         _processService = processService;
 
-        PinItem = new Command<string>(OnPinItemExecute);
-        UnpinItem = new Command<string>(OnUnpinItemExecute);
-        OpenInExplorer = new TaskCommand<string>(OnOpenInExplorerExecuteAsync);
+        PinItem = new Command<string>(serviceProvider, OnPinItemExecute);
+        UnpinItem = new Command<string>(serviceProvider, OnUnpinItemExecute);
+        OpenInExplorer = new TaskCommand<string>(serviceProvider, OnOpenInExplorerExecuteAsync);
     }
 
     public List<RecentlyUsedItem> RecentlyUsedItems { get; private set; }

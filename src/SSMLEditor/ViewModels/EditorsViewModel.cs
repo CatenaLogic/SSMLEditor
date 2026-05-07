@@ -13,7 +13,8 @@ public class EditorsViewModel : ViewModelBase
     private readonly ISelectionManager<Language> _languageSelectionManager;
     private readonly IProjectManager _projectManager;
 
-    public EditorsViewModel(ISelectionManager<Language> languageSelectionManager, IProjectManager projectManager)
+    public EditorsViewModel(IServiceProvider serviceProvider, ISelectionManager<Language> languageSelectionManager, IProjectManager projectManager)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(languageSelectionManager);
         ArgumentNullException.ThrowIfNull(projectManager);

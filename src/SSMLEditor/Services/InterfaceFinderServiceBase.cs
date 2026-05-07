@@ -2,13 +2,13 @@
 
 using System;
 using System.Collections.Generic;
-using Catel.IoC;
 using Catel.Logging;
 using Catel.Reflection;
+using Microsoft.Extensions.Logging;
 
 public abstract class InterfaceFinderServiceBase<TInterface>
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(InterfaceFinderServiceBase<TInterface>));
 
     protected InterfaceFinderServiceBase()
     {
@@ -21,23 +21,23 @@ public abstract class InterfaceFinderServiceBase<TInterface>
 
         var items = new List<TInterface>();
 
-#pragma warning disable IDISP001 // Dispose created
-        var typeFactory = this.GetTypeFactory();
-#pragma warning restore IDISP001 // Dispose created
-
         var types = TypeCache.GetTypes(x => x.ImplementsInterfaceEx<TInterface>() && !x.IsAbstractEx());
 
         foreach (var type in types)
         {
             try
             {
-                Log.Debug("Found type '{0}'", type.Name);
+                Logger.LogDebug("Found type '{TypeName}'", type.Name);
 
-                items.Add((TInterface)typeFactory.CreateInstance(type));
+                var item = Activator.CreateInstance(type);
+                if (item is TInterface typedItem)
+                {
+                    items.Add(typedItem);
+                }
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Failed to instantiate '{0}'", type.FullName);
+                Logger.LogError(ex, "Failed to instantiate '{TypeName}'", type.FullName);
             }
         }
 

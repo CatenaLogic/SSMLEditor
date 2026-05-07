@@ -9,7 +9,8 @@ public class MainViewModel : ViewModelBase
 {
     private readonly IProjectManager _projectManager;
 
-    public MainViewModel(IProjectManager projectManager)
+    public MainViewModel(IServiceProvider serviceProvider, IProjectManager projectManager)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(projectManager);
 

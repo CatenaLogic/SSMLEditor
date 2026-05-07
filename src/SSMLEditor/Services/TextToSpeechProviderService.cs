@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Catel.Logging;
 using Catel.Services;
 using Newtonsoft.Json;
 using Orc.FileSystem;
@@ -14,8 +13,6 @@ using SSMLEditor.Serialization;
 
 public class TextToSpeechProviderService : InterfaceFinderServiceBase<ITextToSpeechProvider>, ITextToSpeechProviderService
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
     private readonly IFileService _fileService;
     private readonly IAppDataService _appDataService;
 

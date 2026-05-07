@@ -1,8 +1,25 @@
 ﻿namespace SSMLEditor;
 
+using System;
+using System.Globalization;
 using System.Windows;
+using Catel;
+using Catel.Configuration;
 using Catel.IoC;
+using Catel.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Orc;
+using Orc.ProjectManagement;
+using Orc.SelectionManagement;
+using Orchestra;
 using Orchestra.Views;
+using SSMLEditor.ProjectManagement;
+using SSMLEditor.Providers;
+using SSMLEditor.Services;
+using SSMLEditor.Views;
+using SSMLEditor.Wizards.AddProvider;
 using Velopack;
 
 public partial class App : Application
@@ -41,6 +58,17 @@ public partial class App : Application
                 services.AddSingleton<IAboutInfoService, AboutInfoService>();
                 services.AddSingleton<IRibbonService, RibbonService>();
                 services.AddSingleton<IApplicationInitializationService, ApplicationInitializationService>();
+                services.AddSingleton<ISelectionManager<ITextToSpeechProvider>, SelectionManager<ITextToSpeechProvider>>();
+                services.AddSingleton<ISelectionManager<Language>, SelectionManager<Language>>();
+                services.AddSingleton<IAnalyzerService, AnalyzerService>();
+                services.AddSingleton<IProjectSerializerSelector, ProjectSerializerSelector>();
+                services.AddSingleton<IMainWindowTitleService, MainWindowTitleService>();
+                services.AddSingleton<IInitialProjectLocationService, SSMLEditor.Services.InitialProjectLocationService>();
+                services.AddSingleton<ITextToSpeechProviderService, TextToSpeechProviderService>();
+                services.AddSingleton<ISsmlConverterService, SsmlConverterService>();
+                services.AddSingleton<IProjectInitializer, FileProjectInitializer>();
+                services.AddTransient<ProjectReader>();
+                services.AddTransient<ProjectWriter>();
 
                 services.AddSingleton<IConfigurationInitializationService, ConfigurationInitializationService>();
                 services.AddSingleton<IFilterCustomizationService, FilterCustomizationService>();
@@ -65,6 +93,10 @@ public partial class App : Application
 
                 services.AddSingleton<FileBrowserModel>();
                 services.AddSingleton<UnhandledExceptionWatcher>();
+                services.AddSingleton<RecentlyUsedItemsProjectWatcher>();
+                services.AddSingleton<MainWindowTitleProjectWatcher>();
+                services.AddSingleton<ProjectManagementCloseApplicationWatcher>();
+                services.AddTransient<AddProviderWizard>();
 
                 services.AddLogging(x =>
                 {

@@ -27,8 +27,8 @@ public abstract class TTSCommandContainerBase : ProjectCommandContainerBase
     protected TTSCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager,
         ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, IBusyIndicatorService busyIndicatorService, 
         IFileService fileService, IDirectoryService directoryService, IMessageMediator messageMediator, 
-        INotificationService notificationService)
-        : base(commandName, commandManager, projectManager)
+        INotificationService notificationService, IServiceProvider serviceProvider)
+        : base(commandName, commandManager, projectManager, serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(ttsProviderSelectionManager);
         ArgumentNullException.ThrowIfNull(busyIndicatorService);

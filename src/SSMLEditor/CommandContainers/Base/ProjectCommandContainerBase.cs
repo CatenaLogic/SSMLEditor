@@ -10,8 +10,8 @@ public abstract class ProjectCommandContainerBase : CommandContainerBase
     protected readonly ICommandManager _commandManager;
     protected readonly IProjectManager _projectManager;
 
-    protected ProjectCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager)
-        : base(commandName, commandManager)
+    protected ProjectCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager, IServiceProvider serviceProvider)
+        : base(commandName, commandManager, serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(projectManager);
 

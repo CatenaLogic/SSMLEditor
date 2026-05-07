@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using Catel.Logging;
 using MethodTimer;
 using Microsoft.CognitiveServices.Speech;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 public class AzureCognitiveServices : TextToSpeechProviderBase
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(AzureCognitiveServices));
 
     public AzureCognitiveServices()
     {
@@ -128,7 +129,8 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
             {
                 if (result.Reason == ResultReason.Canceled)
                 {
-                    throw Log.ErrorAndCreateException<SSMLEditorException>($"Failed to convert text to speech");
+                    Logger.LogError("Failed to convert text to speech");
+                    throw new SSMLEditorException("Failed to convert text to speech");
                 }
 
                 var memoryStream = new MemoryStream();

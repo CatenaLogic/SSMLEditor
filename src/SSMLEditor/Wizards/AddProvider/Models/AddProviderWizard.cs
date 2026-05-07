@@ -1,16 +1,13 @@
 ﻿namespace SSMLEditor.Wizards.AddProvider;
 
-using Catel.IoC;
-using Catel.Logging;
+using System;
 using Orc.Wizard;
 using SSMLEditor.Providers;
 
 public class AddProviderWizard : WizardBase
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
-    public AddProviderWizard(ITypeFactory typeFactory)
-        : base(typeFactory)
+    public AddProviderWizard(IServiceProvider serviceProvider)
+        : base(serviceProvider)
     {
         Title = "Add provider"; 
 

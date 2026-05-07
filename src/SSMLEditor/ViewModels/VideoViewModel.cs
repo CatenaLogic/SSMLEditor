@@ -1,4 +1,4 @@
-﻿namespace SSMLEditor.ViewModels;
+namespace SSMLEditor.ViewModels;
 
 using System;
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Catel.Logging;
 using Catel.Messaging;
 using Catel.MVVM;
+using Microsoft.Extensions.Logging;
 using Orc.FileSystem;
 using Orc.ProjectManagement;
 using Orc.SelectionManagement;
@@ -14,15 +15,16 @@ using SSMLEditor.Messaging;
 
 public class VideoViewModel : ViewModelBase
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(VideoViewModel));
 
     private readonly IProjectManager _projectManager;
     private readonly ISelectionManager<Language> _languageSelectionManager;
     private readonly IFileService _fileService;
     private readonly IMessageMediator _messageMediator;
 
-    public VideoViewModel(IProjectManager projectManager, ISelectionManager<Language> languageSelectionManager,
+    public VideoViewModel(IServiceProvider serviceProvider, IProjectManager projectManager, ISelectionManager<Language> languageSelectionManager,
         IFileService fileService, IMessageMediator messageMediator)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(projectManager);
         ArgumentNullException.ThrowIfNull(languageSelectionManager);
@@ -34,8 +36,8 @@ public class VideoViewModel : ViewModelBase
         _fileService = fileService;
         _messageMediator = messageMediator;
 
-        Play = new TaskCommand(OnPlayExecuteAsync, OnPlayCanExecute);
-        Pause = new TaskCommand(OnPauseExecuteAsync, OnPauseCanExecute);
+        Play = new TaskCommand(serviceProvider, OnPlayExecuteAsync, OnPlayCanExecute);
+        Pause = new TaskCommand(serviceProvider, OnPauseExecuteAsync, OnPauseCanExecute);
     }
 
     public override string Title { get { return "Video"; } }
@@ -174,7 +176,7 @@ public class VideoViewModel : ViewModelBase
     {
         if (message.Data == _languageSelectionManager.GetSelectedItem())
         {
-            Log.Info($"Current language is being (re)generated, stopping playback");
+            Logger.LogInformation("Current language is being (re)generated, stopping playback");
 
             Pause.Execute();
             AudioUri = null;
@@ -185,7 +187,7 @@ public class VideoViewModel : ViewModelBase
     {
         if (message.Data == _languageSelectionManager.GetSelectedItem())
         {
-            Log.Info($"Current language is (re)generated");
+            Logger.LogInformation("Current language is (re)generated");
 
             UpdateProject();
         }

@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Catel.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Orc.FileSystem;
 using Orc.Notifications;
@@ -11,7 +12,7 @@ using Orc.ProjectManagement;
 
 public class ProjectReader : ProjectReaderBase
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(ProjectReader));
 
     private readonly IFileService _fileService;
     private readonly INotificationService _notificationService;
@@ -46,13 +47,13 @@ public class ProjectReader : ProjectReaderBase
 
             foreach (var language in project.ProjectRoot.Languages)
             {
-                Log.Debug($"Reading project language '{language}'");
+                Logger.LogDebug("Reading project language '{Language}'", language);
 
                 var languageFileName = project.GetFullPath(language);
 
                 if (!_fileService.Exists(languageFileName))
                 {
-                    Log.Warning($"Could not find '{languageFileName}'");
+                    Logger.LogWarning("Could not find '{LanguageFileName}'", languageFileName);
                     continue;
                 }
 

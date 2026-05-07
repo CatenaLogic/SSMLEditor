@@ -15,7 +15,8 @@ public class EditorViewModel : ViewModelBase
 
     private bool _isUpdating;
 
-    public EditorViewModel(Language language, IProjectManager projectManager, ISsmlConverterService ssmlConverterService)
+    public EditorViewModel(IServiceProvider serviceProvider, Language language, IProjectManager projectManager, ISsmlConverterService ssmlConverterService)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(language);
         ArgumentNullException.ThrowIfNull(projectManager);

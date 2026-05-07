@@ -1,5 +1,6 @@
 ﻿namespace SSMLEditor;
 
+using System;
 using System.Threading.Tasks;
 using Catel.Messaging;
 using Catel.MVVM;
@@ -17,9 +18,9 @@ public class TTSGenerateCommandContainer : TTSCommandContainerBase
     public TTSGenerateCommandContainer(ICommandManager commandManager, IProjectManager projectManager,
         ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, ISelectionManager<Language> languageSelectionManager,
         IBusyIndicatorService busyIndicatorService, IFileService fileService, IDirectoryService directoryService,
-        IMessageMediator messageMediator, INotificationService notificationService)
+        IMessageMediator messageMediator, INotificationService notificationService, IServiceProvider serviceProvider)
         : base(Commands.TTS.Generate, commandManager, projectManager, ttsProviderSelectionManager, busyIndicatorService, 
-              fileService, directoryService, messageMediator, notificationService)
+              fileService, directoryService, messageMediator, notificationService, serviceProvider)
     {
         _languageSelectionManager = languageSelectionManager;
     }
