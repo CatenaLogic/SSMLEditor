@@ -19,7 +19,6 @@ using SSMLEditor.ProjectManagement;
 using SSMLEditor.Providers;
 using SSMLEditor.Services;
 using SSMLEditor.Views;
-using SSMLEditor.Wizards.AddProvider;
 using Velopack;
 
 public partial class App : Application
@@ -69,7 +68,6 @@ public partial class App : Application
                 services.AddSingleton<MainWindowTitleProjectWatcher>();
                 services.AddSingleton<ProjectManagementCloseApplicationWatcher>();
                 services.AddTransient<WindowCommandsView>();
-                services.AddTransient<AddProviderWizard>();
 
                 services.AddLogging(x =>
                 {
@@ -91,6 +89,8 @@ public partial class App : Application
 
         var configurationService = serviceProvider.GetRequiredService<IConfigurationService>();
         await configurationService.LoadAsync();
+
+        serviceProvider.CreateTypesThatMustBeConstructedAtStartup();
 
         var languageService = serviceProvider.GetRequiredService<ILanguageService>();
 

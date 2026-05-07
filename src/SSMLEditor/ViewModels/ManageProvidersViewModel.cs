@@ -47,7 +47,7 @@ public class ManageProvidersViewModel : ViewModelBase
 
     private async Task OnAddExecuteAsync()
     {
-        var wizard = _serviceProvider.GetRequiredService<AddProviderWizard>();
+        var wizard = ActivatorUtilities.CreateInstance<AddProviderWizard>(_serviceProvider);
         if ((await _wizardService.ShowWizardAsync(wizard)).DialogResult ?? false)
         {
             Providers.Add(wizard.Provider);

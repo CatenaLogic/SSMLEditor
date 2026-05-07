@@ -2,10 +2,11 @@
 
 using System;
 using System.Threading.Tasks;
+using Catel.IoC;
 using Orc.ProjectManagement;
 using Services;
 
-public class MainWindowTitleProjectWatcher : ProjectWatcherBase
+public class MainWindowTitleProjectWatcher : ProjectWatcherBase, IConstructAtStartup
 {
     private readonly IMainWindowTitleService _mainWindowTitleService;
 

@@ -2,12 +2,13 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using Catel.IoC;
 using Catel.Services;
 using Orc.ProjectManagement;
 using Orchestra;
 using System;
 
-public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase
+public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase, IConstructAtStartup
 {
     private readonly IProjectManager _projectManager;
     private readonly IBusyIndicatorService _busyIndicatorService;

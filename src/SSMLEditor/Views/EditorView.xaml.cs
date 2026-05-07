@@ -12,7 +12,6 @@ using System.Windows.Media;
 using Catel.Logging;
 using Catel.MVVM;
 using Catel.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SSMLEditor.Analyzers;
 using SSMLEditor.AvalonEdit;
@@ -30,15 +29,17 @@ public partial class EditorView
     private bool _isUpdatingFromSsmlEditor;
     private TextMarkerService _textMarkerService;
 
-    public EditorView(IServiceProvider serviceProvider, IViewModelWrapperService viewModelWrapperService, IDataContextSubscriptionService dataContextSubscriptionService)
+    public EditorView(IServiceProvider serviceProvider, IAnalyzerService analyzerService, IViewModelWrapperService viewModelWrapperService, IDataContextSubscriptionService dataContextSubscriptionService)
         : base(serviceProvider, viewModelWrapperService, dataContextSubscriptionService)
     {
+        ArgumentNullException.ThrowIfNull(analyzerService);
+
         InitializeComponent();
 
         _serviceProvider = serviceProvider;
         InitializeTextMarkerService();
 
-        _analyzerService = serviceProvider.GetRequiredService<IAnalyzerService>();
+        _analyzerService = analyzerService;
     }
 
     protected override void OnLoaded(System.EventArgs e)

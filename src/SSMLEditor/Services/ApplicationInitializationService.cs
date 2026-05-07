@@ -48,7 +48,6 @@ public class ApplicationInitializationService : ApplicationInitializationService
     {
         InitializeFonts();
         InitializeCommands();
-        InitializeWatchers();
 
         var tasks = new List<Task>
         {
@@ -113,13 +112,6 @@ public class ApplicationInitializationService : ApplicationInitializationService
         _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Settings), nameof(Commands.Settings.General));
 
         _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Help), nameof(Commands.Help.About));
-    }
-
-    private void InitializeWatchers()
-    {
-        _ = _serviceProvider.GetRequiredService<RecentlyUsedItemsProjectWatcher>();
-        _ = _serviceProvider.GetRequiredService<MainWindowTitleProjectWatcher>();
-        _ = _serviceProvider.GetRequiredService<ProjectManagementCloseApplicationWatcher>();
     }
 
     [Time]

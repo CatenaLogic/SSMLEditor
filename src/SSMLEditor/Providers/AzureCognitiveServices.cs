@@ -129,8 +129,7 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
             {
                 if (result.Reason == ResultReason.Canceled)
                 {
-                    Logger.LogError("Failed to convert text to speech");
-                    throw new SSMLEditorException("Failed to convert text to speech");
+                    throw Logger.LogErrorAndCreateException("Failed to convert text to speech");
                 }
 
                 var memoryStream = new MemoryStream();

@@ -4,15 +4,18 @@ using System;
 using System.Collections.Generic;
 using Catel.Logging;
 using Catel.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 public abstract class InterfaceFinderServiceBase<TInterface>
 {
     private static readonly ILogger Logger = LogManager.GetLogger(typeof(InterfaceFinderServiceBase<TInterface>));
+    private readonly IServiceProvider _serviceProvider;
 
-    protected InterfaceFinderServiceBase()
+    protected InterfaceFinderServiceBase(IServiceProvider serviceProvider)
     {
-
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        _serviceProvider = serviceProvider;
     }
 
     protected IEnumerable<TInterface> GetAvailableItems()
@@ -29,7 +32,7 @@ public abstract class InterfaceFinderServiceBase<TInterface>
             {
                 Logger.LogDebug("Found type '{TypeName}'", type.Name);
 
-                var item = Activator.CreateInstance(type);
+                var item = ActivatorUtilities.CreateInstance(_serviceProvider, type);
                 if (item is TInterface typedItem)
                 {
                     items.Add(typedItem);

@@ -16,7 +16,8 @@ public class TextToSpeechProviderService : InterfaceFinderServiceBase<ITextToSpe
     private readonly IFileService _fileService;
     private readonly IAppDataService _appDataService;
 
-    public TextToSpeechProviderService(IFileService fileService, IAppDataService appDataService)
+    public TextToSpeechProviderService(IServiceProvider serviceProvider, IFileService fileService, IAppDataService appDataService)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(fileService);
         ArgumentNullException.ThrowIfNull(appDataService);
