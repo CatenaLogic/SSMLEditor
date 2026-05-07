@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Catel.Services;
 using Orc.FileSystem;
@@ -15,16 +17,50 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
     private readonly IFileService _fileService;
     private readonly IAppDataService _appDataService;
     private readonly IJsonSerializerFactory _jsonSerializerFactory;
+    private readonly IJsonSerializer _serializer;
 
     private readonly IReadOnlyList<ITextToSpeechProvider> _availableProviders;
 
-    public TextToSpeechProviderService(IEnumerable<ITextToSpeechProvider> availableProviders, 
+    public TextToSpeechProviderService(IEnumerable<ITextToSpeechProvider> availableProviders,
         IFileService fileService, IAppDataService appDataService, IJsonSerializerFactory jsonSerializerFactory)
     {
         _availableProviders = availableProviders.ToArray();
         _fileService = fileService;
         _appDataService = appDataService;
         _jsonSerializerFactory = jsonSerializerFactory;
+
+        var serializerSettings = new JsonSerializerSettings
+        {
+        };
+
+        var resolver = new DefaultJsonTypeInfoResolver();
+        resolver.Modifiers.Add(x =>
+        {
+            if (x.Type != typeof(ITextToSpeechProvider))
+            {
+                return;
+            }
+
+            if (x.Kind == JsonTypeInfoKind.None)
+            {
+                return;
+            }
+
+            x.PolymorphismOptions = new JsonPolymorphismOptions
+            {
+                TypeDiscriminatorPropertyName = "$type",
+                UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization,
+                IgnoreUnrecognizedTypeDiscriminators = false,
+                DerivedTypes =
+                {
+                    new JsonDerivedType(typeof(AzureCognitiveServices), "AzureCognitiveServices")
+                }
+            };
+        });
+
+        serializerSettings.TypeInfoResolverChain.Add(resolver);
+
+        _serializer = _jsonSerializerFactory.CreateSerializer(serializerSettings);
 
         Providers = new List<ITextToSpeechProvider>();
     }
@@ -38,8 +74,6 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
 
     public async Task LoadAsync()
     {
-        var serializer = _jsonSerializerFactory.CreateSerializer();
-
         var providers = new List<ITextToSpeechProvider>();
 
         var filename = GetFilename();
@@ -47,7 +81,7 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
         {
             var json = await _fileService.ReadAllTextAsync(filename);
 
-            providers.AddRange(serializer.DeserializeFromString<List<ITextToSpeechProvider>>(json));
+            providers.AddRange(_serializer.DeserializeFromString<ITextToSpeechProvider[]>(json));
         }
 
         providers.ForEach(x => x.RemoveDuplicateProperties());
@@ -63,7 +97,7 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
 
         providers.ForEach(x => x.RemoveDuplicateProperties());
 
-        var json = serializer.SerializeToString(providers);
+        var json = _serializer.SerializeToString(providers);
         var filename = GetFilename();
 
         await _fileService.WriteAllTextAsync(filename, json);
