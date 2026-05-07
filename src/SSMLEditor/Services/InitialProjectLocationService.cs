@@ -2,13 +2,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Catel.Logging;
 using Orc.CommandLine;
 
 public class InitialProjectLocationService : Orc.ProjectManagement.IInitialProjectLocationService
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
     private readonly ICommandLineParser _commandLineParser;
     private readonly ICommandLineService _commandLineService;
 

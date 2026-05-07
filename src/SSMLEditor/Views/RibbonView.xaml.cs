@@ -1,13 +1,15 @@
-﻿namespace SSMLEditor.Views;
+namespace SSMLEditor.Views;
 
+using Catel.MVVM;
 using Orchestra;
 
 public partial class RibbonView
 {
-    public RibbonView()
-    {
-        InitializeComponent();
+    [Catel.InjectedService]
+    private readonly IAboutService _aboutService = null!;
 
-        ribbon.AddAboutButton();
+    partial void OnInitializedComponent()
+    {
+        ribbon.AddAboutButton(_aboutService);
     }
 }

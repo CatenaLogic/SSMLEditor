@@ -2,17 +2,20 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using Catel.IoC;
 using Catel.Services;
 using Orc.ProjectManagement;
 using Orchestra;
 using System;
 
-public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase
+public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase, IConstructAtStartup
 {
     private readonly IProjectManager _projectManager;
     private readonly IBusyIndicatorService _busyIndicatorService;
 
-    public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService)
+    public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService,
+        IMessageService messageService, IDispatcherService dispatcherService, IMainWindowService mainWindowService)
+        : base(messageService, dispatcherService, mainWindowService)
     {
         ArgumentNullException.ThrowIfNull(projectManager);
         ArgumentNullException.ThrowIfNull(busyIndicatorService);

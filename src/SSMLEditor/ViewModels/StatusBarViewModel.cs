@@ -14,7 +14,8 @@ public class StatusBarViewModel : ViewModelBase
     private readonly IConfigurationService _configurationService;
     private readonly IUpdateService _updateService;
 
-    public StatusBarViewModel(IProjectManager projectManager, IConfigurationService configurationService, IUpdateService updateService)
+    public StatusBarViewModel(IServiceProvider serviceProvider, IProjectManager projectManager, IConfigurationService configurationService, IUpdateService updateService)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(projectManager);
         ArgumentNullException.ThrowIfNull(configurationService);

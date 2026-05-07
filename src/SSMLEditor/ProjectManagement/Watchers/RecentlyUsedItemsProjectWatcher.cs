@@ -2,10 +2,11 @@
 
 using System;
 using System.Threading.Tasks;
+using Catel.IoC;
 using Orc.ProjectManagement;
 using Orchestra;
 
-public class RecentlyUsedItemsProjectWatcher : ProjectWatcherBase
+public class RecentlyUsedItemsProjectWatcher : ProjectWatcherBase, IConstructAtStartup
 {
     private readonly IRecentlyUsedItemsService _recentlyUsedItemsService;
 

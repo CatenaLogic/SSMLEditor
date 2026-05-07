@@ -7,30 +7,23 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 using Catel;
 using Catel.Collections;
+using Catel.MVVM;
+using Catel.Services;
 using SSMLEditor.ViewModels;
 
 public partial class VideoView
 {
-    private readonly DispatcherTimer _positionDispatcherTimer;
-    private readonly DispatcherTimer _positionUpdateDispatcherTimer;
+    private readonly DispatcherTimer _positionDispatcherTimer = new DispatcherTimer
+    {
+        Interval = TimeSpan.FromMilliseconds(200)
+    };
+    private readonly DispatcherTimer _positionUpdateDispatcherTimer = new DispatcherTimer
+    {
+        Interval = TimeSpan.FromMilliseconds(100)
+    };
 
     private bool _isUserUpdatingSlider;
     private bool _isAppUpdatingSlider;
-
-    public VideoView()
-    {
-        InitializeComponent();
-
-        _positionDispatcherTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(200)
-        };
-
-        _positionUpdateDispatcherTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(100)
-        };
-    }
 
     protected override void OnLoaded(EventArgs e)
     {

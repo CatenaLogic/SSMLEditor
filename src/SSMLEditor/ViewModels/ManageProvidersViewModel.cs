@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catel.Collections;
-using Catel.IoC;
 using Catel.MVVM;
+using Microsoft.Extensions.DependencyInjection;
 using Orc.Wizard;
 using SSMLEditor.Providers;
 using SSMLEditor.Services;
@@ -15,21 +15,22 @@ public class ManageProvidersViewModel : ViewModelBase
 {
     private readonly ITextToSpeechProviderService _textToSpeechProviderService;
     private readonly IWizardService _wizardService;
-    private readonly ITypeFactory _typeFactory;
+    private readonly IServiceProvider _serviceProvider;
 
-    public ManageProvidersViewModel(ITextToSpeechProviderService textToSpeechProviderService,
-        IWizardService wizardService, ITypeFactory typeFactory)
+    public ManageProvidersViewModel(IServiceProvider serviceProvider, ITextToSpeechProviderService textToSpeechProviderService,
+        IWizardService wizardService)
+        : base(serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(serviceProvider);
         ArgumentNullException.ThrowIfNull(textToSpeechProviderService);
         ArgumentNullException.ThrowIfNull(wizardService);
-        ArgumentNullException.ThrowIfNull(typeFactory);
 
+        _serviceProvider = serviceProvider;
         _textToSpeechProviderService = textToSpeechProviderService;
         _wizardService = wizardService;
-        _typeFactory = typeFactory;
 
-        Add = new TaskCommand(OnAddExecuteAsync, OnAddCanExecute);
-        Remove = new TaskCommand(OnRemoveExecuteAsync, OnRemoveCanExecute);
+        Add = new TaskCommand(serviceProvider, OnAddExecuteAsync, OnAddCanExecute);
+        Remove = new TaskCommand(serviceProvider, OnRemoveExecuteAsync, OnRemoveCanExecute);
     }
 
     public List<ITextToSpeechProvider> Providers { get; private set; }
@@ -46,7 +47,7 @@ public class ManageProvidersViewModel : ViewModelBase
 
     private async Task OnAddExecuteAsync()
     {
-        var wizard = _typeFactory.CreateInstance<AddProviderWizard>();
+        var wizard = ActivatorUtilities.CreateInstance<AddProviderWizard>(_serviceProvider);
         if ((await _wizardService.ShowWizardAsync(wizard)).DialogResult ?? false)
         {
             Providers.Add(wizard.Provider);

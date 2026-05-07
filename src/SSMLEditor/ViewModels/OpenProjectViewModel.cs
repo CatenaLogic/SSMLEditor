@@ -1,4 +1,4 @@
-﻿namespace SSMLEditor.ViewModels;
+namespace SSMLEditor.ViewModels;
 
 using Catel.MVVM;
 

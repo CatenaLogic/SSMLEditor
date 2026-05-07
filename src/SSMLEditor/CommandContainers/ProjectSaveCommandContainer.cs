@@ -1,13 +1,14 @@
 ﻿namespace SSMLEditor;
 
+using System;
 using System.Threading.Tasks;
 using Catel.MVVM;
 using Orc.ProjectManagement;
 
 public class ProjectSaveCommandContainer : ProjectCommandContainerBase
 {
-    public ProjectSaveCommandContainer(ICommandManager commandManager, IProjectManager projectManager)
-        : base(Commands.Project.Save, commandManager, projectManager)
+    public ProjectSaveCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IServiceProvider serviceProvider)
+        : base(Commands.Project.Save, commandManager, projectManager, serviceProvider)
     {
     }
 

@@ -4,13 +4,14 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Catel.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Orc.FileSystem;
 using Orc.ProjectManagement;
 
 public class ProjectWriter : ProjectWriterBase<Project>
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(ProjectWriter));
 
     private readonly IFileService _fileService;
     private readonly IDirectoryService _directoryService;
@@ -39,7 +40,7 @@ public class ProjectWriter : ProjectWriterBase<Project>
 
         foreach (var language in project.ProjectRoot.Languages)
         {
-            Log.Debug($"Saving project language '{language}'");
+            Logger.LogDebug("Saving project language '{Language}'", language);
 
             var languageFileName = Path.Combine(directory, language.RelativeFileName);
             var languageDirectory = Path.GetDirectoryName(languageFileName);

@@ -5,25 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Catel.Logging;
 using Catel.Services;
 using Newtonsoft.Json;
 using Orc.FileSystem;
 using SSMLEditor.Providers;
 using SSMLEditor.Serialization;
 
-public class TextToSpeechProviderService : InterfaceFinderServiceBase<ITextToSpeechProvider>, ITextToSpeechProviderService
+public class TextToSpeechProviderService : ITextToSpeechProviderService
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
     private readonly IFileService _fileService;
     private readonly IAppDataService _appDataService;
+    private readonly IReadOnlyList<ITextToSpeechProvider> _availableProviders;
 
-    public TextToSpeechProviderService(IFileService fileService, IAppDataService appDataService)
+    public TextToSpeechProviderService(IEnumerable<ITextToSpeechProvider> availableProviders, IFileService fileService, IAppDataService appDataService)
     {
+        ArgumentNullException.ThrowIfNull(availableProviders);
         ArgumentNullException.ThrowIfNull(fileService);
         ArgumentNullException.ThrowIfNull(appDataService);
 
+        _availableProviders = availableProviders.ToArray();
         _fileService = fileService;
         _appDataService = appDataService;
 
@@ -32,7 +32,7 @@ public class TextToSpeechProviderService : InterfaceFinderServiceBase<ITextToSpe
 
     public IEnumerable<ITextToSpeechProvider> GetAvailableProviders()
     {
-        return GetAvailableItems();
+        return _availableProviders;
     }
 
     public List<ITextToSpeechProvider> Providers { get; private set; }

@@ -20,8 +20,9 @@ public class RibbonViewModel : ViewModelBase
     private readonly ITextToSpeechProviderService _textToSpeechProviderService;
     private readonly IUIVisualizerService _uiVisualizerService;
 
-    public RibbonViewModel(IUIVisualizerService uiVisualizerService, IProjectManager projectManager,
+    public RibbonViewModel(IServiceProvider serviceProvider, IUIVisualizerService uiVisualizerService, IProjectManager projectManager,
         ISelectionManager<ITextToSpeechProvider> textToSpeechProviderSelectionManager, ITextToSpeechProviderService textToSpeechProviderService)
+        : base(serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(uiVisualizerService);
         ArgumentNullException.ThrowIfNull(projectManager);
@@ -33,7 +34,7 @@ public class RibbonViewModel : ViewModelBase
         _textToSpeechProviderSelectionManager = textToSpeechProviderSelectionManager;
         _textToSpeechProviderService = textToSpeechProviderService;
 
-        ShowKeyboardMappings = new TaskCommand(OnShowKeyboardMappingsExecuteAsync);
+        ShowKeyboardMappings = new TaskCommand(serviceProvider, OnShowKeyboardMappingsExecuteAsync);
 
         Title = AssemblyHelper.GetEntryAssembly().Title();
     }

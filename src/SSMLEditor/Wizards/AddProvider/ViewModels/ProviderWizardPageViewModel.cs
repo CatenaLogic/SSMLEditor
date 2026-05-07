@@ -10,9 +10,9 @@ using SSMLEditor.Services;
 
 public class ProviderWizardPageViewModel : WizardPageViewModelBase<ProviderWizardPage>
 {
-    public ProviderWizardPageViewModel(ProviderWizardPage wizardPage, 
+    public ProviderWizardPageViewModel(ProviderWizardPage wizardPage, IServiceProvider serviceProvider, 
         ITextToSpeechProviderService textToSpeechProviderService)
-        : base(wizardPage)
+        : base(wizardPage, serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(textToSpeechProviderService);
 

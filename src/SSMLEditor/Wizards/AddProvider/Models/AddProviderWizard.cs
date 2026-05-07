@@ -1,22 +1,19 @@
 ﻿namespace SSMLEditor.Wizards.AddProvider;
 
-using Catel.IoC;
-using Catel.Logging;
+using System;
 using Orc.Wizard;
 using SSMLEditor.Providers;
 
 public class AddProviderWizard : WizardBase
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
-    public AddProviderWizard(ITypeFactory typeFactory)
-        : base(typeFactory)
+    public AddProviderWizard(IServiceProvider serviceProvider)
+        : base(serviceProvider)
     {
         Title = "Add provider"; 
 
-        this.AddPage<ProviderWizardPage>();
-        this.AddPage<ProviderPropertiesWizardPage>();
-        this.AddPage<SummaryWizardPage>();
+        this.AddPage<ProviderWizardPage>(serviceProvider);
+        this.AddPage<ProviderPropertiesWizardPage>(serviceProvider);
+        this.AddPage<SummaryWizardPage>(serviceProvider);
 
         MinSize = new System.Windows.Size(800, 600);
         MaxSize = new System.Windows.Size(1000, 800);

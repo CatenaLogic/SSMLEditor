@@ -5,20 +5,21 @@ using System.Threading.Tasks;
 using Catel.Logging;
 using Catel.MVVM;
 using Catel.Services;
+using Microsoft.Extensions.Logging;
 using Orc.FileSystem;
 using Orc.ProjectManagement;
 
 public class ProjectOpenCommandContainer : ProjectCommandContainerBase
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(ProjectOpenCommandContainer));
 
     private readonly IFileService _fileService;
     private readonly IOpenFileService _openFileService;
     private readonly IBusyIndicatorService _busyIndicatorService;
 
     public ProjectOpenCommandContainer(ICommandManager commandManager, IProjectManager projectManager, IOpenFileService openFileService,
-        IFileService fileService, IBusyIndicatorService busyIndicatorService)
-        : base(Commands.Project.Open, commandManager, projectManager)
+        IFileService fileService, IBusyIndicatorService busyIndicatorService, IServiceProvider serviceProvider)
+        : base(Commands.Project.Open, commandManager, projectManager, serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(openFileService);
         ArgumentNullException.ThrowIfNull(fileService);
@@ -65,7 +66,7 @@ public class ProjectOpenCommandContainer : ProjectCommandContainerBase
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Failed to open file");
+            Logger.LogError(ex, "Failed to open file");
         }
     }
 }

@@ -1,43 +1,43 @@
 ﻿namespace SSMLEditor.Services;
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Catel;
-using Catel.IoC;
 using Catel.Logging;
 using Catel.MVVM;
 using Catel.Services;
 using Catel.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Orc.ProjectManagement;
-using Orchestra.Services;
+using Orchestra;
 using ProjectManagement;
 using Orc.Squirrel;
 using MethodTimer;
 using Fluent;
 using SSMLEditor.Views;
-using Orc.SelectionManagement;
-using SSMLEditor.Providers;
-using System.Collections.Generic;
 
 public class ApplicationInitializationService : ApplicationInitializationServiceBase
 {
     #region Fields
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(ApplicationInitializationService));
     private readonly ICommandManager _commandManager;
     private readonly IBusyIndicatorService _busyIndicatorService;
 
-    private readonly IServiceLocator _serviceLocator;
+    private readonly IServiceProvider _serviceProvider;
     #endregion
 
     #region Constructors
-    public ApplicationInitializationService(IServiceLocator serviceLocator, ICommandManager commandManager, IBusyIndicatorService busyIndicatorService)
+    public ApplicationInitializationService(IServiceProvider serviceProvider, ICommandManager commandManager, IBusyIndicatorService busyIndicatorService)
+        : base(serviceProvider)
     {
-        ArgumentNullException.ThrowIfNull(serviceLocator);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
         ArgumentNullException.ThrowIfNull(commandManager);
         ArgumentNullException.ThrowIfNull(busyIndicatorService);
 
-        _serviceLocator = serviceLocator;
+        _serviceProvider = serviceProvider;
         _commandManager = commandManager;
         _busyIndicatorService = busyIndicatorService;
     }
@@ -46,10 +46,8 @@ public class ApplicationInitializationService : ApplicationInitializationService
     #region Methods
     public override async Task InitializeBeforeCreatingShellAsync()
     {
-        RegisterTypes();
         InitializeFonts();
         InitializeCommands();
-        InitializeWatchers();
 
         var tasks = new List<Task>
         {
@@ -59,7 +57,7 @@ public class ApplicationInitializationService : ApplicationInitializationService
 
         await Task.WhenAll(tasks);
 
-        var textToSpeechProviderService = _serviceLocator.ResolveType<ITextToSpeechProviderService>();
+        var textToSpeechProviderService = _serviceProvider.GetRequiredService<ITextToSpeechProviderService>();
         await textToSpeechProviderService.LoadAsync();
     }
 
@@ -68,10 +66,10 @@ public class ApplicationInitializationService : ApplicationInitializationService
         var shellWindow = System.Windows.Application.Current.MainWindow as RibbonWindow;
 
         var windowCommands = new WindowCommands();
-        windowCommands.Items.Add(new WindowCommandsView());
+        windowCommands.Items.Add(_serviceProvider.GetRequiredService<WindowCommandsView>());
         shellWindow.WindowCommands = windowCommands;
 
-        var mainWindowTitleService = _serviceLocator.ResolveType<IMainWindowTitleService>();
+        var mainWindowTitleService = _serviceProvider.GetRequiredService<IMainWindowTitleService>();
         mainWindowTitleService.UpdateTitle();
 
         await base.InitializeAfterCreatingShellAsync();
@@ -84,21 +82,6 @@ public class ApplicationInitializationService : ApplicationInitializationService
         await LoadProjectAsync();
     }
 
-    private void RegisterTypes()
-    {
-        _serviceLocator.RegisterType<ISelectionManager<ITextToSpeechProvider>, SelectionManager<ITextToSpeechProvider>>();
-        _serviceLocator.RegisterType<ISelectionManager<Language>, SelectionManager<Language>>();
-
-        _serviceLocator.RegisterType<IAnalyzerService, AnalyzerService>();
-        _serviceLocator.RegisterType<IProjectSerializerSelector, ProjectSerializerSelector>();
-        _serviceLocator.RegisterType<IMainWindowTitleService, MainWindowTitleService>();
-        _serviceLocator.RegisterType<IInitialProjectLocationService, InitialProjectLocationService>();
-        _serviceLocator.RegisterType<ITextToSpeechProviderService, TextToSpeechProviderService>();
-        _serviceLocator.RegisterType<ISsmlConverterService, SsmlConverterService>();
-
-        _serviceLocator.RegisterType<IProjectInitializer, FileProjectInitializer>();
-    }
-
     private void InitializeFonts()
     {
         Orc.Theming.FontImage.RegisterFont("FontAwesome", new FontFamily(new Uri("pack://application:,,,/SSMLEditor;component/Resources/Fonts/", UriKind.RelativeOrAbsolute), "./#FontAwesome"));
@@ -109,7 +92,7 @@ public class ApplicationInitializationService : ApplicationInitializationService
     [Time]
     private async Task ImprovePerformanceAsync()
     {
-        Log.Info("Improving performance");
+        Logger.LogInformation("Improving performance");
 
         UserControl.DefaultCreateWarningAndErrorValidatorForViewModelValue = false;
         UserControl.DefaultSkipSearchingForInfoBarMessageControlValue = true;
@@ -117,33 +100,26 @@ public class ApplicationInitializationService : ApplicationInitializationService
 
     private void InitializeCommands()
     {
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Close));
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Open));
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Project), nameof(Commands.Project.Save));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Project), nameof(Commands.Project.Close));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Project), nameof(Commands.Project.Open));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Project), nameof(Commands.Project.Save));
 
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Providers), nameof(Commands.Providers.Manage));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Providers), nameof(Commands.Providers.Manage));
 
-        _commandManager.CreateCommandWithGesture(typeof(Commands.TTS), nameof(Commands.TTS.Generate));
-        _commandManager.CreateCommandWithGesture(typeof(Commands.TTS), nameof(Commands.TTS.GenerateAll));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.TTS), nameof(Commands.TTS.Generate));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.TTS), nameof(Commands.TTS.GenerateAll));
 
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Settings), nameof(Commands.Settings.General));
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Settings), nameof(Commands.Settings.General));
 
-        _commandManager.CreateCommandWithGesture(typeof(Commands.Help), nameof(Commands.Help.About));
-    }
-
-    private void InitializeWatchers()
-    {
-        _serviceLocator.RegisterTypeAndInstantiate<RecentlyUsedItemsProjectWatcher>();
-        _serviceLocator.RegisterTypeAndInstantiate<MainWindowTitleProjectWatcher>();
-        _serviceLocator.RegisterTypeAndInstantiate<ProjectManagementCloseApplicationWatcher>();
+        _commandManager.CreateCommandWithGesture(_serviceProvider, typeof(Commands.Help), nameof(Commands.Help.About));
     }
 
     [Time]
     private async Task CheckForUpdatesAsync()
     {
-        Log.Info("Checking for updates");
+        Logger.LogInformation("Checking for updates");
 
-        var updateService = _serviceLocator.ResolveType<IUpdateService>();
+        var updateService = _serviceProvider.GetRequiredService<IUpdateService>();
         await updateService.InitializeAsync(SSMLEditor.Settings.Application.AutomaticUpdates.AvailableChannels, 
             SSMLEditor.Settings.Application.AutomaticUpdates.DefaultChannel,
             SSMLEditor.Settings.Application.AutomaticUpdates.CheckForUpdatesDefaultValue);
@@ -158,10 +134,11 @@ public class ApplicationInitializationService : ApplicationInitializationService
     {
         using (_busyIndicatorService.PushInScope())
         {
-            var projectManager = _serviceLocator.ResolveType<IProjectManager>();
+            var projectManager = _serviceProvider.GetRequiredService<IProjectManager>();
             if (projectManager is null)
             {
-                throw Log.ErrorAndCreateException<Exception>("Failed to resolve project manager");
+                Logger.LogError("Failed to resolve project manager");
+                throw new InvalidOperationException("Failed to resolve project manager");
             }
 
             await projectManager.InitializeAsync();
