@@ -15,7 +15,7 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
 {
     private readonly IFileService _fileService;
     private readonly IAppDataService _appDataService;
-    private readonly IEnumerable<ITextToSpeechProvider> _availableProviders;
+    private readonly IReadOnlyList<ITextToSpeechProvider> _availableProviders;
 
     public TextToSpeechProviderService(IEnumerable<ITextToSpeechProvider> availableProviders, IFileService fileService, IAppDataService appDataService)
     {
@@ -23,7 +23,7 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
         ArgumentNullException.ThrowIfNull(fileService);
         ArgumentNullException.ThrowIfNull(appDataService);
 
-        _availableProviders = availableProviders;
+        _availableProviders = availableProviders.ToArray();
         _fileService = fileService;
         _appDataService = appDataService;
 
