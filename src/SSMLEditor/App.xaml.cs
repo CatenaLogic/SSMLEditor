@@ -39,14 +39,20 @@ public partial class App : Application
             {
                 services.AddCatelCore();
                 services.AddCatelMvvm();
+
                 services.AddOrcAutomation();
                 services.AddOrcControls();
                 services.AddOrcFileSystem();
+                services.AddOrcLogViewer();
+                services.AddOrcNotifications();
+                services.AddOrcProjectManagement();
+                services.AddOrcSelectionManagement();
                 services.AddOrcSerializationJson();
                 services.AddOrcSquirrel();
                 services.AddOrcSquirrelXaml();
                 services.AddOrcSystemInfo();
                 services.AddOrcTheming();
+                services.AddOrcWizard();
                 services.AddOrchestraCore();
                 services.AddOrchestraShellRibbonFluent();
 
@@ -67,6 +73,7 @@ public partial class App : Application
                 services.AddTransient<ProjectReader>();
                 services.AddTransient<ProjectWriter>();
 
+                services.AddSingleton<ShellActivatedActionQueue>();
                 services.AddSingleton<RecentlyUsedItemsProjectWatcher>();
                 services.AddSingleton<MainWindowTitleProjectWatcher>();
                 services.AddSingleton<ProjectManagementCloseApplicationWatcher>();

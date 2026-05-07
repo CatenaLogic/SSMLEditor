@@ -5,10 +5,10 @@ using System.IO;
 using System.Threading.Tasks;
 using Catel.Logging;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Orc.FileSystem;
 using Orc.Notifications;
 using Orc.ProjectManagement;
+using Orc.Serialization.Json;
 
 public class ProjectReader : ProjectReaderBase
 {
@@ -16,32 +16,30 @@ public class ProjectReader : ProjectReaderBase
 
     private readonly IFileService _fileService;
     private readonly INotificationService _notificationService;
+    private readonly IJsonSerializerFactory _jsonSerializerFactory;
 
-    public ProjectReader(IFileService fileService, INotificationService notificationService)
+    public ProjectReader(IFileService fileService, INotificationService notificationService,
+        IJsonSerializerFactory jsonSerializerFactory)
     {
-        ArgumentNullException.ThrowIfNull(fileService);
-        ArgumentNullException.ThrowIfNull(notificationService);
-
         _fileService = fileService;
         _notificationService = notificationService;
+        _jsonSerializerFactory = jsonSerializerFactory;
     }
 
     protected override async Task<IProject> ReadFromLocationAsync(string location)
     {
         try
         {
-            var project = new Project(location)
-            {
-            };
-
             var json = await _fileService.ReadAllTextAsync(location);
 
-            var jsonSettings = new JsonSerializerSettings
+            var jsonSerializer = _jsonSerializerFactory.CreateSerializer();
+
+            var projectRoot = jsonSerializer.DeserializeFromString<ProjectRoot>(json);
+
+            var project = new Project(location)
             {
-
+                ProjectRoot = projectRoot
             };
-
-            JsonConvert.PopulateObject(json, project.ProjectRoot, jsonSettings);
 
             var directory = Path.GetDirectoryName(location);
 

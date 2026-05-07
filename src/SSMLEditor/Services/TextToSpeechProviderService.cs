@@ -6,26 +6,25 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Catel.Services;
-using Newtonsoft.Json;
 using Orc.FileSystem;
+using Orc.Serialization.Json;
 using SSMLEditor.Providers;
-using SSMLEditor.Serialization;
 
 public class TextToSpeechProviderService : ITextToSpeechProviderService
 {
     private readonly IFileService _fileService;
     private readonly IAppDataService _appDataService;
+    private readonly IJsonSerializerFactory _jsonSerializerFactory;
+
     private readonly IReadOnlyList<ITextToSpeechProvider> _availableProviders;
 
-    public TextToSpeechProviderService(IEnumerable<ITextToSpeechProvider> availableProviders, IFileService fileService, IAppDataService appDataService)
+    public TextToSpeechProviderService(IEnumerable<ITextToSpeechProvider> availableProviders, 
+        IFileService fileService, IAppDataService appDataService, IJsonSerializerFactory jsonSerializerFactory)
     {
-        ArgumentNullException.ThrowIfNull(availableProviders);
-        ArgumentNullException.ThrowIfNull(fileService);
-        ArgumentNullException.ThrowIfNull(appDataService);
-
         _availableProviders = availableProviders.ToArray();
         _fileService = fileService;
         _appDataService = appDataService;
+        _jsonSerializerFactory = jsonSerializerFactory;
 
         Providers = new List<ITextToSpeechProvider>();
     }
@@ -39,6 +38,8 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
 
     public async Task LoadAsync()
     {
+        var serializer = _jsonSerializerFactory.CreateSerializer();
+
         var providers = new List<ITextToSpeechProvider>();
 
         var filename = GetFilename();
@@ -46,7 +47,7 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
         {
             var json = await _fileService.ReadAllTextAsync(filename);
 
-            JsonConvert.PopulateObject(json, providers, GetSettings());
+            providers.AddRange(serializer.DeserializeFromString<List<ITextToSpeechProvider>>(json));
         }
 
         providers.ForEach(x => x.RemoveDuplicateProperties());
@@ -56,28 +57,30 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
 
     public async Task SaveAsync()
     {
+        var serializer = _jsonSerializerFactory.CreateSerializer();
+
         var providers = Providers.ToList();
 
         providers.ForEach(x => x.RemoveDuplicateProperties());
 
-        var json = Newtonsoft.Json.JsonConvert.SerializeObject(providers, GetSettings());
+        var json = serializer.SerializeToString(providers);
         var filename = GetFilename();
 
         await _fileService.WriteAllTextAsync(filename, json);
     }
 
-    protected JsonSerializerSettings GetSettings()
-    {
-        var settings = new JsonSerializerSettings
-        {
-            Formatting = Formatting.Indented,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            TypeNameHandling = TypeNameHandling.Auto,
-            SerializationBinder = new SafetySerializationBinder(),
-        };
+    //protected JsonSerializerSettings GetSettings()
+    //{
+    //    var settings = new JsonSerializerSettings
+    //    {
+    //        Formatting = Formatting.Indented,
+    //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+    //        TypeNameHandling = TypeNameHandling.Auto,
+    //        SerializationBinder = new SafetySerializationBinder(),
+    //    };
 
-        return settings;
-    }
+    //    return settings;
+    //}
 
     protected string GetFilename()
     {

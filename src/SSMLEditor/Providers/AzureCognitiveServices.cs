@@ -1,14 +1,15 @@
 ﻿namespace SSMLEditor.Providers;
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Catel.Logging;
 using MethodTimer;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 public class AzureCognitiveServices : TextToSpeechProviderBase
 {

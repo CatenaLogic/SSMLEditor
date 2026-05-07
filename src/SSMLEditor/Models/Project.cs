@@ -17,7 +17,7 @@ public sealed class Project : ProjectBase, IProject, IEquatable<Project>
         ProjectRoot = new ProjectRoot();
     }
 
-    public ProjectRoot ProjectRoot { get; private set; }
+    public ProjectRoot ProjectRoot { get; init; }
 
     public bool Equals(Project other)
     {
