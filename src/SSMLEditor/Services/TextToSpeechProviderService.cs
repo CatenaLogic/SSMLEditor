@@ -31,8 +31,10 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
 
         var serializerSettings = new JsonSerializerSettings
         {
+            
         };
 
+        // Don't expose full type names, so use a custom type info resolver
         var resolver = new DefaultJsonTypeInfoResolver();
         resolver.Modifiers.Add(x =>
         {
@@ -102,19 +104,6 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
 
         await _fileService.WriteAllTextAsync(filename, json);
     }
-
-    //protected JsonSerializerSettings GetSettings()
-    //{
-    //    var settings = new JsonSerializerSettings
-    //    {
-    //        Formatting = Formatting.Indented,
-    //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-    //        TypeNameHandling = TypeNameHandling.Auto,
-    //        SerializationBinder = new SafetySerializationBinder(),
-    //    };
-
-    //    return settings;
-    //}
 
     protected string GetFilename()
     {

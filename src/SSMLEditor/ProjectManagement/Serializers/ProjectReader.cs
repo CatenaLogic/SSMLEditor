@@ -18,12 +18,19 @@ public class ProjectReader : ProjectReaderBase
     private readonly INotificationService _notificationService;
     private readonly IJsonSerializerFactory _jsonSerializerFactory;
 
+    private readonly IJsonSerializer _jsonSerializer;
+
     public ProjectReader(IFileService fileService, INotificationService notificationService,
         IJsonSerializerFactory jsonSerializerFactory)
     {
         _fileService = fileService;
         _notificationService = notificationService;
         _jsonSerializerFactory = jsonSerializerFactory;
+
+        _jsonSerializer = _jsonSerializerFactory.CreateSerializer(new JsonSerializerSettings
+        {
+            PropertyNameCaseInsensitive = true
+        });
     }
 
     protected override async Task<IProject> ReadFromLocationAsync(string location)
@@ -32,9 +39,7 @@ public class ProjectReader : ProjectReaderBase
         {
             var json = await _fileService.ReadAllTextAsync(location);
 
-            var jsonSerializer = _jsonSerializerFactory.CreateSerializer();
-
-            var projectRoot = jsonSerializer.DeserializeFromString<ProjectRoot>(json);
+            var projectRoot = _jsonSerializer.DeserializeFromString<ProjectRoot>(json);
 
             var project = new Project(location)
             {

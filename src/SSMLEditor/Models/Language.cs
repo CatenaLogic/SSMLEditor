@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json.Serialization;
 using Catel.Data;
+using SSMLEditor.Serialization.Converters;
 
 public class Language : ObservableObject
 {
@@ -31,6 +32,7 @@ public class Language : ObservableObject
         set => _outputRelativeFileName = value;
     }
 
+    [JsonConverter(typeof(CultureInfoJsonConverter))]
     public CultureInfo Culture { get; set; }
 
     [JsonIgnore]

@@ -10,7 +10,7 @@ public class ProjectRoot
         Video = new Video();
     }
 
-    public List<Language> Languages { get; private set; }
+    public List<Language> Languages { get; init; }
 
-    public Video Video { get; private set; } 
+    public Video Video { get; init; } 
 }
