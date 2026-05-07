@@ -22,24 +22,18 @@ public partial class EditorView
 {
     private static readonly ILogger Logger = LogManager.GetLogger(typeof(EditorView));
 
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IAnalyzerService _analyzerService;
+    [Catel.InjectedService]
+    private readonly IServiceProvider _injectedServiceProvider = null!;
+    [Catel.InjectedService]
+    private readonly IAnalyzerService _analyzerService = null!;
 
     private CancellationTokenSource _cancellationTokenSource;
     private bool _isUpdatingFromSsmlEditor;
     private TextMarkerService _textMarkerService;
 
-    public EditorView(IServiceProvider serviceProvider, IAnalyzerService analyzerService, IViewModelWrapperService viewModelWrapperService, IDataContextSubscriptionService dataContextSubscriptionService)
-        : base(serviceProvider, viewModelWrapperService, dataContextSubscriptionService)
+    partial void OnInitializedComponent()
     {
-        ArgumentNullException.ThrowIfNull(analyzerService);
-
-        InitializeComponent();
-
-        _serviceProvider = serviceProvider;
         InitializeTextMarkerService();
-
-        _analyzerService = analyzerService;
     }
 
     protected override void OnLoaded(System.EventArgs e)
@@ -216,7 +210,7 @@ public partial class EditorView
             SsmlEmphasisContextMenu.Items.Add(new MenuItem
             {
                 Header = emphasisOption.Key,
-                Command = new Command<EmphasisOption>(_serviceProvider, AddEmphasis),
+                Command = new Command<EmphasisOption>(_injectedServiceProvider, AddEmphasis),
                 CommandParameter = new EmphasisOption
                 {
                     Level = emphasisOption.Value,
@@ -288,7 +282,7 @@ public partial class EditorView
             var timeSpanMenuItem = new MenuItem
             {
                 Header = timeSpan,
-                Command = new Command<BreakOption>(_serviceProvider, AddBreak),
+                Command = new Command<BreakOption>(_injectedServiceProvider, AddBreak),
                 CommandParameter = new BreakOption
                 {
                     Strength = string.Empty,
@@ -301,7 +295,7 @@ public partial class EditorView
                 timeSpanMenuItem.Items.Add(new MenuItem
                 {
                     Header = breakOption.Key,
-                    Command = new Command<BreakOption>(_serviceProvider, AddBreak),
+                Command = new Command<BreakOption>(_injectedServiceProvider, AddBreak),
                     CommandParameter = new BreakOption
                     {
                         Strength = breakOption.Value,

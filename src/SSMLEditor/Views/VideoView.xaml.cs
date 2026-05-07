@@ -13,27 +13,17 @@ using SSMLEditor.ViewModels;
 
 public partial class VideoView
 {
-    private readonly DispatcherTimer _positionDispatcherTimer;
-    private readonly DispatcherTimer _positionUpdateDispatcherTimer;
+    private readonly DispatcherTimer _positionDispatcherTimer = new DispatcherTimer
+    {
+        Interval = TimeSpan.FromMilliseconds(200)
+    };
+    private readonly DispatcherTimer _positionUpdateDispatcherTimer = new DispatcherTimer
+    {
+        Interval = TimeSpan.FromMilliseconds(100)
+    };
 
     private bool _isUserUpdatingSlider;
     private bool _isAppUpdatingSlider;
-
-    public VideoView(IServiceProvider serviceProvider, IViewModelWrapperService viewModelWrapperService, IDataContextSubscriptionService dataContextSubscriptionService)
-        : base(serviceProvider, viewModelWrapperService, dataContextSubscriptionService)
-    {
-        InitializeComponent();
-
-        _positionDispatcherTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(200)
-        };
-
-        _positionUpdateDispatcherTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(100)
-        };
-    }
 
     protected override void OnLoaded(EventArgs e)
     {

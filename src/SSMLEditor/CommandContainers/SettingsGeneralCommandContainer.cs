@@ -33,7 +33,7 @@ public class SettingsGeneralCommandContainer : CommandContainerBase
         var settingsViewModelType = TypeCache.GetTypes(x => string.Equals(x.Name, ViewModelType)).FirstOrDefault();
         if (settingsViewModelType is null)
         {
-            throw Logger.LogErrorAndCreateException("Cannot find type '{ViewModelType}'", ViewModelType);
+            throw Logger.LogErrorAndCreateException<InvalidOperationException>("Cannot find type '{ViewModelType}'", ViewModelType);
         }
 
         var viewModel = _viewModelFactory.CreateViewModel(settingsViewModelType, null, null);

@@ -1,4 +1,4 @@
-﻿namespace SSMLEditor.Services;
+namespace SSMLEditor.Services;
 
 using System;
 using System.Collections.Generic;
@@ -8,13 +8,15 @@ using System.Xml.Linq;
 using MethodTimer;
 using SSMLEditor.Analyzers;
 
-public class AnalyzerService : InterfaceFinderServiceBase<IAnalyzer>, IAnalyzerService
+public class AnalyzerService : IAnalyzerService
 {
     private readonly List<IAnalyzer> _analyzers = new List<IAnalyzer>();
 
-    public AnalyzerService()
+    public AnalyzerService(IEnumerable<IAnalyzer> analyzers)
     {
-        _analyzers.AddRange(GetAvailableItems());
+        ArgumentNullException.ThrowIfNull(analyzers);
+
+        _analyzers.AddRange(analyzers);
     }
 
     [Time]

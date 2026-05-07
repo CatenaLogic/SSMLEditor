@@ -125,12 +125,12 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
 
         using (var synthesizer = new SpeechSynthesizer(config, null))
         {
-            using (var result = await synthesizer.SpeakSsmlAsync(ssml))
-            {
-                if (result.Reason == ResultReason.Canceled)
+                using (var result = await synthesizer.SpeakSsmlAsync(ssml))
                 {
-                    throw Logger.LogErrorAndCreateException("Failed to convert text to speech");
-                }
+                    if (result.Reason == ResultReason.Canceled)
+                    {
+                        throw Logger.LogErrorAndCreateException<InvalidOperationException>("Failed to convert text to speech");
+                    }
 
                 var memoryStream = new MemoryStream();
 

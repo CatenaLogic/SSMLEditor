@@ -11,17 +11,19 @@ using Orc.FileSystem;
 using SSMLEditor.Providers;
 using SSMLEditor.Serialization;
 
-public class TextToSpeechProviderService : InterfaceFinderServiceBase<ITextToSpeechProvider>, ITextToSpeechProviderService
+public class TextToSpeechProviderService : ITextToSpeechProviderService
 {
     private readonly IFileService _fileService;
     private readonly IAppDataService _appDataService;
+    private readonly IEnumerable<ITextToSpeechProvider> _availableProviders;
 
-    public TextToSpeechProviderService(IServiceProvider serviceProvider, IFileService fileService, IAppDataService appDataService)
-        : base(serviceProvider)
+    public TextToSpeechProviderService(IEnumerable<ITextToSpeechProvider> availableProviders, IFileService fileService, IAppDataService appDataService)
     {
+        ArgumentNullException.ThrowIfNull(availableProviders);
         ArgumentNullException.ThrowIfNull(fileService);
         ArgumentNullException.ThrowIfNull(appDataService);
 
+        _availableProviders = availableProviders;
         _fileService = fileService;
         _appDataService = appDataService;
 
@@ -30,7 +32,7 @@ public class TextToSpeechProviderService : InterfaceFinderServiceBase<ITextToSpe
 
     public IEnumerable<ITextToSpeechProvider> GetAvailableProviders()
     {
-        return GetAvailableItems();
+        return _availableProviders;
     }
 
     public List<ITextToSpeechProvider> Providers { get; private set; }

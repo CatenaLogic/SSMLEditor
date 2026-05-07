@@ -1,17 +1,15 @@
-﻿namespace SSMLEditor.Views;
+namespace SSMLEditor.Views;
 
-using System;
 using Catel.MVVM;
-using Catel.Services;
 using Orchestra;
 
 public partial class RibbonView
 {
-    public RibbonView(IServiceProvider serviceProvider, IViewModelWrapperService viewModelWrapperService, IDataContextSubscriptionService dataContextSubscriptionService, IAboutService aboutService)
-        : base(serviceProvider, viewModelWrapperService, dataContextSubscriptionService)
-    {
-        InitializeComponent();
+    [Catel.InjectedService]
+    private readonly IAboutService _aboutService = null!;
 
-        ribbon.AddAboutButton(aboutService);
+    partial void OnInitializedComponent()
+    {
+        ribbon.AddAboutButton(_aboutService);
     }
 }
