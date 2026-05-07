@@ -1,278 +1,277 @@
-﻿namespace SSMLEditor.ViewModels
+﻿namespace SSMLEditor.ViewModels;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Catel.Logging;
+using Catel.Messaging;
+using Catel.MVVM;
+using Orc.FileSystem;
+using Orc.ProjectManagement;
+using Orc.SelectionManagement;
+using SSMLEditor.Messaging;
+
+public class VideoViewModel : ViewModelBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Catel.Logging;
-    using Catel.Messaging;
-    using Catel.MVVM;
-    using Orc.FileSystem;
-    using Orc.ProjectManagement;
-    using Orc.SelectionManagement;
-    using SSMLEditor.Messaging;
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-    public class VideoViewModel : ViewModelBase
+    private readonly IProjectManager _projectManager;
+    private readonly ISelectionManager<Language> _languageSelectionManager;
+    private readonly IFileService _fileService;
+    private readonly IMessageMediator _messageMediator;
+
+    public VideoViewModel(IProjectManager projectManager, ISelectionManager<Language> languageSelectionManager,
+        IFileService fileService, IMessageMediator messageMediator)
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        ArgumentNullException.ThrowIfNull(projectManager);
+        ArgumentNullException.ThrowIfNull(languageSelectionManager);
+        ArgumentNullException.ThrowIfNull(fileService);
+        ArgumentNullException.ThrowIfNull(messageMediator);
 
-        private readonly IProjectManager _projectManager;
-        private readonly ISelectionManager<Language> _languageSelectionManager;
-        private readonly IFileService _fileService;
-        private readonly IMessageMediator _messageMediator;
+        _projectManager = projectManager;
+        _languageSelectionManager = languageSelectionManager;
+        _fileService = fileService;
+        _messageMediator = messageMediator;
 
-        public VideoViewModel(IProjectManager projectManager, ISelectionManager<Language> languageSelectionManager,
-            IFileService fileService, IMessageMediator messageMediator)
+        Play = new TaskCommand(OnPlayExecuteAsync, OnPlayCanExecute);
+        Pause = new TaskCommand(OnPauseExecuteAsync, OnPauseCanExecute);
+    }
+
+    public override string Title { get { return "Video"; } }
+
+    public Uri VideoUri { get; private set; }
+
+    public Uri AudioUri { get; private set; }
+
+    public Uri BaseAudioUri { get; private set; }
+
+    public TimeSpan Position { get; set; }
+
+    public TimeSpan TotalDuration { get; set; }
+
+    public bool IsPlaying { get; private set; }
+
+    public bool EnableBaseAudioTrack { get; set; }
+
+    public bool CanSelectedBaseAudioTrack { get; set; }
+
+    public List<Language> AvailableBaseAudioTracks { get; private set; }
+
+    public Language SelectedBaseAudioTrack { get; set; }
+
+    #region Commands
+    public TaskCommand Play { get; private set; }
+
+    private bool OnPlayCanExecute()
+    {
+        if (VideoUri is null)
         {
-            ArgumentNullException.ThrowIfNull(projectManager);
-            ArgumentNullException.ThrowIfNull(languageSelectionManager);
-            ArgumentNullException.ThrowIfNull(fileService);
-            ArgumentNullException.ThrowIfNull(messageMediator);
-
-            _projectManager = projectManager;
-            _languageSelectionManager = languageSelectionManager;
-            _fileService = fileService;
-            _messageMediator = messageMediator;
-
-            Play = new TaskCommand(OnPlayExecuteAsync, OnPlayCanExecute);
-            Pause = new TaskCommand(OnPauseExecuteAsync, OnPauseCanExecute);
+            return false;
         }
 
-        public override string Title { get { return "Video"; } }
-
-        public Uri VideoUri { get; private set; }
-
-        public Uri AudioUri { get; private set; }
-
-        public Uri BaseAudioUri { get; private set; }
-
-        public TimeSpan Position { get; set; }
-
-        public TimeSpan TotalDuration { get; set; }
-
-        public bool IsPlaying { get; private set; }
-
-        public bool EnableBaseAudioTrack { get; set; }
-
-        public bool CanSelectedBaseAudioTrack { get; set; }
-
-        public List<Language> AvailableBaseAudioTracks { get; private set; }
-
-        public Language SelectedBaseAudioTrack { get; set; }
-
-        #region Commands
-        public TaskCommand Play { get; private set; }
-
-        private bool OnPlayCanExecute()
+        if (AudioUri is null)
         {
-            if (VideoUri is null)
-            {
-                return false;
-            }
-
-            if (AudioUri is null)
-            {
-                return false;
-            }
-
-            if (IsPlaying)
-            {
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-        private async Task OnPlayExecuteAsync()
+        if (IsPlaying)
         {
-            IsPlaying = true;
+            return false;
         }
 
-        public TaskCommand Pause { get; private set; }
+        return true;
+    }
 
-        private bool OnPauseCanExecute()
+    private async Task OnPlayExecuteAsync()
+    {
+        IsPlaying = true;
+    }
+
+    public TaskCommand Pause { get; private set; }
+
+    private bool OnPauseCanExecute()
+    {
+        if (VideoUri is null)
         {
-            if (VideoUri is null)
-            {
-                return false;
-            }
-
-            if (!IsPlaying)
-            {
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-        private async Task OnPauseExecuteAsync()
+        if (!IsPlaying)
         {
-            IsPlaying = false;
+            return false;
         }
 
-        #endregion
+        return true;
+    }
 
-        protected override async Task InitializeAsync()
-        {
-            await base.InitializeAsync();
+    private async Task OnPauseExecuteAsync()
+    {
+        IsPlaying = false;
+    }
 
-            _projectManager.ProjectActivatedAsync += OnProjectManagerProjectActivedAsync;
-            _projectManager.ProjectClosedAsync += OnProjectManagerProjectClosedAsync;
-            _languageSelectionManager.SelectionChanged += OnLanguageSelectionManagerSelectionChanged;
-            _messageMediator.Register<TTSGenerating>(this, OnTTSGenerating);
-            _messageMediator.Register<TTSGenerated>(this, OnTTSGenerated);
+    #endregion
 
-            UpdateProject();
-        }
+    protected override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
 
-        protected override async Task CloseAsync()
-        {
-            _projectManager.ProjectActivatedAsync -= OnProjectManagerProjectActivedAsync;
-            _projectManager.ProjectClosedAsync -= OnProjectManagerProjectClosedAsync;
-            _languageSelectionManager.SelectionChanged -= OnLanguageSelectionManagerSelectionChanged;
-            _messageMediator.Unregister<TTSGenerating>(this, OnTTSGenerating);
-            _messageMediator.Unregister<TTSGenerated>(this, OnTTSGenerated);
+        _projectManager.ProjectActivatedAsync += OnProjectManagerProjectActivedAsync;
+        _projectManager.ProjectClosedAsync += OnProjectManagerProjectClosedAsync;
+        _languageSelectionManager.SelectionChanged += OnLanguageSelectionManagerSelectionChanged;
+        _messageMediator.Register<TTSGenerating>(this, OnTTSGenerating);
+        _messageMediator.Register<TTSGenerated>(this, OnTTSGenerated);
 
-            await base.CloseAsync();
-        }
+        UpdateProject();
+    }
 
-        private async Task OnProjectManagerProjectActivedAsync(object sender, ProjectUpdatedEventArgs e)
-        {
-            if (e.NewProject is null)
-            {
-                // Don't support for now
-                return;
-            }
+    protected override async Task CloseAsync()
+    {
+        _projectManager.ProjectActivatedAsync -= OnProjectManagerProjectActivedAsync;
+        _projectManager.ProjectClosedAsync -= OnProjectManagerProjectClosedAsync;
+        _languageSelectionManager.SelectionChanged -= OnLanguageSelectionManagerSelectionChanged;
+        _messageMediator.Unregister<TTSGenerating>(this, OnTTSGenerating);
+        _messageMediator.Unregister<TTSGenerated>(this, OnTTSGenerated);
 
-            UpdateProject();
-        }
+        await base.CloseAsync();
+    }
 
-        private async Task OnProjectManagerProjectClosedAsync(object sender, ProjectEventArgs e)
+    private async Task OnProjectManagerProjectActivedAsync(object sender, ProjectUpdatedEventArgs e)
+    {
+        if (e.NewProject is null)
         {
             // Don't support for now
-            //UpdateProject();
+            return;
         }
 
-        private void OnLanguageSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<Language> e)
+        UpdateProject();
+    }
+
+    private async Task OnProjectManagerProjectClosedAsync(object sender, ProjectEventArgs e)
+    {
+        // Don't support for now
+        //UpdateProject();
+    }
+
+    private void OnLanguageSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<Language> e)
+    {
+        Pause.Execute();
+
+        UpdateProject();
+    }
+
+    private void OnSelectedBaseAudioTrackChanged()
+    {
+        UpdateBaseAudio();
+    }
+
+    private void OnEnableBaseAudioTrackChanged()
+    {
+        UpdateBaseAudio();
+    }
+
+    private void OnTTSGenerating(TTSGenerating message)
+    {
+        if (message.Data == _languageSelectionManager.GetSelectedItem())
         {
+            Log.Info($"Current language is being (re)generated, stopping playback");
+
             Pause.Execute();
+            AudioUri = null;
+        }
+    }
+
+    private void OnTTSGenerated(TTSGenerated message)
+    {
+        if (message.Data == _languageSelectionManager.GetSelectedItem())
+        {
+            Log.Info($"Current language is (re)generated");
 
             UpdateProject();
         }
+    }
 
-        private void OnSelectedBaseAudioTrackChanged()
-        {
-            UpdateBaseAudio();
-        }
+    private void UpdateBaseAudio()
+    {
+        Uri baseAudioUri = null;
 
-        private void OnEnableBaseAudioTrackChanged()
-        {
-            UpdateBaseAudio();
-        }
+        var availableBaseAudioTracks = new List<Language>();
 
-        private void OnTTSGenerating(TTSGenerating message)
+        var project = _projectManager.GetActiveProject<Project>();
+        if (project is not null)
         {
-            if (message.Data == _languageSelectionManager.GetSelectedItem())
+            availableBaseAudioTracks.AddRange(from x in project.ProjectRoot.Languages
+                                              orderby x.Culture.DisplayName
+                                              select x);
+
+            var selectedBaseAudioTrack = SelectedBaseAudioTrack ?? availableBaseAudioTracks.FirstOrDefault();
+            if (selectedBaseAudioTrack is not null)
             {
-                Log.Info($"Current language is being (re)generated, stopping playback");
+                var audioFileName = project.GetFullAudioPath(selectedBaseAudioTrack);
 
-                Pause.Execute();
-                AudioUri = null;
-            }
-        }
-
-        private void OnTTSGenerated(TTSGenerated message)
-        {
-            if (message.Data == _languageSelectionManager.GetSelectedItem())
-            {
-                Log.Info($"Current language is (re)generated");
-
-                UpdateProject();
-            }
-        }
-
-        private void UpdateBaseAudio()
-        {
-            Uri baseAudioUri = null;
-
-            var availableBaseAudioTracks = new List<Language>();
-
-            var project = _projectManager.GetActiveProject<Project>();
-            if (project is not null)
-            {
-                availableBaseAudioTracks.AddRange(from x in project.ProjectRoot.Languages
-                                                  orderby x.Culture.DisplayName
-                                                  select x);
-
-                var selectedBaseAudioTrack = SelectedBaseAudioTrack ?? availableBaseAudioTracks.FirstOrDefault();
-                if (selectedBaseAudioTrack is not null)
+                if (_fileService.Exists(audioFileName))
                 {
-                    var audioFileName = project.GetFullAudioPath(selectedBaseAudioTrack);
-
-                    if (_fileService.Exists(audioFileName))
-                    {
-                        baseAudioUri = new Uri(audioFileName, UriKind.RelativeOrAbsolute);
-                    }
+                    baseAudioUri = new Uri(audioFileName, UriKind.RelativeOrAbsolute);
                 }
             }
-
-            AvailableBaseAudioTracks = availableBaseAudioTracks;
-            CanSelectedBaseAudioTrack = AvailableBaseAudioTracks.Count > 0;
-
-            if (SelectedBaseAudioTrack is null)
-            {
-                SelectedBaseAudioTrack = availableBaseAudioTracks.FirstOrDefault();
-            }
-
-            if (!EnableBaseAudioTrack)
-            {
-                baseAudioUri = null;
-            }
-
-            BaseAudioUri = baseAudioUri;
         }
 
-        private void UpdateProject()
+        AvailableBaseAudioTracks = availableBaseAudioTracks;
+        CanSelectedBaseAudioTrack = AvailableBaseAudioTracks.Count > 0;
+
+        if (SelectedBaseAudioTrack is null)
         {
-            if (IsClosing || IsClosed)
+            SelectedBaseAudioTrack = availableBaseAudioTracks.FirstOrDefault();
+        }
+
+        if (!EnableBaseAudioTrack)
+        {
+            baseAudioUri = null;
+        }
+
+        BaseAudioUri = baseAudioUri;
+    }
+
+    private void UpdateProject()
+    {
+        if (IsClosing || IsClosed)
+        {
+            return;
+        }
+
+        Uri videoUri = null;
+        Uri audioUri = null;
+
+        var project = _projectManager.GetActiveProject<Project>();
+        if (project is not null)
+        {
+            var videoFileName = project.GetFullPath(project.ProjectRoot.Video);
+
+            if (_fileService.Exists(videoFileName))
             {
-                return;
+                videoUri = new Uri(videoFileName, UriKind.RelativeOrAbsolute);
             }
 
-            Uri videoUri = null;
-            Uri audioUri = null;
-
-            var project = _projectManager.GetActiveProject<Project>();
-            if (project is not null)
+            var language = _languageSelectionManager.GetSelectedItem();
+            if (language is not null)
             {
-                var videoFileName = project.GetFullPath(project.ProjectRoot.Video);
+                var audioFileName = project.GetFullAudioPath(language);
 
-                if (_fileService.Exists(videoFileName))
+                if (_fileService.Exists(audioFileName))
                 {
-                    videoUri = new Uri(videoFileName, UriKind.RelativeOrAbsolute);
-                }
-
-                var language = _languageSelectionManager.GetSelectedItem();
-                if (language is not null)
-                {
-                    var audioFileName = project.GetFullAudioPath(language);
-
-                    if (_fileService.Exists(audioFileName))
-                    {
-                        audioUri = new Uri(audioFileName, UriKind.RelativeOrAbsolute);
-                    }
+                    audioUri = new Uri(audioFileName, UriKind.RelativeOrAbsolute);
                 }
             }
+        }
 
-            VideoUri = videoUri;
-            AudioUri = audioUri;
+        VideoUri = videoUri;
+        AudioUri = audioUri;
 
-            UpdateBaseAudio();
+        UpdateBaseAudio();
 
-            if (IsPlaying && videoUri is null)
-            {
-                IsPlaying = false;
-            }
+        if (IsPlaying && videoUri is null)
+        {
+            IsPlaying = false;
         }
     }
 }

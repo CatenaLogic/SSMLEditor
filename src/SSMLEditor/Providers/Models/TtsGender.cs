@@ -1,11 +1,10 @@
-﻿namespace SSMLEditor.Providers
+﻿namespace SSMLEditor.Providers;
+
+public enum TtsGender
 {
-    public enum TtsGender
-    {
-        Male,
+    Male,
 
-        Female,
+    Female,
 
-        Unknown
-    }
+    Unknown
 }

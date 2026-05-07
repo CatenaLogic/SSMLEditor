@@ -1,15 +1,14 @@
-﻿namespace SSMLEditor
+﻿namespace SSMLEditor;
+
+using System;
+using Orchestra;
+
+public class ShellActivatedActionQueue : ApplicationWatcherBase
 {
-    using System;
-    using Orchestra;
-
-    public class ShellActivatedActionQueue : ApplicationWatcherBase
+    public void EnqueueAction(Action action)
     {
-        public void EnqueueAction(Action action)
-        {
-            ArgumentNullException.ThrowIfNull(action);
+        ArgumentNullException.ThrowIfNull(action);
 
-            EnqueueShellActivatedAction(w => action());
-        }
+        EnqueueShellActivatedAction(w => action());
     }
 }

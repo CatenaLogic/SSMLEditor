@@ -1,11 +1,10 @@
-﻿namespace SSMLEditor.Providers
+﻿namespace SSMLEditor.Providers;
+
+using System.Globalization;
+
+public class TtsLanguage
 {
-    using System.Globalization;
+    public string Name { get; set; }
 
-    public class TtsLanguage
-    {
-        public string Name { get; set; }
-
-        public CultureInfo CultureInfo { get; set; }
-    }
+    public CultureInfo CultureInfo { get; set; }
 }

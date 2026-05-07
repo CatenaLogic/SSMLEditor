@@ -1,84 +1,83 @@
-﻿namespace SSMLEditor.ViewModels
+﻿namespace SSMLEditor.ViewModels;
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Catel.Configuration;
+using Catel.MVVM;
+using Orc.Theming;
+
+public class WindowCommandsViewModel : ViewModelBase
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Catel.Configuration;
-    using Catel.MVVM;
-    using Orc.Theming;
+    private readonly IBaseColorSchemeService _baseColorSchemeService;
+    private readonly IConfigurationService _configurationService;
 
-    public class WindowCommandsViewModel : ViewModelBase
+    public WindowCommandsViewModel(IBaseColorSchemeService baseColorSchemeService, IConfigurationService configurationService)
     {
-        private readonly IBaseColorSchemeService _baseColorSchemeService;
-        private readonly IConfigurationService _configurationService;
+        ArgumentNullException.ThrowIfNull(baseColorSchemeService);
+        ArgumentNullException.ThrowIfNull(configurationService);
 
-        public WindowCommandsViewModel(IBaseColorSchemeService baseColorSchemeService, IConfigurationService configurationService)
+        _baseColorSchemeService = baseColorSchemeService;
+        _configurationService = configurationService;
+
+        SwitchTheme = new Command(OnSwitchThemeExecute);
+    }
+
+    public bool IsInDarkMode { get; private set; }
+
+    public Command SwitchTheme { get; private set; }
+
+    private void OnSwitchThemeExecute()
+    {
+        var availableSchemes = _baseColorSchemeService.GetAvailableBaseColorSchemes();
+        if (availableSchemes.Count <= 1)
         {
-            ArgumentNullException.ThrowIfNull(baseColorSchemeService);
-            ArgumentNullException.ThrowIfNull(configurationService);
-
-            _baseColorSchemeService = baseColorSchemeService;
-            _configurationService = configurationService;
-
-            SwitchTheme = new Command(OnSwitchThemeExecute);
+            return;
         }
 
-        public bool IsInDarkMode { get; private set; }
+        var currentScheme = _baseColorSchemeService.GetBaseColorScheme();
+        var index = (availableSchemes[0] == currentScheme) ? 1 : 0;
 
-        public Command SwitchTheme { get; private set; }
+        _baseColorSchemeService.SetBaseColorScheme(availableSchemes[index]);
+    }
 
-        private void OnSwitchThemeExecute()
+    protected override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
+
+        _baseColorSchemeService.BaseColorSchemeChanged += OnBaseColorSchemeServiceBaseColorSchemeChanged;
+
+        var value = _configurationService.GetRoamingValue(Settings.Application.General.ThemeBaseColor, Settings.Application.General.ThemeBaseColorDefaultValue);
+
+        var availableValues = _baseColorSchemeService.GetAvailableBaseColorSchemes().ToList();
+        if (availableValues.Contains(value))
         {
-            var availableSchemes = _baseColorSchemeService.GetAvailableBaseColorSchemes();
-            if (availableSchemes.Count <= 1)
-            {
-                return;
-            }
-
-            var currentScheme = _baseColorSchemeService.GetBaseColorScheme();
-            var index = (availableSchemes[0] == currentScheme) ? 1 : 0;
-
-            _baseColorSchemeService.SetBaseColorScheme(availableSchemes[index]);
+            _baseColorSchemeService.SetBaseColorScheme(value);
         }
 
-        protected override async Task InitializeAsync()
-        {
-            await base.InitializeAsync();
+        UpdateState();
+    }
 
-            _baseColorSchemeService.BaseColorSchemeChanged += OnBaseColorSchemeServiceBaseColorSchemeChanged;
+    protected override async Task CloseAsync()
+    {
+        _baseColorSchemeService.BaseColorSchemeChanged -= OnBaseColorSchemeServiceBaseColorSchemeChanged;
 
-            var value = _configurationService.GetRoamingValue(Settings.Application.General.ThemeBaseColor, Settings.Application.General.ThemeBaseColorDefaultValue);
+        await base.CloseAsync();
+    }
 
-            var availableValues = _baseColorSchemeService.GetAvailableBaseColorSchemes().ToList();
-            if (availableValues.Contains(value))
-            {
-                _baseColorSchemeService.SetBaseColorScheme(value);
-            }
+    private void OnBaseColorSchemeServiceBaseColorSchemeChanged(object sender, EventArgs e)
+    {
+        var baseColorScheme = _baseColorSchemeService.GetBaseColorScheme();
 
-            UpdateState();
-        }
+        _configurationService.SetRoamingValue(Settings.Application.General.ThemeBaseColor, baseColorScheme);
 
-        protected override async Task CloseAsync()
-        {
-            _baseColorSchemeService.BaseColorSchemeChanged -= OnBaseColorSchemeServiceBaseColorSchemeChanged;
+        UpdateState();
+    }
 
-            await base.CloseAsync();
-        }
+    private void UpdateState()
+    {
+        var baseColorScheme = _baseColorSchemeService.GetBaseColorScheme();
 
-        private void OnBaseColorSchemeServiceBaseColorSchemeChanged(object sender, EventArgs e)
-        {
-            var baseColorScheme = _baseColorSchemeService.GetBaseColorScheme();
-
-            _configurationService.SetRoamingValue(Settings.Application.General.ThemeBaseColor, baseColorScheme);
-
-            UpdateState();
-        }
-
-        private void UpdateState()
-        {
-            var baseColorScheme = _baseColorSchemeService.GetBaseColorScheme();
-
-            IsInDarkMode = baseColorScheme == "Dark";
-        }
+        IsInDarkMode = baseColorScheme == "Dark";
     }
 }

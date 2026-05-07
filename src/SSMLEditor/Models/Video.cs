@@ -1,7 +1,6 @@
-﻿namespace SSMLEditor
+﻿namespace SSMLEditor;
+
+public class Video
 {
-    public class Video
-    {
-        public string RelativeFileName { get; set; }
-    }
+    public string RelativeFileName { get; set; }
 }

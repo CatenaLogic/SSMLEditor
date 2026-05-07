@@ -1,92 +1,91 @@
-﻿namespace SSMLEditor.ViewModels
+﻿namespace SSMLEditor.ViewModels;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Catel.MVVM;
+using Catel.Reflection;
+using Catel.Services;
+using Orc.ProjectManagement;
+using Orc.SelectionManagement;
+using Orchestra.ViewModels;
+using SSMLEditor.Providers;
+using SSMLEditor.Services;
+
+public class RibbonViewModel : ViewModelBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Catel.MVVM;
-    using Catel.Reflection;
-    using Catel.Services;
-    using Orc.ProjectManagement;
-    using Orc.SelectionManagement;
-    using Orchestra.ViewModels;
-    using SSMLEditor.Providers;
-    using SSMLEditor.Services;
+    private readonly IProjectManager _projectManager;
+    private readonly ISelectionManager<ITextToSpeechProvider> _textToSpeechProviderSelectionManager;
+    private readonly ITextToSpeechProviderService _textToSpeechProviderService;
+    private readonly IUIVisualizerService _uiVisualizerService;
 
-    public class RibbonViewModel : ViewModelBase
+    public RibbonViewModel(IUIVisualizerService uiVisualizerService, IProjectManager projectManager,
+        ISelectionManager<ITextToSpeechProvider> textToSpeechProviderSelectionManager, ITextToSpeechProviderService textToSpeechProviderService)
     {
-        private readonly IProjectManager _projectManager;
-        private readonly ISelectionManager<ITextToSpeechProvider> _textToSpeechProviderSelectionManager;
-        private readonly ITextToSpeechProviderService _textToSpeechProviderService;
-        private readonly IUIVisualizerService _uiVisualizerService;
+        ArgumentNullException.ThrowIfNull(uiVisualizerService);
+        ArgumentNullException.ThrowIfNull(projectManager);
+        ArgumentNullException.ThrowIfNull(textToSpeechProviderSelectionManager);
+        ArgumentNullException.ThrowIfNull(textToSpeechProviderSelectionManager);
 
-        public RibbonViewModel(IUIVisualizerService uiVisualizerService, IProjectManager projectManager,
-            ISelectionManager<ITextToSpeechProvider> textToSpeechProviderSelectionManager, ITextToSpeechProviderService textToSpeechProviderService)
-        {
-            ArgumentNullException.ThrowIfNull(uiVisualizerService);
-            ArgumentNullException.ThrowIfNull(projectManager);
-            ArgumentNullException.ThrowIfNull(textToSpeechProviderSelectionManager);
-            ArgumentNullException.ThrowIfNull(textToSpeechProviderSelectionManager);
+        _uiVisualizerService = uiVisualizerService;
+        _projectManager = projectManager;
+        _textToSpeechProviderSelectionManager = textToSpeechProviderSelectionManager;
+        _textToSpeechProviderService = textToSpeechProviderService;
 
-            _uiVisualizerService = uiVisualizerService;
-            _projectManager = projectManager;
-            _textToSpeechProviderSelectionManager = textToSpeechProviderSelectionManager;
-            _textToSpeechProviderService = textToSpeechProviderService;
+        ShowKeyboardMappings = new TaskCommand(OnShowKeyboardMappingsExecuteAsync);
 
-            ShowKeyboardMappings = new TaskCommand(OnShowKeyboardMappingsExecuteAsync);
+        Title = AssemblyHelper.GetEntryAssembly().Title();
+    }
 
-            Title = AssemblyHelper.GetEntryAssembly().Title();
-        }
+    public Project Project { get; private set; }
 
-        public Project Project { get; private set; }
+    public List<ITextToSpeechProvider> AvailableProviders { get; private set; }
 
-        public List<ITextToSpeechProvider> AvailableProviders { get; private set; }
+    public ITextToSpeechProvider SelectedProvider { get; set; }
 
-        public ITextToSpeechProvider SelectedProvider { get; set; }
+    #region Commands
+    public TaskCommand ShowKeyboardMappings { get; private set; }
 
-        #region Commands
-        public TaskCommand ShowKeyboardMappings { get; private set; }
+    private async Task OnShowKeyboardMappingsExecuteAsync()
+    {
+        await _uiVisualizerService.ShowDialogAsync<KeyboardMappingsCustomizationViewModel>();
+    }
+    #endregion
 
-        private async Task OnShowKeyboardMappingsExecuteAsync()
-        {
-            await _uiVisualizerService.ShowDialogAsync<KeyboardMappingsCustomizationViewModel>();
-        }
-        #endregion
+    protected override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
 
-        protected override async Task InitializeAsync()
-        {
-            await base.InitializeAsync();
+        AvailableProviders = _textToSpeechProviderService.Providers.ToList();
+        SelectedProvider = _textToSpeechProviderSelectionManager.GetSelectedItem() ?? AvailableProviders.FirstOrDefault();
 
-            AvailableProviders = _textToSpeechProviderService.Providers.ToList();
-            SelectedProvider = _textToSpeechProviderSelectionManager.GetSelectedItem() ?? AvailableProviders.FirstOrDefault();
+        _projectManager.ProjectActivatedAsync += OnProjectActivatedAsync;
+        _textToSpeechProviderSelectionManager.SelectionChanged += OnTextToSpeechProviderSelectionManagerSelectionChanged;
+    }
 
-            _projectManager.ProjectActivatedAsync += OnProjectActivatedAsync;
-            _textToSpeechProviderSelectionManager.SelectionChanged += OnTextToSpeechProviderSelectionManagerSelectionChanged;
-        }
+    protected override async Task CloseAsync()
+    {
+        _projectManager.ProjectActivatedAsync -= OnProjectActivatedAsync;
+        _textToSpeechProviderSelectionManager.SelectionChanged -= OnTextToSpeechProviderSelectionManagerSelectionChanged;
 
-        protected override async Task CloseAsync()
-        {
-            _projectManager.ProjectActivatedAsync -= OnProjectActivatedAsync;
-            _textToSpeechProviderSelectionManager.SelectionChanged -= OnTextToSpeechProviderSelectionManagerSelectionChanged;
+        await base.CloseAsync();
+    }
 
-            await base.CloseAsync();
-        }
+    private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs e)
+    {
+        Project = (Project)e.NewProject;
 
-        private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs e)
-        {
-            Project = (Project)e.NewProject;
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    private void OnTextToSpeechProviderSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
+    {
+        SelectedProvider = _textToSpeechProviderSelectionManager.GetSelectedItem();
+    }
 
-        private void OnTextToSpeechProviderSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
-        {
-            SelectedProvider = _textToSpeechProviderSelectionManager.GetSelectedItem();
-        }
-
-        private void OnSelectedProviderChanged()
-        {
-            _textToSpeechProviderSelectionManager.Replace(SelectedProvider);
-        }
+    private void OnSelectedProviderChanged()
+    {
+        _textToSpeechProviderSelectionManager.Replace(SelectedProvider);
     }
 }

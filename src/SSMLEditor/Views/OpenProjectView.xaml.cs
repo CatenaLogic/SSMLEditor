@@ -1,10 +1,9 @@
-﻿namespace SSMLEditor.Views
+﻿namespace SSMLEditor.Views;
+
+public partial class OpenProjectView
 {
-    public partial class OpenProjectView
+    public OpenProjectView()
     {
-        public OpenProjectView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

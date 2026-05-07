@@ -1,8 +1,7 @@
-﻿namespace SSMLEditor.ViewModels
-{
-    using Catel.MVVM;
+﻿namespace SSMLEditor.ViewModels;
 
-    public class OpenProjectViewModel : ViewModelBase
-    {
-    }
+using Catel.MVVM;
+
+public class OpenProjectViewModel : ViewModelBase
+{
 }

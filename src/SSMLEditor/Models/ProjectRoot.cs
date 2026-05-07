@@ -1,17 +1,16 @@
-﻿namespace SSMLEditor
+﻿namespace SSMLEditor;
+
+using System.Collections.Generic;
+
+public class ProjectRoot
 {
-    using System.Collections.Generic;
-
-    public class ProjectRoot
+    public ProjectRoot()
     {
-        public ProjectRoot()
-        {
-            Languages = new List<Language>();
-            Video = new Video();
-        }
-
-        public List<Language> Languages { get; private set; }
-
-        public Video Video { get; private set; } 
+        Languages = new List<Language>();
+        Video = new Video();
     }
+
+    public List<Language> Languages { get; private set; }
+
+    public Video Video { get; private set; } 
 }

@@ -1,10 +1,9 @@
-﻿namespace SSMLEditor.Wizards.AddProvider.Views
+﻿namespace SSMLEditor.Wizards.AddProvider.Views;
+
+public partial class ProviderWizardPageView
 {
-    public partial class ProviderWizardPageView
+    public ProviderWizardPageView()
     {
-        public ProviderWizardPageView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

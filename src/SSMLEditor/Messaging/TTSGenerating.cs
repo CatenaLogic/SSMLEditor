@@ -1,16 +1,15 @@
-﻿namespace SSMLEditor.Messaging
+﻿namespace SSMLEditor.Messaging;
+
+using Catel.Messaging;
+
+public class TTSGenerating : MessageBase<TTSGenerating, Language>
 {
-    using Catel.Messaging;
-
-    public class TTSGenerating : MessageBase<TTSGenerating, Language>
+    public TTSGenerating()
     {
-        public TTSGenerating()
-        {
-        }
+    }
 
-        public TTSGenerating(Language language)
-            : base(language)
-        {
-        }
+    public TTSGenerating(Language language)
+        : base(language)
+    {
     }
 }

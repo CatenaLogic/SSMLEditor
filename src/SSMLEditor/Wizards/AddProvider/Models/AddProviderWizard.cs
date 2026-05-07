@@ -1,35 +1,34 @@
-﻿namespace SSMLEditor.Wizards.AddProvider
+﻿namespace SSMLEditor.Wizards.AddProvider;
+
+using Catel.IoC;
+using Catel.Logging;
+using Orc.Wizard;
+using SSMLEditor.Providers;
+
+public class AddProviderWizard : WizardBase
 {
-    using Catel.IoC;
-    using Catel.Logging;
-    using Orc.Wizard;
-    using SSMLEditor.Providers;
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-    public class AddProviderWizard : WizardBase
+    public AddProviderWizard(ITypeFactory typeFactory)
+        : base(typeFactory)
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        Title = "Add provider"; 
 
-        public AddProviderWizard(ITypeFactory typeFactory)
-            : base(typeFactory)
+        this.AddPage<ProviderWizardPage>();
+        this.AddPage<ProviderPropertiesWizardPage>();
+        this.AddPage<SummaryWizardPage>();
+
+        MinSize = new System.Windows.Size(800, 600);
+        MaxSize = new System.Windows.Size(1000, 800);
+        ResizeMode = System.Windows.ResizeMode.CanResize;
+    }
+
+    public ITextToSpeechProvider Provider
+    {
+        get
         {
-            Title = "Add provider"; 
-
-            this.AddPage<ProviderWizardPage>();
-            this.AddPage<ProviderPropertiesWizardPage>();
-            this.AddPage<SummaryWizardPage>();
-
-            MinSize = new System.Windows.Size(800, 600);
-            MaxSize = new System.Windows.Size(1000, 800);
-            ResizeMode = System.Windows.ResizeMode.CanResize;
-        }
-
-        public ITextToSpeechProvider Provider
-        {
-            get
-            {
-                var wizardPage = this.FindPageByType<ProviderWizardPage>();
-                return wizardPage.SelectedProvider;
-            }
+            var wizardPage = this.FindPageByType<ProviderWizardPage>();
+            return wizardPage.SelectedProvider;
         }
     }
 }

@@ -1,27 +1,26 @@
-﻿namespace SSMLEditor.ProjectManagement
+﻿namespace SSMLEditor.ProjectManagement;
+
+using System;
+using System.Threading.Tasks;
+using Orc.ProjectManagement;
+using Services;
+
+public class MainWindowTitleProjectWatcher : ProjectWatcherBase
 {
-    using System;
-    using System.Threading.Tasks;
-    using Orc.ProjectManagement;
-    using Services;
+    private readonly IMainWindowTitleService _mainWindowTitleService;
 
-    public class MainWindowTitleProjectWatcher : ProjectWatcherBase
+    public MainWindowTitleProjectWatcher(IProjectManager projectManager, IMainWindowTitleService mainWindowTitleService)
+        : base(projectManager)
     {
-        private readonly IMainWindowTitleService _mainWindowTitleService;
+        ArgumentNullException.ThrowIfNull(mainWindowTitleService);
 
-        public MainWindowTitleProjectWatcher(IProjectManager projectManager, IMainWindowTitleService mainWindowTitleService)
-            : base(projectManager)
-        {
-            ArgumentNullException.ThrowIfNull(mainWindowTitleService);
+        _mainWindowTitleService = mainWindowTitleService;
+    }
 
-            _mainWindowTitleService = mainWindowTitleService;
-        }
+    protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
+    {
+        _mainWindowTitleService.UpdateTitle();
 
-        protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
-        {
-            _mainWindowTitleService.UpdateTitle();
-
-            return base.OnActivatedAsync(oldProject, newProject);
-        }
+        return base.OnActivatedAsync(oldProject, newProject);
     }
 }

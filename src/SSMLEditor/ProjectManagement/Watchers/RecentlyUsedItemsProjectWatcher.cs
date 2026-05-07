@@ -1,28 +1,26 @@
-﻿namespace SSMLEditor.ProjectManagement
+﻿namespace SSMLEditor.ProjectManagement;
+
+using System;
+using System.Threading.Tasks;
+using Orc.ProjectManagement;
+using Orchestra;
+
+public class RecentlyUsedItemsProjectWatcher : ProjectWatcherBase
 {
-    using System;
-    using System.Threading.Tasks;
-    using Orc.ProjectManagement;
-    using Orchestra;
-    using Orchestra.Services;
+    private readonly IRecentlyUsedItemsService _recentlyUsedItemsService;
 
-    public class RecentlyUsedItemsProjectWatcher : ProjectWatcherBase
+    public RecentlyUsedItemsProjectWatcher(IProjectManager projectManager, IRecentlyUsedItemsService recentlyUsedItemsService)
+        : base(projectManager)
     {
-        private readonly IRecentlyUsedItemsService _recentlyUsedItemsService;
+        ArgumentNullException.ThrowIfNull(recentlyUsedItemsService);
 
-        public RecentlyUsedItemsProjectWatcher(IProjectManager projectManager, IRecentlyUsedItemsService recentlyUsedItemsService)
-            : base(projectManager)
-        {
-            ArgumentNullException.ThrowIfNull(recentlyUsedItemsService);
+        _recentlyUsedItemsService = recentlyUsedItemsService;
+    }
 
-            _recentlyUsedItemsService = recentlyUsedItemsService;
-        }
+    protected override Task OnLoadedAsync(IProject project)
+    {
+        _recentlyUsedItemsService.AddItem(new RecentlyUsedItem(project.Location, DateTime.Now));
 
-        protected override Task OnLoadedAsync(IProject project)
-        {
-            _recentlyUsedItemsService.AddItem(new RecentlyUsedItem(project.Location, DateTime.Now));
-
-            return base.OnLoadedAsync(project);
-        }
+        return base.OnLoadedAsync(project);
     }
 }

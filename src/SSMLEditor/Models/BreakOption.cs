@@ -1,9 +1,8 @@
-﻿namespace SSMLEditor
-{
-    public class BreakOption
-    {
-        public string Time { get; set; }
+﻿namespace SSMLEditor;
 
-        public string Strength { get; set; }
-    }
+public class BreakOption
+{
+    public string Time { get; set; }
+
+    public string Strength { get; set; }
 }

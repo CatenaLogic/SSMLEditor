@@ -1,69 +1,68 @@
-﻿namespace SSMLEditor
+﻿namespace SSMLEditor;
+
+using System;
+using Orc.ProjectManagement;
+
+public sealed class Project : ProjectBase, IProject, IEquatable<Project>
 {
-    using System;
-    using Orc.ProjectManagement;
-
-    public sealed class Project : ProjectBase, IProject, IEquatable<Project>
+    public Project(string location)
+        : this(location, location)
     {
-        public Project(string location)
-            : this(location, location)
+        // Keep empty
+    }
+
+    public Project(string location, string title)
+        : base(location, title)
+    {
+        ProjectRoot = new ProjectRoot();
+    }
+
+    public ProjectRoot ProjectRoot { get; private set; }
+
+    public bool Equals(Project other)
+    {
+        if (ReferenceEquals(null, other))
         {
-            // Keep empty
+            return false;
         }
 
-        public Project(string location, string title)
-            : base(location, title)
+        if (ReferenceEquals(this, other))
         {
-            ProjectRoot = new ProjectRoot();
+            return true;
         }
 
-        public ProjectRoot ProjectRoot { get; private set; }
+        return string.Equals(Location, other.Location);
+    }
 
-        public bool Equals(Project other)
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj))
         {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return string.Equals(Location, other.Location);
+            return false;
         }
 
-        public override bool Equals(object obj)
+        if (ReferenceEquals(this, obj))
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            return obj.GetType() == GetType() && Equals((Project) obj);
+            return true;
         }
 
-        public override int GetHashCode()
-        {
-            return (Location is not null ? Location.GetHashCode() : 0);
-        }
+        return obj.GetType() == GetType() && Equals((Project) obj);
+    }
 
-        public void SetIsDirty(bool isDirty)
+    public override int GetHashCode()
+    {
+        return (Location is not null ? Location.GetHashCode() : 0);
+    }
+
+    public void SetIsDirty(bool isDirty)
+    {
+        if (isDirty)
         {
-            if (isDirty)
-            {
-                MarkAsDirty();
-            }
-            else
-            {
-                ClearIsDirty();
-            }
+            MarkAsDirty();
+        }
+        else
+        {
+            ClearIsDirty();
         }
     }
 }

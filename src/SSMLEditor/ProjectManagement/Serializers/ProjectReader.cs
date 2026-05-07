@@ -1,74 +1,73 @@
-﻿namespace SSMLEditor.ProjectManagement
+﻿namespace SSMLEditor.ProjectManagement;
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Catel.Logging;
+using Newtonsoft.Json;
+using Orc.FileSystem;
+using Orc.Notifications;
+using Orc.ProjectManagement;
+
+public class ProjectReader : ProjectReaderBase
 {
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
-    using Catel.Logging;
-    using Newtonsoft.Json;
-    using Orc.FileSystem;
-    using Orc.Notifications;
-    using Orc.ProjectManagement;
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-    public class ProjectReader : ProjectReaderBase
+    private readonly IFileService _fileService;
+    private readonly INotificationService _notificationService;
+
+    public ProjectReader(IFileService fileService, INotificationService notificationService)
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        ArgumentNullException.ThrowIfNull(fileService);
+        ArgumentNullException.ThrowIfNull(notificationService);
 
-        private readonly IFileService _fileService;
-        private readonly INotificationService _notificationService;
+        _fileService = fileService;
+        _notificationService = notificationService;
+    }
 
-        public ProjectReader(IFileService fileService, INotificationService notificationService)
+    protected override async Task<IProject> ReadFromLocationAsync(string location)
+    {
+        try
         {
-            ArgumentNullException.ThrowIfNull(fileService);
-            ArgumentNullException.ThrowIfNull(notificationService);
-
-            _fileService = fileService;
-            _notificationService = notificationService;
-        }
-
-        protected override async Task<IProject> ReadFromLocationAsync(string location)
-        {
-            try
+            var project = new Project(location)
             {
-                var project = new Project(location)
+            };
+
+            var json = await _fileService.ReadAllTextAsync(location);
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+
+            };
+
+            JsonConvert.PopulateObject(json, project.ProjectRoot, jsonSettings);
+
+            var directory = Path.GetDirectoryName(location);
+
+            foreach (var language in project.ProjectRoot.Languages)
+            {
+                Log.Debug($"Reading project language '{language}'");
+
+                var languageFileName = project.GetFullPath(language);
+
+                if (!_fileService.Exists(languageFileName))
                 {
-                };
-
-                var json = await _fileService.ReadAllTextAsync(location);
-
-                var jsonSettings = new JsonSerializerSettings
-                {
-
-                };
-
-                JsonConvert.PopulateObject(json, project.ProjectRoot, jsonSettings);
-
-                var directory = Path.GetDirectoryName(location);
-
-                foreach (var language in project.ProjectRoot.Languages)
-                {
-                    Log.Debug($"Reading project language '{language}'");
-
-                    var languageFileName = project.GetFullPath(language);
-
-                    if (!_fileService.Exists(languageFileName))
-                    {
-                        Log.Warning($"Could not find '{languageFileName}'");
-                        continue;
-                    }
-
-                    language.Content = await _fileService.ReadAllTextAsync(languageFileName);
-                    language.OriginalContent = language.Content;
+                    Log.Warning($"Could not find '{languageFileName}'");
+                    continue;
                 }
 
-                return project;
-
-            }
-            catch (System.IO.IOException ex)
-            {
-                _notificationService.ShowNotification("Could not open file", ex.Message);
+                language.Content = await _fileService.ReadAllTextAsync(languageFileName);
+                language.OriginalContent = language.Content;
             }
 
-            return null;
+            return project;
+
         }
+        catch (System.IO.IOException ex)
+        {
+            _notificationService.ShowNotification("Could not open file", ex.Message);
+        }
+
+        return null;
     }
 }

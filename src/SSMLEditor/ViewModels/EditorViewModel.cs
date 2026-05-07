@@ -1,106 +1,105 @@
-﻿namespace SSMLEditor.ViewModels
+﻿namespace SSMLEditor.ViewModels;
+
+using System;
+using System.Threading.Tasks;
+using System.Windows.Documents;
+using Catel;
+using Catel.MVVM;
+using Orc.ProjectManagement;
+using SSMLEditor.Services;
+
+public class EditorViewModel : ViewModelBase
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Windows.Documents;
-    using Catel;
-    using Catel.MVVM;
-    using Orc.ProjectManagement;
-    using SSMLEditor.Services;
+    private readonly IProjectManager _projectManager;
+    private readonly ISsmlConverterService _ssmlConverterService;
 
-    public class EditorViewModel : ViewModelBase
+    private bool _isUpdating;
+
+    public EditorViewModel(Language language, IProjectManager projectManager, ISsmlConverterService ssmlConverterService)
     {
-        private readonly IProjectManager _projectManager;
-        private readonly ISsmlConverterService _ssmlConverterService;
+        ArgumentNullException.ThrowIfNull(language);
+        ArgumentNullException.ThrowIfNull(projectManager);
+        ArgumentNullException.ThrowIfNull(ssmlConverterService);
 
-        private bool _isUpdating;
+        Language = language;
+        _projectManager = projectManager;
+        _ssmlConverterService = ssmlConverterService;
+    }
 
-        public EditorViewModel(Language language, IProjectManager projectManager, ISsmlConverterService ssmlConverterService)
-        {
-            ArgumentNullException.ThrowIfNull(language);
-            ArgumentNullException.ThrowIfNull(projectManager);
-            ArgumentNullException.ThrowIfNull(ssmlConverterService);
+    public Language Language { get; private set; }
 
-            Language = language;
-            _projectManager = projectManager;
-            _ssmlConverterService = ssmlConverterService;
-        }
+    public FlowDocument RichDocument { get; private set; }
 
-        public Language Language { get; private set; }
+    public string SsmlDocument { get; set; }
 
-        public FlowDocument RichDocument { get; private set; }
+    #region Commands
+    
+    #endregion
 
-        public string SsmlDocument { get; set; }
+    protected override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
 
-        #region Commands
+        _projectManager.ProjectSavingAsync += OnProjectManagerSavingAsync;
+
+        UpdateSsmlDocument();
+    }
+
+    protected override async Task CloseAsync()
+    {
+        _projectManager.ProjectSavingAsync -= OnProjectManagerSavingAsync;
+
+        await base.CloseAsync();
+    }
+
+    private async Task OnProjectManagerSavingAsync(object sender, ProjectCancelEventArgs e)
+    {
         
-        #endregion
+    }
 
-        protected override async Task InitializeAsync()
+    public void MarkRichDocumentAsChanged()
+    {
+        // TODO: Update ssml based on rich document
+    }
+
+    public void MarkSsmlDocumentAsChanged(string text)
+    {
+        Language.Content = text;
+        SsmlDocument = text;
+    }
+
+    private void UpdateRichDocument()
+    {
+        if (_isUpdating)
         {
-            await base.InitializeAsync();
-
-            _projectManager.ProjectSavingAsync += OnProjectManagerSavingAsync;
-
-            UpdateSsmlDocument();
+            return;
         }
 
-        protected override async Task CloseAsync()
+        using (new DisposableToken<EditorViewModel>(this,
+            x => x.Instance._isUpdating = true,
+            x => x.Instance._isUpdating = false))
         {
-            _projectManager.ProjectSavingAsync -= OnProjectManagerSavingAsync;
+            RichDocument = _ssmlConverterService.ConvertToFlowDocument(Language.Content);
+        }
+    }
 
-            await base.CloseAsync();
+    private void UpdateSsmlDocument()
+    {
+        if (_isUpdating)
+        {
+            return;
         }
 
-        private async Task OnProjectManagerSavingAsync(object sender, ProjectCancelEventArgs e)
+        using (new DisposableToken<EditorViewModel>(this,
+            x => x.Instance._isUpdating = true,
+            x => x.Instance._isUpdating = false))
         {
-            
+            SsmlDocument = Language.Content ?? string.Empty;
         }
+    }
 
-        public void MarkRichDocumentAsChanged()
-        {
-            // TODO: Update ssml based on rich document
-        }
-
-        public void MarkSsmlDocumentAsChanged(string text)
-        {
-            Language.Content = text;
-            SsmlDocument = text;
-        }
-
-        private void UpdateRichDocument()
-        {
-            if (_isUpdating)
-            {
-                return;
-            }
-
-            using (new DisposableToken<EditorViewModel>(this,
-                x => x.Instance._isUpdating = true,
-                x => x.Instance._isUpdating = false))
-            {
-                RichDocument = _ssmlConverterService.ConvertToFlowDocument(Language.Content);
-            }
-        }
-
-        private void UpdateSsmlDocument()
-        {
-            if (_isUpdating)
-            {
-                return;
-            }
-
-            using (new DisposableToken<EditorViewModel>(this,
-                x => x.Instance._isUpdating = true,
-                x => x.Instance._isUpdating = false))
-            {
-                SsmlDocument = Language.Content ?? string.Empty;
-            }
-        }
-
-        private void OnSsmlDocumentChanged()
-        {
-            UpdateRichDocument();
-        }
+    private void OnSsmlDocumentChanged()
+    {
+        UpdateRichDocument();
     }
 }

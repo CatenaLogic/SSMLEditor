@@ -1,28 +1,27 @@
-﻿namespace SSMLEditor.ProjectManagement
+﻿namespace SSMLEditor.ProjectManagement;
+
+using System;
+using Catel.IoC;
+using Orc.ProjectManagement;
+
+internal class ProjectSerializerSelector : IProjectSerializerSelector
 {
-    using System;
-    using Catel.IoC;
-    using Orc.ProjectManagement;
+    private readonly ITypeFactory _typeFactory;
 
-    internal class ProjectSerializerSelector : IProjectSerializerSelector
+    public ProjectSerializerSelector(ITypeFactory typeFactory)
     {
-        private readonly ITypeFactory _typeFactory;
+        ArgumentNullException.ThrowIfNull(typeFactory);
 
-        public ProjectSerializerSelector(ITypeFactory typeFactory)
-        {
-            ArgumentNullException.ThrowIfNull(typeFactory);
+        _typeFactory = typeFactory;
+    }
 
-            _typeFactory = typeFactory;
-        }
+    public IProjectReader GetReader(string location)
+    {
+        return _typeFactory.CreateInstance<ProjectReader>();
+    }
 
-        public IProjectReader GetReader(string location)
-        {
-            return _typeFactory.CreateInstance<ProjectReader>();
-        }
-
-        public IProjectWriter GetWriter(string location)
-        {
-            return _typeFactory.CreateInstance<ProjectWriter>();
-        }
+    public IProjectWriter GetWriter(string location)
+    {
+        return _typeFactory.CreateInstance<ProjectWriter>();
     }
 }

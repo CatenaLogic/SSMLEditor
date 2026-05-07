@@ -1,12 +1,11 @@
-﻿namespace SSMLEditor
-{
-    using System;
+﻿namespace SSMLEditor;
 
-    public class SSMLEditorException : Exception
+using System;
+
+public class SSMLEditorException : Exception
+{
+    public SSMLEditorException(string message) 
+        : base(message)
     {
-        public SSMLEditorException(string message) 
-            : base(message)
-        {
-        }
     }
 }

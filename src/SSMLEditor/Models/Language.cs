@@ -1,79 +1,78 @@
-﻿namespace SSMLEditor
+﻿namespace SSMLEditor;
+
+using System.Globalization;
+using System.IO;
+using Catel.Data;
+using Newtonsoft.Json;
+
+public class Language : ObservableObject
 {
-    using System.Globalization;
-    using System.IO;
-    using Catel.Data;
-    using Newtonsoft.Json;
+    private string _outputRelativeFileName;
 
-    public class Language : ObservableObject
+    public string RelativeFileName { get; set; }
+
+    public string OutputRelativeFileName
     {
-        private string _outputRelativeFileName;
-
-        public string RelativeFileName { get; set; }
-
-        public string OutputRelativeFileName
+        get
         {
-            get
+            if (string.IsNullOrEmpty(_outputRelativeFileName))
             {
-                if (string.IsNullOrEmpty(_outputRelativeFileName))
+                var relativeFileName = RelativeFileName;
+                if (string.IsNullOrWhiteSpace(relativeFileName))
                 {
-                    var relativeFileName = RelativeFileName;
-                    if (string.IsNullOrWhiteSpace(relativeFileName))
-                    {
-                        return string.Empty;
-                    }
-
-                    return Path.ChangeExtension(relativeFileName, ".wav");
+                    return string.Empty;
                 }
 
-                return _outputRelativeFileName;
+                return Path.ChangeExtension(relativeFileName, ".wav");
             }
-            set => _outputRelativeFileName = value;
+
+            return _outputRelativeFileName;
         }
+        set => _outputRelativeFileName = value;
+    }
 
-        public CultureInfo Culture { get; set; }
+    public CultureInfo Culture { get; set; }
 
-        [JsonIgnore]
-        public bool IsDirty
+    [JsonIgnore]
+    public bool IsDirty
+    {
+        get
         {
-            get
+            var equal = string.Equals(Content, OriginalContent);
+            return !equal;
+        }
+    }
+
+    [JsonIgnore]
+    public string ShortName
+    {
+        get { return Culture.TwoLetterISOLanguageName; }
+    }
+
+    [JsonIgnore]
+    public string Content { get; set; }
+
+    [JsonIgnore]
+    public string OriginalContent { get; set; }
+
+    [JsonIgnore]
+    public string Status
+    {
+        get
+        {
+            var text = $"{ShortName}";
+
+            if (IsDirty)
             {
-                var equal = string.Equals(Content, OriginalContent);
-                return !equal;
+                text += " *";
             }
+
+            return text;
         }
+    }
 
-        [JsonIgnore]
-        public string ShortName
-        {
-            get { return Culture.TwoLetterISOLanguageName; }
-        }
-
-        [JsonIgnore]
-        public string Content { get; set; }
-
-        [JsonIgnore]
-        public string OriginalContent { get; set; }
-
-        [JsonIgnore]
-        public string Status
-        {
-            get
-            {
-                var text = $"{ShortName}";
-
-                if (IsDirty)
-                {
-                    text += " *";
-                }
-
-                return text;
-            }
-        }
-
-        public override string ToString()
-        {
-            return $"{RelativeFileName} | {Culture?.TwoLetterISOLanguageName}";
-        }
+    public override string ToString()
+    {
+        return $"{RelativeFileName} | {Culture?.TwoLetterISOLanguageName}";
     }
 }

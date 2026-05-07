@@ -1,57 +1,56 @@
-﻿namespace SSMLEditor.ProjectManagement
+﻿namespace SSMLEditor.ProjectManagement;
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Catel.Logging;
+using Newtonsoft.Json;
+using Orc.FileSystem;
+using Orc.ProjectManagement;
+
+public class ProjectWriter : ProjectWriterBase<Project>
 {
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
-    using Catel.Logging;
-    using Newtonsoft.Json;
-    using Orc.FileSystem;
-    using Orc.ProjectManagement;
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-    public class ProjectWriter : ProjectWriterBase<Project>
+    private readonly IFileService _fileService;
+    private readonly IDirectoryService _directoryService;
+
+    public ProjectWriter(IFileService fileService, IDirectoryService directoryService)
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        ArgumentNullException.ThrowIfNull(fileService);
+        ArgumentNullException.ThrowIfNull(directoryService);
 
-        private readonly IFileService _fileService;
-        private readonly IDirectoryService _directoryService;
+        _fileService = fileService;
+        _directoryService = directoryService;
+    }
 
-        public ProjectWriter(IFileService fileService, IDirectoryService directoryService)
+    protected override async Task<bool> WriteToLocationAsync(Project project, string location)
+    {
+        var jsonSettings = new JsonSerializerSettings
         {
-            ArgumentNullException.ThrowIfNull(fileService);
-            ArgumentNullException.ThrowIfNull(directoryService);
+            Formatting = Formatting.Indented
+        };
 
-            _fileService = fileService;
-            _directoryService = directoryService;
+        var json = JsonConvert.SerializeObject(project.ProjectRoot, jsonSettings);
+
+        await _fileService.WriteAllTextAsync(location, json);
+
+        var directory = Path.GetDirectoryName(location);
+
+        foreach (var language in project.ProjectRoot.Languages)
+        {
+            Log.Debug($"Saving project language '{language}'");
+
+            var languageFileName = Path.Combine(directory, language.RelativeFileName);
+            var languageDirectory = Path.GetDirectoryName(languageFileName);
+
+            _directoryService.Create(languageDirectory);
+
+            await _fileService.WriteAllTextAsync(languageFileName, language.Content);
+
+            language.OriginalContent = language.Content;
         }
 
-        protected override async Task<bool> WriteToLocationAsync(Project project, string location)
-        {
-            var jsonSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented
-            };
-
-            var json = JsonConvert.SerializeObject(project.ProjectRoot, jsonSettings);
-
-            await _fileService.WriteAllTextAsync(location, json);
-
-            var directory = Path.GetDirectoryName(location);
-
-            foreach (var language in project.ProjectRoot.Languages)
-            {
-                Log.Debug($"Saving project language '{language}'");
-
-                var languageFileName = Path.Combine(directory, language.RelativeFileName);
-                var languageDirectory = Path.GetDirectoryName(languageFileName);
-
-                _directoryService.Create(languageDirectory);
-
-                await _fileService.WriteAllTextAsync(languageFileName, language.Content);
-
-                language.OriginalContent = language.Content;
-            }
-
-            return true;
-        }
+        return true;
     }
 }

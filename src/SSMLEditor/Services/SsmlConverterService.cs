@@ -1,29 +1,28 @@
-﻿namespace SSMLEditor.Services
+﻿namespace SSMLEditor.Services;
+
+using System;
+using System.Text;
+using System.Windows.Documents;
+
+public class SsmlConverterService : ISsmlConverterService
 {
-    using System;
-    using System.Text;
-    using System.Windows.Documents;
-
-    public class SsmlConverterService : ISsmlConverterService
+    public string ConvertToSsml(FlowDocument flowDocument)
     {
-        public string ConvertToSsml(FlowDocument flowDocument)
-        {
-            ArgumentNullException.ThrowIfNull(flowDocument);
+        ArgumentNullException.ThrowIfNull(flowDocument);
 
-            var stringBuilder = new StringBuilder();
+        var stringBuilder = new StringBuilder();
 
 
-            var ssml = stringBuilder.ToString();
-            return ssml;
-        }
+        var ssml = stringBuilder.ToString();
+        return ssml;
+    }
 
-        public FlowDocument ConvertToFlowDocument(string ssml)
-        {
-            var flowDocument = new FlowDocument();
+    public FlowDocument ConvertToFlowDocument(string ssml)
+    {
+        var flowDocument = new FlowDocument();
 
 
 
-            return flowDocument;
-        }
+        return flowDocument;
     }
 }

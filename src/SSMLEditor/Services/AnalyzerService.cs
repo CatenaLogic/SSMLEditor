@@ -1,66 +1,65 @@
-﻿namespace SSMLEditor.Services
+﻿namespace SSMLEditor.Services;
+
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Xml.Linq;
+using MethodTimer;
+using SSMLEditor.Analyzers;
+
+public class AnalyzerService : InterfaceFinderServiceBase<IAnalyzer>, IAnalyzerService
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.CompilerServices;
-    using System.Threading;
-    using System.Xml.Linq;
-    using MethodTimer;
-    using SSMLEditor.Analyzers;
+    private readonly List<IAnalyzer> _analyzers = new List<IAnalyzer>();
 
-    public class AnalyzerService : InterfaceFinderServiceBase<IAnalyzer>, IAnalyzerService
+    public AnalyzerService()
     {
-        private readonly List<IAnalyzer> _analyzers = new List<IAnalyzer>();
+        _analyzers.AddRange(GetAvailableItems());
+    }
 
-        public AnalyzerService()
+    [Time]
+    public async IAsyncEnumerable<AnalyzerResult> AnalyzeAsync(string document, [EnumeratorCancellation]CancellationToken cancellationToken)
+    {
+        var failed = false;
+        XDocument xmlDocument = null;
+
+        try
         {
-            _analyzers.AddRange(GetAvailableItems());
+            xmlDocument = XDocument.Parse(document, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+        }
+        catch (Exception)
+        {
+            failed = true;
         }
 
-        [Time]
-        public async IAsyncEnumerable<AnalyzerResult> AnalyzeAsync(string document, [EnumeratorCancellation]CancellationToken cancellationToken)
+        if (failed)
         {
-            var failed = false;
-            XDocument xmlDocument = null;
+            yield return new AnalyzerResult
+            {
+                Name = "Not valid XML",
+                Description = "Please make sure to document is valid XML",
+                StartIndex = 0,
+                Length = document.Length
+            };
+        }
 
-            try
-            {
-                xmlDocument = XDocument.Parse(document, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
-            }
-            catch (Exception)
-            {
-                failed = true;
-            }
+        var context = new AnalyzerContext(document, xmlDocument, cancellationToken);
 
-            if (failed)
+        foreach (var analyzer in _analyzers)
+        {
+            if (cancellationToken.IsCancellationRequested)
             {
-                yield return new AnalyzerResult
-                {
-                    Name = "Not valid XML",
-                    Description = "Please make sure to document is valid XML",
-                    StartIndex = 0,
-                    Length = document.Length
-                };
+                yield break;
             }
 
-            var context = new AnalyzerContext(document, xmlDocument, cancellationToken);
-
-            foreach (var analyzer in _analyzers)
+            await foreach (var analyzerResult in analyzer.AnalyzeAsync(context))
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
                     yield break;
                 }
 
-                await foreach (var analyzerResult in analyzer.AnalyzeAsync(context))
-                {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        yield break;
-                    }
-
-                    yield return analyzerResult;
-                }
+                yield return analyzerResult;
             }
         }
     }

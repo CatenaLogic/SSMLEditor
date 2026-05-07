@@ -1,7 +1,6 @@
-﻿namespace SSMLEditor.Services
+﻿namespace SSMLEditor.Services;
+
+public interface IMainWindowTitleService
 {
-    public interface IMainWindowTitleService
-    {
-        void UpdateTitle();
-    }
+    void UpdateTitle();
 }

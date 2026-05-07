@@ -1,14 +1,13 @@
-﻿namespace SSMLEditor.Views
+﻿namespace SSMLEditor.Views;
+
+using Orchestra;
+
+public partial class RibbonView
 {
-    using Orchestra;
-
-    public partial class RibbonView
+    public RibbonView()
     {
-        public RibbonView()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            ribbon.AddAboutButton();
-        }
+        ribbon.AddAboutButton();
     }
 }

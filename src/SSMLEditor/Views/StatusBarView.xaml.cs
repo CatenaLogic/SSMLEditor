@@ -1,10 +1,9 @@
-﻿namespace SSMLEditor.Views
+﻿namespace SSMLEditor.Views;
+
+public partial class StatusBarView
 {
-    public partial class StatusBarView
+    public StatusBarView()
     {
-        public StatusBarView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

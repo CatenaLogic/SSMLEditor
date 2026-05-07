@@ -1,46 +1,45 @@
-﻿namespace SSMLEditor.Services
+﻿namespace SSMLEditor.Services;
+
+using System;
+using Catel.Reflection;
+using Orc.ProjectManagement;
+
+public class MainWindowTitleService : IMainWindowTitleService
 {
-    using System;
-    using Catel.Reflection;
-    using Orc.ProjectManagement;
+    private readonly string _defaulTitle;
+    private readonly IProjectManager _projectManager;
+    private readonly ShellActivatedActionQueue _shellActivatedActionQueue;
 
-    public class MainWindowTitleService : IMainWindowTitleService
+    public MainWindowTitleService(IProjectManager projectManager)
     {
-        private readonly string _defaulTitle;
-        private readonly IProjectManager _projectManager;
-        private readonly ShellActivatedActionQueue _shellActivatedActionQueue;
+        ArgumentNullException.ThrowIfNull(projectManager);
 
-        public MainWindowTitleService(IProjectManager projectManager)
+        _projectManager = projectManager;
+
+        _shellActivatedActionQueue = new ShellActivatedActionQueue();
+
+        _defaulTitle = AssemblyHelper.GetEntryAssembly().Title();
+    }
+
+    public void UpdateTitle()
+    {
+        _shellActivatedActionQueue.EnqueueAction(() =>
         {
-            ArgumentNullException.ThrowIfNull(projectManager);
+            var project = _projectManager.ActiveProject;
+            var app = System.Windows.Application.Current;
+            var title = _defaulTitle;
 
-            _projectManager = projectManager;
-
-            _shellActivatedActionQueue = new ShellActivatedActionQueue();
-
-            _defaulTitle = AssemblyHelper.GetEntryAssembly().Title();
-        }
-
-        public void UpdateTitle()
-        {
-            _shellActivatedActionQueue.EnqueueAction(() =>
+            if (project is not null)
             {
-                var project = _projectManager.ActiveProject;
-                var app = System.Windows.Application.Current;
-                var title = _defaulTitle;
+                title += $" - {project.Title}";
 
-                if (project is not null)
+                if (project.IsDirty)
                 {
-                    title += $" - {project.Title}";
-
-                    if (project.IsDirty)
-                    {
-                        title += " *";
-                    }
+                    title += " *";
                 }
+            }
 
-                app.MainWindow.SetCurrentValue(System.Windows.Window.TitleProperty, title);
-            });
-        }
+            app.MainWindow.SetCurrentValue(System.Windows.Window.TitleProperty, title);
+        });
     }
 }

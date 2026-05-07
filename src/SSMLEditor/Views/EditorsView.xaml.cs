@@ -1,11 +1,10 @@
-﻿namespace SSMLEditor.Views
-{
+﻿namespace SSMLEditor.Views;
 
-    public partial class EditorsView
+
+public partial class EditorsView
+{
+    public EditorsView()
     {
-        public EditorsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

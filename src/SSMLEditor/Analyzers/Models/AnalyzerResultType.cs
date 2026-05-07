@@ -1,9 +1,8 @@
-﻿namespace SSMLEditor.Analyzers
-{
-    public enum AnalyzerResultType
-    {
-        Warning,
+﻿namespace SSMLEditor.Analyzers;
 
-        Error
-    }
+public enum AnalyzerResultType
+{
+    Warning,
+
+    Error
 }

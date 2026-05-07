@@ -1,10 +1,9 @@
-﻿namespace SSMLEditor.Views
+﻿namespace SSMLEditor.Views;
+
+public partial class RecentlyUsedItemsView
 {
-    public partial class RecentlyUsedItemsView
+    public RecentlyUsedItemsView()
     {
-        public RecentlyUsedItemsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

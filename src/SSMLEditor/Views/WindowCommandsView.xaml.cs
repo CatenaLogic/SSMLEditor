@@ -1,10 +1,9 @@
-﻿namespace SSMLEditor.Views
+﻿namespace SSMLEditor.Views;
+
+public partial class WindowCommandsView
 {
-    public partial class WindowCommandsView
+    public WindowCommandsView()
     {
-        public WindowCommandsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

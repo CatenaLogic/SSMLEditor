@@ -1,60 +1,59 @@
-﻿namespace SSMLEditor
+﻿namespace SSMLEditor;
+
+using System.Linq;
+using System.Threading.Tasks;
+using Catel.Services;
+using Orc.ProjectManagement;
+using Orchestra;
+using System;
+
+public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase
 {
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Catel.Services;
-    using Orc.ProjectManagement;
-    using Orchestra;
-    using System;
+    private readonly IProjectManager _projectManager;
+    private readonly IBusyIndicatorService _busyIndicatorService;
 
-    public class ProjectManagementCloseApplicationWatcher : CloseApplicationWatcherBase
+    public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService)
     {
-        private readonly IProjectManager _projectManager;
-        private readonly IBusyIndicatorService _busyIndicatorService;
+        ArgumentNullException.ThrowIfNull(projectManager);
+        ArgumentNullException.ThrowIfNull(busyIndicatorService);
 
-        public ProjectManagementCloseApplicationWatcher(IProjectManager projectManager, IBusyIndicatorService busyIndicatorService)
+        _projectManager = projectManager;
+        _busyIndicatorService = busyIndicatorService;
+    }
+
+    protected override async Task<bool> ClosingAsync()
+    {
+        using (_busyIndicatorService.PushInScope())
         {
-            ArgumentNullException.ThrowIfNull(projectManager);
-            ArgumentNullException.ThrowIfNull(busyIndicatorService);
+            var projects = _projectManager.Projects.OfType<Project>().OrderByDescending(x => x.IsDirty).ToArray();
 
-            _projectManager = projectManager;
-            _busyIndicatorService = busyIndicatorService;
-        }
-
-        protected override async Task<bool> ClosingAsync()
-        {
-            using (_busyIndicatorService.PushInScope())
+            for (var i = 0; i < projects.Length; i++)
             {
-                var projects = _projectManager.Projects.OfType<Project>().OrderByDescending(x => x.IsDirty).ToArray();
-
-                for (var i = 0; i < projects.Length; i++)
+                var project = projects[i];
+                project.ClearIsDirty();
+                var closed = await _projectManager.CloseAsync(project);
+                if (!closed)
                 {
-                    var project = projects[i];
-                    project.ClearIsDirty();
-                    var closed = await _projectManager.CloseAsync(project);
-                    if (!closed)
-                    {
-                        return false;
-                    }
-
-                    _busyIndicatorService.UpdateStatus(i, projects.Length);
+                    return false;
                 }
+
+                _busyIndicatorService.UpdateStatus(i, projects.Length);
             }
-
-            return await base.ClosingAsync();
         }
 
-        protected override async Task<bool> PrepareClosingAsync()
-        {
-            //foreach (var project in _projectManager.Projects.OfType<Project>())
-            //{
-            //    if (!await _saveProjectChangesService.EnsureChangesSavedAsync(project, SaveChangesReason.Closing))
-            //    {
-            //        return false;
-            //    }
-            //}
+        return await base.ClosingAsync();
+    }
 
-            return await base.PrepareClosingAsync();
-        }
+    protected override async Task<bool> PrepareClosingAsync()
+    {
+        //foreach (var project in _projectManager.Projects.OfType<Project>())
+        //{
+        //    if (!await _saveProjectChangesService.EnsureChangesSavedAsync(project, SaveChangesReason.Closing))
+        //    {
+        //        return false;
+        //    }
+        //}
+
+        return await base.PrepareClosingAsync();
     }
 }

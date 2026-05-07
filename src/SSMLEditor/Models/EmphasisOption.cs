@@ -1,12 +1,11 @@
-﻿namespace SSMLEditor
+﻿namespace SSMLEditor;
+
+public class EmphasisOption
 {
-    public class EmphasisOption
+    public EmphasisOption()
     {
-        public EmphasisOption()
-        {
 
-        }
-
-        public string Level { get; set; }
     }
+
+    public string Level { get; set; }
 }

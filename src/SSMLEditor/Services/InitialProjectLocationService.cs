@@ -1,32 +1,31 @@
-﻿namespace SSMLEditor.Services
+﻿namespace SSMLEditor.Services;
+
+using System;
+using System.Threading.Tasks;
+using Catel.Logging;
+using Orc.CommandLine;
+
+public class InitialProjectLocationService : Orc.ProjectManagement.IInitialProjectLocationService
 {
-    using System;
-    using System.Threading.Tasks;
-    using Catel.Logging;
-    using Orc.CommandLine;
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-    public class InitialProjectLocationService : Orc.ProjectManagement.IInitialProjectLocationService
+    private readonly ICommandLineParser _commandLineParser;
+    private readonly ICommandLineService _commandLineService;
+
+    public InitialProjectLocationService(ICommandLineService commandLineService, ICommandLineParser commandLineParser)
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        ArgumentNullException.ThrowIfNull(commandLineService);
+        ArgumentNullException.ThrowIfNull(commandLineParser);
 
-        private readonly ICommandLineParser _commandLineParser;
-        private readonly ICommandLineService _commandLineService;
+        _commandLineService = commandLineService;
+        _commandLineParser = commandLineParser;
+    }
 
-        public InitialProjectLocationService(ICommandLineService commandLineService, ICommandLineParser commandLineParser)
-        {
-            ArgumentNullException.ThrowIfNull(commandLineService);
-            ArgumentNullException.ThrowIfNull(commandLineParser);
+    public async Task<string> GetInitialProjectLocationAsync()
+    {
+        var commandLineContext = new CommandLineContext();
+        _commandLineParser.Parse(_commandLineService.GetCommandLine(), commandLineContext);
 
-            _commandLineService = commandLineService;
-            _commandLineParser = commandLineParser;
-        }
-
-        public async Task<string> GetInitialProjectLocationAsync()
-        {
-            var commandLineContext = new CommandLineContext();
-            _commandLineParser.Parse(_commandLineService.GetCommandLine(), commandLineContext);
-
-            return commandLineContext.InitialFile;
-        }
+        return commandLineContext.InitialFile;
     }
 }

@@ -1,17 +1,16 @@
-﻿namespace SSMLEditor.Services
+﻿namespace SSMLEditor.Services;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using SSMLEditor.Providers;
+
+public interface ITextToSpeechProviderService
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using SSMLEditor.Providers;
+    List<ITextToSpeechProvider> Providers { get; }
 
-    public interface ITextToSpeechProviderService
-    {
-        List<ITextToSpeechProvider> Providers { get; }
+    Task LoadAsync();
 
-        Task LoadAsync();
+    Task SaveAsync();
 
-        Task SaveAsync();
-
-        IEnumerable<ITextToSpeechProvider> GetAvailableProviders();
-    }
+    IEnumerable<ITextToSpeechProvider> GetAvailableProviders();
 }

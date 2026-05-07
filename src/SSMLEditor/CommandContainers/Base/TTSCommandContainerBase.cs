@@ -1,115 +1,114 @@
-﻿namespace SSMLEditor
+﻿namespace SSMLEditor;
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Catel.Messaging;
+using Catel.MVVM;
+using Catel.Services;
+using Orc.FileSystem;
+using Orc.Notifications;
+using Orc.ProjectManagement;
+using Orc.SelectionManagement;
+using SSMLEditor.Messaging;
+using SSMLEditor.Providers;
+
+public abstract class TTSCommandContainerBase : ProjectCommandContainerBase
 {
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
-    using Catel.Messaging;
-    using Catel.MVVM;
-    using Catel.Services;
-    using Orc.FileSystem;
-    using Orc.Notifications;
-    using Orc.ProjectManagement;
-    using Orc.SelectionManagement;
-    using SSMLEditor.Messaging;
-    using SSMLEditor.Providers;
+    protected readonly ISelectionManager<ITextToSpeechProvider> _ttsProviderSelectionManager;
+    protected readonly IBusyIndicatorService _busyIndicatorService;
+    protected readonly IFileService _fileService;
+    private readonly IDirectoryService _directoryService;
+    protected readonly IMessageMediator _messageMediator;
+    protected readonly INotificationService _notificationService;
 
-    public abstract class TTSCommandContainerBase : ProjectCommandContainerBase
+    private bool _hasSelectedItem;
+
+    protected TTSCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager,
+        ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, IBusyIndicatorService busyIndicatorService, 
+        IFileService fileService, IDirectoryService directoryService, IMessageMediator messageMediator, 
+        INotificationService notificationService)
+        : base(commandName, commandManager, projectManager)
     {
-        protected readonly ISelectionManager<ITextToSpeechProvider> _ttsProviderSelectionManager;
-        protected readonly IBusyIndicatorService _busyIndicatorService;
-        protected readonly IFileService _fileService;
-        private readonly IDirectoryService _directoryService;
-        protected readonly IMessageMediator _messageMediator;
-        protected readonly INotificationService _notificationService;
+        ArgumentNullException.ThrowIfNull(ttsProviderSelectionManager);
+        ArgumentNullException.ThrowIfNull(busyIndicatorService);
+        ArgumentNullException.ThrowIfNull(fileService);
+        ArgumentNullException.ThrowIfNull(directoryService);
+        ArgumentNullException.ThrowIfNull(messageMediator);
+        ArgumentNullException.ThrowIfNull(notificationService);
 
-        private bool _hasSelectedItem;
+        _ttsProviderSelectionManager = ttsProviderSelectionManager;
+        _busyIndicatorService = busyIndicatorService;
+        _fileService = fileService;
+        _directoryService = directoryService;
+        _messageMediator = messageMediator;
+        _notificationService = notificationService;
 
-        protected TTSCommandContainerBase(string commandName, ICommandManager commandManager, IProjectManager projectManager,
-            ISelectionManager<ITextToSpeechProvider> ttsProviderSelectionManager, IBusyIndicatorService busyIndicatorService, 
-            IFileService fileService, IDirectoryService directoryService, IMessageMediator messageMediator, 
-            INotificationService notificationService)
-            : base(commandName, commandManager, projectManager)
+        _ttsProviderSelectionManager.SelectionChanged += OnTtsProviderSelectionManagerSelectionChanged;
+
+        UpdateSelectionState();
+    }
+
+    private void OnTtsProviderSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
+    {
+        UpdateSelectionState();
+
+        InvalidateCommand();
+    }
+
+    public override bool CanExecute(object parameter)
+    {
+        if (!base.CanExecute(parameter))
         {
-            ArgumentNullException.ThrowIfNull(ttsProviderSelectionManager);
-            ArgumentNullException.ThrowIfNull(busyIndicatorService);
-            ArgumentNullException.ThrowIfNull(fileService);
-            ArgumentNullException.ThrowIfNull(directoryService);
-            ArgumentNullException.ThrowIfNull(messageMediator);
-            ArgumentNullException.ThrowIfNull(notificationService);
-
-            _ttsProviderSelectionManager = ttsProviderSelectionManager;
-            _busyIndicatorService = busyIndicatorService;
-            _fileService = fileService;
-            _directoryService = directoryService;
-            _messageMediator = messageMediator;
-            _notificationService = notificationService;
-
-            _ttsProviderSelectionManager.SelectionChanged += OnTtsProviderSelectionManagerSelectionChanged;
-
-            UpdateSelectionState();
+            return false;
         }
 
-        private void OnTtsProviderSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
-        {
-            UpdateSelectionState();
+        return _hasSelectedItem;
+    }
 
-            InvalidateCommand();
-        }
+    public override async Task ExecuteAsync(object parameter)
+    {
+        await _projectManager.CloseActiveProjectAsync();
+    }
 
-        public override bool CanExecute(object parameter)
+    private void UpdateSelectionState()
+    {
+        _hasSelectedItem = _ttsProviderSelectionManager.GetSelectedItem() is not null;
+    }
+
+    protected virtual async Task GenerateLanguageAsync(ITextToSpeechProvider ttsProvider, Project project, Language language)
+    {
+        var ssmlContent = language.Content;
+        if (!string.IsNullOrWhiteSpace(ssmlContent))
         {
-            if (!base.CanExecute(parameter))
+            using (_busyIndicatorService.PushInScope())
             {
-                return false;
-            }
+                _messageMediator.SendMessage(new TTSGenerating(language));
 
-            return _hasSelectedItem;
-        }
-
-        public override async Task ExecuteAsync(object parameter)
-        {
-            await _projectManager.CloseActiveProjectAsync();
-        }
-
-        private void UpdateSelectionState()
-        {
-            _hasSelectedItem = _ttsProviderSelectionManager.GetSelectedItem() is not null;
-        }
-
-        protected virtual async Task GenerateLanguageAsync(ITextToSpeechProvider ttsProvider, Project project, Language language)
-        {
-            var ssmlContent = language.Content;
-            if (!string.IsNullOrWhiteSpace(ssmlContent))
-            {
-                using (_busyIndicatorService.PushInScope())
+                try
                 {
-                    _messageMediator.SendMessage(new TTSGenerating(language));
-
-                    try
+                    using (var stream = await ttsProvider.ExecuteAsync(ssmlContent))
                     {
-                        using (var stream = await ttsProvider.ExecuteAsync(ssmlContent))
+                        stream.Position = 0L;
+
+                        var fileName = project.GetFullAudioPath(language);
+
+                        var directory = Path.GetDirectoryName(fileName);
+                        _directoryService.Create(directory);
+
+                        using (var fileStream = _fileService.Create(fileName))
                         {
-                            stream.Position = 0L;
-
-                            var fileName = project.GetFullAudioPath(language);
-
-                            var directory = Path.GetDirectoryName(fileName);
-                            _directoryService.Create(directory);
-
-                            using (var fileStream = _fileService.Create(fileName))
-                            {
-                                await stream.CopyToAsync(fileStream);
-                                await fileStream.FlushAsync();
-                            }
+                            await stream.CopyToAsync(fileStream);
+                            await fileStream.FlushAsync();
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        _notificationService.ShowErrorNotification($"'{language.ShortName}' processing failed", $"Language '{language.ShortName}' failed:\n{ex.Message}");
-                    }
-
-                    _messageMediator.SendMessage(new TTSGenerated(language));
                 }
+                catch (Exception ex)
+                {
+                    _notificationService.ShowErrorNotification($"'{language.ShortName}' processing failed", $"Language '{language.ShortName}' failed:\n{ex.Message}");
+                }
+
+                _messageMediator.SendMessage(new TTSGenerated(language));
             }
         }
     }

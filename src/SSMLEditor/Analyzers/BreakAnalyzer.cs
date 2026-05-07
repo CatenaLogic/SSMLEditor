@@ -1,92 +1,91 @@
-﻿namespace SSMLEditor.Analyzers
+﻿namespace SSMLEditor.Analyzers;
+
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
+
+public class BreakAnalyzer : IAnalyzer
 {
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-    using System.Xml.Linq;
+    private readonly Regex _regex = new Regex(@"^(\d+\.?\d*)s$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    public class BreakAnalyzer : IAnalyzer
+    public async IAsyncEnumerable<AnalyzerResult> AnalyzeAsync(AnalyzerContext context)
     {
-        private readonly Regex _regex = new Regex(@"^(\d+\.?\d*)s$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public async IAsyncEnumerable<AnalyzerResult> AnalyzeAsync(AnalyzerContext context)
+        if (context.CancellationToken.IsCancellationRequested)
         {
-            if (context.CancellationToken.IsCancellationRequested)
-            {
-                yield break;
-            }
-
-            var document = context.Document;
-
-            await foreach (var item in AnalyzeAsync(context, document.Root))
-            {
-                yield return item;
-            }
+            yield break;
         }
 
-        private async IAsyncEnumerable<AnalyzerResult> AnalyzeAsync(AnalyzerContext context, XElement element)
+        var document = context.Document;
+
+        await foreach (var item in AnalyzeAsync(context, document.Root))
+        {
+            yield return item;
+        }
+    }
+
+    private async IAsyncEnumerable<AnalyzerResult> AnalyzeAsync(AnalyzerContext context, XElement element)
+    {
+        if (context.CancellationToken.IsCancellationRequested)
+        {
+            yield break;
+        }
+
+        foreach (var childElement in element.Elements())
         {
             if (context.CancellationToken.IsCancellationRequested)
             {
                 yield break;
             }
 
-            foreach (var childElement in element.Elements())
+            if (childElement.Name?.LocalName == "break")
             {
-                if (context.CancellationToken.IsCancellationRequested)
+                var timeAttribute = childElement.Attribute("time");
+                if (timeAttribute is not null)
                 {
-                    yield break;
-                }
-
-                if (childElement.Name?.LocalName == "break")
-                {
-                    var timeAttribute = childElement.Attribute("time");
-                    if (timeAttribute is not null)
+                    var value = timeAttribute.Value?.Trim();
+                    if (!string.IsNullOrEmpty(value))
                     {
-                        var value = timeAttribute.Value?.Trim();
-                        if (!string.IsNullOrEmpty(value))
+                        var match = _regex.Match(value);
+                        if (match.Success)
                         {
-                            var match = _regex.Match(value);
-                            if (match.Success)
+                            var numberAsString = match.Groups[1].Value;
+                            var number = double.Parse(numberAsString, NumberStyles.Any, CultureInfo.InvariantCulture);
+                            if (number > 5.0)
                             {
-                                var numberAsString = match.Groups[1].Value;
-                                var number = double.Parse(numberAsString, NumberStyles.Any, CultureInfo.InvariantCulture);
-                                if (number > 5.0)
+                                var lineNumber = ((IXmlLineInfo)timeAttribute).LineNumber;
+                                var position = ((IXmlLineInfo)timeAttribute).LinePosition;
+
+                                for (var i = 0; i < lineNumber - 1; i++)
                                 {
-                                    var lineNumber = ((IXmlLineInfo)timeAttribute).LineNumber;
-                                    var position = ((IXmlLineInfo)timeAttribute).LinePosition;
+                                    position += context.DocumentLines[i].Length;
 
-                                    for (var i = 0; i < lineNumber - 1; i++)
+                                    if (i < lineNumber - 2)
                                     {
-                                        position += context.DocumentLines[i].Length;
-
-                                        if (i < lineNumber - 2)
-                                        {
-                                            position += "\r\n".Length;
-                                        }
+                                        position += "\r\n".Length;
                                     }
-
-                                    var length = timeAttribute.ToString().Length;
-
-                                    yield return new AnalyzerResult
-                                    {
-                                        Name = "Break too long",
-                                        Description = "Break element has a maximum of 5 seconds",
-                                        StartIndex = position,
-                                        Length = length,
-                                    };
                                 }
+
+                                var length = timeAttribute.ToString().Length;
+
+                                yield return new AnalyzerResult
+                                {
+                                    Name = "Break too long",
+                                    Description = "Break element has a maximum of 5 seconds",
+                                    StartIndex = position,
+                                    Length = length,
+                                };
                             }
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                await foreach (var item in AnalyzeAsync(context, childElement))
                 {
-                    await foreach (var item in AnalyzeAsync(context, childElement))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
         }

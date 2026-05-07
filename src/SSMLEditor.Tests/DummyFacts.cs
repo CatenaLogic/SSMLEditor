@@ -1,13 +1,12 @@
-﻿namespace SSMLEditor.Tests
-{
-    using NUnit.Framework;
+﻿namespace SSMLEditor.Tests;
 
-    [TestFixture]
-    public class DummyFacts
+using NUnit.Framework;
+
+[TestFixture]
+public class DummyFacts
+{
+    [Test]
+    public void DummyTest()
     {
-        [Test]
-        public void DummyTest()
-        {
-        }
     }
 }

@@ -1,11 +1,10 @@
-﻿namespace SSMLEditor.Views
-{
+﻿namespace SSMLEditor.Views;
 
-    public partial class ManageProvidersWindow
+
+public partial class ManageProvidersWindow
+{
+    public ManageProvidersWindow()
     {
-        public ManageProvidersWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

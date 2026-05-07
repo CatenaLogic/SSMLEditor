@@ -1,86 +1,85 @@
-﻿namespace SSMLEditor.ViewModels
+﻿namespace SSMLEditor.ViewModels;
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Catel.Collections;
+using Catel.IoC;
+using Catel.MVVM;
+using Orc.Wizard;
+using SSMLEditor.Providers;
+using SSMLEditor.Services;
+using SSMLEditor.Wizards.AddProvider;
+
+public class ManageProvidersViewModel : ViewModelBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Catel.Collections;
-    using Catel.IoC;
-    using Catel.MVVM;
-    using Orc.Wizard;
-    using SSMLEditor.Providers;
-    using SSMLEditor.Services;
-    using SSMLEditor.Wizards.AddProvider;
+    private readonly ITextToSpeechProviderService _textToSpeechProviderService;
+    private readonly IWizardService _wizardService;
+    private readonly ITypeFactory _typeFactory;
 
-    public class ManageProvidersViewModel : ViewModelBase
+    public ManageProvidersViewModel(ITextToSpeechProviderService textToSpeechProviderService,
+        IWizardService wizardService, ITypeFactory typeFactory)
     {
-        private readonly ITextToSpeechProviderService _textToSpeechProviderService;
-        private readonly IWizardService _wizardService;
-        private readonly ITypeFactory _typeFactory;
+        ArgumentNullException.ThrowIfNull(textToSpeechProviderService);
+        ArgumentNullException.ThrowIfNull(wizardService);
+        ArgumentNullException.ThrowIfNull(typeFactory);
 
-        public ManageProvidersViewModel(ITextToSpeechProviderService textToSpeechProviderService,
-            IWizardService wizardService, ITypeFactory typeFactory)
+        _textToSpeechProviderService = textToSpeechProviderService;
+        _wizardService = wizardService;
+        _typeFactory = typeFactory;
+
+        Add = new TaskCommand(OnAddExecuteAsync, OnAddCanExecute);
+        Remove = new TaskCommand(OnRemoveExecuteAsync, OnRemoveCanExecute);
+    }
+
+    public List<ITextToSpeechProvider> Providers { get; private set; }
+
+    public ITextToSpeechProvider SelectedProvider { get; set; }
+
+    #region Commands
+    public TaskCommand Add { get; private set; }
+
+    private bool OnAddCanExecute()
+    {
+        return true;
+    }
+
+    private async Task OnAddExecuteAsync()
+    {
+        var wizard = _typeFactory.CreateInstance<AddProviderWizard>();
+        if ((await _wizardService.ShowWizardAsync(wizard)).DialogResult ?? false)
         {
-            ArgumentNullException.ThrowIfNull(textToSpeechProviderService);
-            ArgumentNullException.ThrowIfNull(wizardService);
-            ArgumentNullException.ThrowIfNull(typeFactory);
-
-            _textToSpeechProviderService = textToSpeechProviderService;
-            _wizardService = wizardService;
-            _typeFactory = typeFactory;
-
-            Add = new TaskCommand(OnAddExecuteAsync, OnAddCanExecute);
-            Remove = new TaskCommand(OnRemoveExecuteAsync, OnRemoveCanExecute);
+            Providers.Add(wizard.Provider);
         }
+    }
 
-        public List<ITextToSpeechProvider> Providers { get; private set; }
+    public TaskCommand Remove { get; private set; }
 
-        public ITextToSpeechProvider SelectedProvider { get; set; }
+    private bool OnRemoveCanExecute()
+    {
+        return SelectedProvider is not null;
+    }
 
-        #region Commands
-        public TaskCommand Add { get; private set; }
+    private async Task OnRemoveExecuteAsync()
+    {
+        Providers.Remove(SelectedProvider);
+        SelectedProvider = null;
+    }
+    #endregion
 
-        private bool OnAddCanExecute()
-        {
-            return true;
-        }
+    protected override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
 
-        private async Task OnAddExecuteAsync()
-        {
-            var wizard = _typeFactory.CreateInstance<AddProviderWizard>();
-            if ((await _wizardService.ShowWizardAsync(wizard)).DialogResult ?? false)
-            {
-                Providers.Add(wizard.Provider);
-            }
-        }
+        Providers = new List<ITextToSpeechProvider>(_textToSpeechProviderService.Providers);
+    }
 
-        public TaskCommand Remove { get; private set; }
+    protected override async Task<bool> SaveAsync()
+    {
+        _textToSpeechProviderService.Providers.ReplaceRange(Providers);
 
-        private bool OnRemoveCanExecute()
-        {
-            return SelectedProvider is not null;
-        }
-
-        private async Task OnRemoveExecuteAsync()
-        {
-            Providers.Remove(SelectedProvider);
-            SelectedProvider = null;
-        }
-        #endregion
-
-        protected override async Task InitializeAsync()
-        {
-            await base.InitializeAsync();
-
-            Providers = new List<ITextToSpeechProvider>(_textToSpeechProviderService.Providers);
-        }
-
-        protected override async Task<bool> SaveAsync()
-        {
-            _textToSpeechProviderService.Providers.ReplaceRange(Providers);
-
-            await _textToSpeechProviderService.SaveAsync(); 
-            
-            return await base.SaveAsync();
-        }
+        await _textToSpeechProviderService.SaveAsync(); 
+        
+        return await base.SaveAsync();
     }
 }

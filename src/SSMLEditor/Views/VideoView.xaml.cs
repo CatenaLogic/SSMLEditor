@@ -1,209 +1,208 @@
-﻿namespace SSMLEditor.Views
+﻿namespace SSMLEditor.Views;
+
+using System;
+using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
+using Catel;
+using Catel.Collections;
+using SSMLEditor.ViewModels;
+
+public partial class VideoView
 {
-    using System;
-    using System.ComponentModel;
-    using System.Windows.Controls;
-    using System.Windows.Controls.Primitives;
-    using System.Windows.Threading;
-    using Catel;
-    using Catel.Collections;
-    using SSMLEditor.ViewModels;
+    private readonly DispatcherTimer _positionDispatcherTimer;
+    private readonly DispatcherTimer _positionUpdateDispatcherTimer;
 
-    public partial class VideoView
+    private bool _isUserUpdatingSlider;
+    private bool _isAppUpdatingSlider;
+
+    public VideoView()
     {
-        private readonly DispatcherTimer _positionDispatcherTimer;
-        private readonly DispatcherTimer _positionUpdateDispatcherTimer;
+        InitializeComponent();
 
-        private bool _isUserUpdatingSlider;
-        private bool _isAppUpdatingSlider;
-
-        public VideoView()
+        _positionDispatcherTimer = new DispatcherTimer
         {
-            InitializeComponent();
+            Interval = TimeSpan.FromMilliseconds(200)
+        };
 
-            _positionDispatcherTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(200)
-            };
-
-            _positionUpdateDispatcherTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(100)
-            };
-        }
-
-        protected override void OnLoaded(EventArgs e)
+        _positionUpdateDispatcherTimer = new DispatcherTimer
         {
-            base.OnLoaded(e);
+            Interval = TimeSpan.FromMilliseconds(100)
+        };
+    }
 
-            _positionDispatcherTimer.Tick += OnPositionDispatcherTimerTick;
-            _positionUpdateDispatcherTimer.Tick += OnPositionUpdateDispatcherTimerTick;
-        }
+    protected override void OnLoaded(EventArgs e)
+    {
+        base.OnLoaded(e);
 
-        protected override void OnUnloaded(EventArgs e)
+        _positionDispatcherTimer.Tick += OnPositionDispatcherTimerTick;
+        _positionUpdateDispatcherTimer.Tick += OnPositionUpdateDispatcherTimerTick;
+    }
+
+    protected override void OnUnloaded(EventArgs e)
+    {
+        _positionDispatcherTimer.Tick -= OnPositionDispatcherTimerTick;
+        _positionUpdateDispatcherTimer.Tick -= OnPositionUpdateDispatcherTimerTick;
+
+        base.OnUnloaded(e);
+    }
+
+    protected override void OnViewModelPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnViewModelPropertyChanged(e);
+
+        if (e.HasPropertyChanged(nameof(VideoViewModel.VideoUri)))
         {
-            _positionDispatcherTimer.Tick -= OnPositionDispatcherTimerTick;
-            _positionUpdateDispatcherTimer.Tick -= OnPositionUpdateDispatcherTimerTick;
-
-            base.OnUnloaded(e);
-        }
-
-        protected override void OnViewModelPropertyChanged(PropertyChangedEventArgs e)
-        {
-            base.OnViewModelPropertyChanged(e);
-
-            if (e.HasPropertyChanged(nameof(VideoViewModel.VideoUri)))
+            var vm = (VideoViewModel)ViewModel;
+            if (vm.VideoUri is null)
             {
-                var vm = (VideoViewModel)ViewModel;
-                if (vm.VideoUri is null)
-                {
-                    ProgressSlider.SetCurrentValue(System.Windows.Controls.Primitives.RangeBase.MaximumProperty, 0d);
-                }
-
-                // Pause so the media actually gets loaded
-                UpdateMediaElements(x => x.Pause());
-            }
-            else if (e.HasPropertyChanged(nameof(VideoViewModel.Position)))
-            {
-                if (_isAppUpdatingSlider)
-                {
-                    return;
-                }
-
-                var vm = (VideoViewModel)ViewModel;
-
-                UpdateMediaElements(x => x.Position = vm.Position);
-
-                if (!vm.IsPlaying)
-                {
-                    // Pause so the media actually gets loaded to the new position
-                    UpdateMediaElements(x => x.Pause());
-                }
-            }
-            else if (e.HasPropertyChanged(nameof(VideoViewModel.BaseAudioUri)))
-            {
-                var vm = (VideoViewModel)ViewModel;
-                if (vm.IsPlaying && vm.BaseAudioUri is not null)
-                {
-                    // Ensure that base audio starts playing on the right position
-                    BaseAudioMediaElement.Position = VideoMediaElement.Position;
-                    BaseAudioMediaElement.Play();
-                }
-            }
-            else if (e.HasPropertyChanged(nameof(VideoViewModel.IsPlaying)))
-            {
-                var vm = (VideoViewModel)ViewModel;
-                if (vm.IsPlaying)
-                {
-                    _positionDispatcherTimer.Start();
-                    UpdateMediaElements(x => x.Play());
-                }
-                else
-                {
-                    _positionDispatcherTimer.Stop();
-                    UpdateMediaElements(x => x.Pause());
-                }
-            }
-        }
-
-        private void OnPositionDispatcherTimerTick(object sender, EventArgs e)
-        {
-            if (_isUserUpdatingSlider)
-            {
-                return;
+                ProgressSlider.SetCurrentValue(System.Windows.Controls.Primitives.RangeBase.MaximumProperty, 0d);
             }
 
-            var position = VideoMediaElement.Position;
-
-            using (new DisposableToken<VideoView>(this,
-                x => _isAppUpdatingSlider = true,
-                x => _isAppUpdatingSlider = false))
-            {
-                ProgressSlider.SetCurrentValue(Slider.ValueProperty, position.TotalSeconds);
-
-                var vm = ViewModel as VideoViewModel;
-                if (vm is not null)
-                {
-                    vm.Position = position;
-                }
-            }
+            // Pause so the media actually gets loaded
+            UpdateMediaElements(x => x.Pause());
         }
-
-        private void OnPositionUpdateDispatcherTimerTick(object sender, EventArgs e)
-        {
-            _positionUpdateDispatcherTimer.Stop();
-
-            using (new DisposableToken<VideoView>(this,
-                x => _isUserUpdatingSlider = true,
-                x => _isUserUpdatingSlider = false))
-            {
-                var vm = ViewModel as VideoViewModel;
-                if (vm is not null)
-                {
-                    vm.Position = TimeSpan.FromSeconds(ProgressSlider.Value);
-                }
-            }
-        }
-
-        private void OnDragStarted(object sender, DragStartedEventArgs e)
-        {
-            _isUserUpdatingSlider = true;
-        }
-
-        private void OnProgressSliderValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        else if (e.HasPropertyChanged(nameof(VideoViewModel.Position)))
         {
             if (_isAppUpdatingSlider)
             {
                 return;
             }
 
-            _positionUpdateDispatcherTimer.Stop();
-            _positionUpdateDispatcherTimer.Start();
-        }
+            var vm = (VideoViewModel)ViewModel;
 
-        private void OnDragCompleted(object sender, DragCompletedEventArgs e)
+            UpdateMediaElements(x => x.Position = vm.Position);
+
+            if (!vm.IsPlaying)
+            {
+                // Pause so the media actually gets loaded to the new position
+                UpdateMediaElements(x => x.Pause());
+            }
+        }
+        else if (e.HasPropertyChanged(nameof(VideoViewModel.BaseAudioUri)))
         {
-            _isUserUpdatingSlider = false;
+            var vm = (VideoViewModel)ViewModel;
+            if (vm.IsPlaying && vm.BaseAudioUri is not null)
+            {
+                // Ensure that base audio starts playing on the right position
+                BaseAudioMediaElement.Position = VideoMediaElement.Position;
+                BaseAudioMediaElement.Play();
+            }
         }
-
-        private void OnMediaOpened(object sender, System.Windows.RoutedEventArgs e)
+        else if (e.HasPropertyChanged(nameof(VideoViewModel.IsPlaying)))
         {
-            var duration = VideoMediaElement.NaturalDuration.TimeSpan;
-
-            ((VideoViewModel)ViewModel).TotalDuration = duration;
-            ProgressSlider.SetCurrentValue(RangeBase.MaximumProperty, duration.TotalSeconds);
+            var vm = (VideoViewModel)ViewModel;
+            if (vm.IsPlaying)
+            {
+                _positionDispatcherTimer.Start();
+                UpdateMediaElements(x => x.Play());
+            }
+            else
+            {
+                _positionDispatcherTimer.Stop();
+                UpdateMediaElements(x => x.Pause());
+            }
         }
+    }
 
-        private void OnMediaFailed(object sender, System.Windows.ExceptionRoutedEventArgs e)
+    private void OnPositionDispatcherTimerTick(object sender, EventArgs e)
+    {
+        if (_isUserUpdatingSlider)
         {
-
+            return;
         }
 
-        private void OnMediaEnded(object sender, System.Windows.RoutedEventArgs e)
+        var position = VideoMediaElement.Position;
+
+        using (new DisposableToken<VideoView>(this,
+            x => _isAppUpdatingSlider = true,
+            x => _isAppUpdatingSlider = false))
+        {
+            ProgressSlider.SetCurrentValue(Slider.ValueProperty, position.TotalSeconds);
+
+            var vm = ViewModel as VideoViewModel;
+            if (vm is not null)
+            {
+                vm.Position = position;
+            }
+        }
+    }
+
+    private void OnPositionUpdateDispatcherTimerTick(object sender, EventArgs e)
+    {
+        _positionUpdateDispatcherTimer.Stop();
+
+        using (new DisposableToken<VideoView>(this,
+            x => _isUserUpdatingSlider = true,
+            x => _isUserUpdatingSlider = false))
         {
             var vm = ViewModel as VideoViewModel;
             if (vm is not null)
             {
-                vm.Pause.Execute();
+                vm.Position = TimeSpan.FromSeconds(ProgressSlider.Value);
             }
         }
+    }
 
-        private void UpdateMediaElements(Action<MediaElement> action)
+    private void OnDragStarted(object sender, DragStartedEventArgs e)
+    {
+        _isUserUpdatingSlider = true;
+    }
+
+    private void OnProgressSliderValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_isAppUpdatingSlider)
         {
-            var elements = new[]
-            {
-                VideoMediaElement,
-                AudioMediaElement,
-                BaseAudioMediaElement
-            };
-
-            elements.ForEach(x =>
-            {
-                if (x.Source is not null)
-                {
-                    action(x);
-                }
-            });
+            return;
         }
+
+        _positionUpdateDispatcherTimer.Stop();
+        _positionUpdateDispatcherTimer.Start();
+    }
+
+    private void OnDragCompleted(object sender, DragCompletedEventArgs e)
+    {
+        _isUserUpdatingSlider = false;
+    }
+
+    private void OnMediaOpened(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var duration = VideoMediaElement.NaturalDuration.TimeSpan;
+
+        ((VideoViewModel)ViewModel).TotalDuration = duration;
+        ProgressSlider.SetCurrentValue(RangeBase.MaximumProperty, duration.TotalSeconds);
+    }
+
+    private void OnMediaFailed(object sender, System.Windows.ExceptionRoutedEventArgs e)
+    {
+
+    }
+
+    private void OnMediaEnded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var vm = ViewModel as VideoViewModel;
+        if (vm is not null)
+        {
+            vm.Pause.Execute();
+        }
+    }
+
+    private void UpdateMediaElements(Action<MediaElement> action)
+    {
+        var elements = new[]
+        {
+            VideoMediaElement,
+            AudioMediaElement,
+            BaseAudioMediaElement
+        };
+
+        elements.ForEach(x =>
+        {
+            if (x.Source is not null)
+            {
+                action(x);
+            }
+        });
     }
 }
