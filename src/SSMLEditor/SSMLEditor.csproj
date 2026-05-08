@@ -35,9 +35,9 @@
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
-    <PackageReference Include="Catel.MVVM" Version="7.0.0-alpha0292" />
+    <PackageReference Include="Catel.MVVM" Version="7.0.0-alpha0311" />
     <PackageReference Include="Catel.Fody" Version="7.1.0-alpha0016" PrivateAssets="all" />
-    <PackageReference Include="Catel.SourceGenerators" Version="7.1.0-alpha0044" PrivateAssets="all" />
+    <PackageReference Include="Catel.SourceGenerators" Version="7.1.0-alpha0052" PrivateAssets="all" />
     <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
@@ -53,10 +53,10 @@
     <PackageReference Include="Orc.Notifications" Version="6.0.0-alpha0103" />
     <PackageReference Include="Orc.ProjectManagement" Version="5.3.0-alpha0548" />
     <PackageReference Include="Orc.SelectionManagement" Version="6.0.0-alpha0090" />
-    <PackageReference Include="Orc.Serialization.Json" Version="6.0.0-alpha0116" />
+    <PackageReference Include="Orc.Serialization.Json" Version="6.0.0-alpha0122" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="6.0.0-alpha0131" />
     <PackageReference Include="Orc.Wizard" Version="6.0.0-alpha0127" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="8.0.0-alpha0156" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="8.0.0-alpha0169" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props')" />
