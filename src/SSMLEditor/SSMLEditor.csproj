@@ -56,7 +56,7 @@
     <PackageReference Include="Orc.Serialization.Json" Version="6.0.0-alpha0122" />
     <PackageReference Include="Orc.Squirrel.Xaml" Version="6.0.0-alpha0131" />
     <PackageReference Include="Orc.Wizard" Version="6.0.0-alpha0127" />
-    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="8.0.0-alpha0169" />
+    <PackageReference Include="Orchestra.Shell.Ribbon.Fluent" Version="8.0.0-alpha0177" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.explicit.props')" />
