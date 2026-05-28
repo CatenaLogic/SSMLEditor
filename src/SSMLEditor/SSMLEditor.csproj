@@ -35,7 +35,7 @@
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
     <PackageReference Include="Catel.MVVM" Version="7.0.0-alpha0359" />
     <PackageReference Include="Catel.Fody" Version="7.1.0-alpha0016" PrivateAssets="all" />
-    <PackageReference Include="Catel.SourceGenerators" Version="7.1.0-alpha0064" PrivateAssets="all" />
+    <PackageReference Include="Catel.SourceGenerators" Version="7.1.0-alpha0069" PrivateAssets="all" />
     <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="all">
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
