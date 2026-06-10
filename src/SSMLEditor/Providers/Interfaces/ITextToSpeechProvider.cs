@@ -12,9 +12,9 @@ public interface ITextToSpeechProvider
 
     List<TtsProperty> Properties { get; }
 
-    Task<IEnumerable<TtsLanguage>> GetLanguagesAsync();
+    Task<IReadOnlyList<TtsLanguage>> GetLanguagesAsync();
 
-    Task<IEnumerable<TtsVoice>> GetVoicesAsync(TtsLanguage language);
+    Task<IReadOnlyList<TtsVoice>> GetVoicesAsync(TtsLanguage language);
 
     Task<Stream> ExecuteAsync(string ssml);
 

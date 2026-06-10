@@ -15,7 +15,7 @@ public abstract class TextToSpeechProviderBase : ITextToSpeechProvider
 
     public string Name { get; set; }
 
-    public List<TtsProperty> Properties { get; private set; }
+    public List<TtsProperty> Properties { get; init; }
 
     public TtsProperty this[string propertyName]
     {
@@ -26,8 +26,8 @@ public abstract class TextToSpeechProviderBase : ITextToSpeechProvider
     }
 
     public abstract Task<Stream> ExecuteAsync(string ssml);
-    public abstract Task<IEnumerable<TtsLanguage>> GetLanguagesAsync();
-    public abstract Task<IEnumerable<TtsVoice>> GetVoicesAsync(TtsLanguage language);
+    public abstract Task<IReadOnlyList<TtsLanguage>> GetLanguagesAsync();
+    public abstract Task<IReadOnlyList<TtsVoice>> GetVoicesAsync(TtsLanguage language);
 
     public virtual void RemoveDuplicateProperties()
     {

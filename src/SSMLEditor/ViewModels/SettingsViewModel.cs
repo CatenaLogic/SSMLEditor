@@ -20,11 +20,6 @@ public class SettingsViewModel : ViewModelBase
         IUpdateService updateService, IOpenFileService openFileService)
         : base(serviceProvider)
     {
-        ArgumentNullException.ThrowIfNull(configurationService);
-        ArgumentNullException.ThrowIfNull(manageAppDataService);
-        ArgumentNullException.ThrowIfNull(updateService);
-        ArgumentNullException.ThrowIfNull(openFileService);
-
         _configurationService = configurationService;
         _manageAppDataService = manageAppDataService;
         _updateService = updateService;

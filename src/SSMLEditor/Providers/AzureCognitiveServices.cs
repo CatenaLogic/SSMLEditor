@@ -53,7 +53,7 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
         set { this["ServiceRegion"].Value = value; }
     }
 
-    public override async Task<IEnumerable<TtsLanguage>> GetLanguagesAsync()
+    public override async Task<IReadOnlyList<TtsLanguage>> GetLanguagesAsync()
     {
         var languages = new List<TtsLanguage>();
 
@@ -74,7 +74,7 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
         return languages;
     }
 
-    public override async Task<IEnumerable<TtsVoice>> GetVoicesAsync(TtsLanguage language)
+    public override async Task<IReadOnlyList<TtsVoice>> GetVoicesAsync(TtsLanguage language)
     {
         var voices = new List<TtsVoice>();
 
