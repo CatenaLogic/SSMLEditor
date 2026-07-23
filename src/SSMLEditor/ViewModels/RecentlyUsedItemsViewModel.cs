@@ -67,7 +67,12 @@ public class RecentlyUsedItemsViewModel : ViewModelBase
 
     private async Task OnOpenInExplorerExecuteAsync(string? parameter)
     {
-        if (!_fileService.Exists(parameter!))
+        if (string.IsNullOrWhiteSpace(parameter))
+        {
+            return;
+        }
+
+        if (!_fileService.Exists(parameter))
         {
             await _messageService.ShowWarningAsync("The file doesn't seem to exist. Cannot open it in explorer.");
             return;
