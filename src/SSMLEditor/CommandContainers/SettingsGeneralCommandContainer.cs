@@ -28,7 +28,7 @@ public class SettingsGeneralCommandContainer : CommandContainerBase
         _viewModelFactory = viewModelFactory;
     }
 
-    public override async Task ExecuteAsync(object parameter)
+    public override async Task ExecuteAsync(object? parameter)
     {
         var settingsViewModelType = TypeCache.GetTypes(x => string.Equals(x.Name, ViewModelType)).FirstOrDefault();
         if (settingsViewModelType is null)
@@ -37,6 +37,10 @@ public class SettingsGeneralCommandContainer : CommandContainerBase
         }
 
         var viewModel = _viewModelFactory.CreateViewModel(settingsViewModelType);
+        if (viewModel is null)
+        {
+            return;
+        }
 
         await _uiVisualizerService.ShowDialogAsync(viewModel);
     }

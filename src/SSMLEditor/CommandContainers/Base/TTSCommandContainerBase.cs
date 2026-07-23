@@ -49,14 +49,14 @@ public abstract class TTSCommandContainerBase : ProjectCommandContainerBase
         UpdateSelectionState();
     }
 
-    private void OnTtsProviderSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
+    private void OnTtsProviderSelectionManagerSelectionChanged(object? sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
     {
         UpdateSelectionState();
 
         InvalidateCommand();
     }
 
-    public override bool CanExecute(object parameter)
+    public override bool CanExecute(object? parameter)
     {
         if (!base.CanExecute(parameter))
         {
@@ -66,7 +66,7 @@ public abstract class TTSCommandContainerBase : ProjectCommandContainerBase
         return _hasSelectedItem;
     }
 
-    public override async Task ExecuteAsync(object parameter)
+    public override async Task ExecuteAsync(object? parameter)
     {
         await _projectManager.CloseActiveProjectAsync();
     }
@@ -94,7 +94,7 @@ public abstract class TTSCommandContainerBase : ProjectCommandContainerBase
                         var fileName = project.GetFullAudioPath(language);
 
                         var directory = Path.GetDirectoryName(fileName);
-                        _directoryService.Create(directory);
+                        _directoryService.Create(directory!);
 
                         using (var fileStream = _fileService.Create(fileName))
                         {

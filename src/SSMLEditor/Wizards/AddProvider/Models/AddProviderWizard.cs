@@ -20,12 +20,12 @@ public class AddProviderWizard : WizardBase
         ResizeMode = System.Windows.ResizeMode.CanResize;
     }
 
-    public ITextToSpeechProvider Provider
+    public ITextToSpeechProvider? Provider
     {
         get
         {
             var wizardPage = this.FindPageByType<ProviderWizardPage>();
-            return wizardPage.SelectedProvider;
+            return wizardPage?.SelectedProvider;
         }
     }
 }

@@ -35,33 +35,39 @@ public class RecentlyUsedItemsViewModel : ViewModelBase
         OpenInExplorer = new TaskCommand<string>(serviceProvider, OnOpenInExplorerExecuteAsync);
     }
 
-    public List<RecentlyUsedItem> RecentlyUsedItems { get; private set; }
-    public List<RecentlyUsedItem> PinnedItems { get; private set; }
+    public List<RecentlyUsedItem>? RecentlyUsedItems { get; private set; }
+    public List<RecentlyUsedItem>? PinnedItems { get; private set; }
 
     #region Commands
     public Command<string> PinItem { get; private set; }
 
-    private void OnPinItemExecute(string parameter)
+    private void OnPinItemExecute(string? parameter)
     {
-        Argument.IsNotNullOrWhitespace(() => parameter);
+        if (string.IsNullOrWhiteSpace(parameter))
+        {
+            return;
+        }
 
         _recentlyUsedItemsService.PinItem(parameter);
     }
 
     public Command<string> UnpinItem { get; private set; }
 
-    private void OnUnpinItemExecute(string parameter)
+    private void OnUnpinItemExecute(string? parameter)
     {
-        Argument.IsNotNullOrWhitespace(() => parameter);
+        if (string.IsNullOrWhiteSpace(parameter))
+        {
+            return;
+        }
 
         _recentlyUsedItemsService.UnpinItem(parameter);
     }
 
     public TaskCommand<string> OpenInExplorer { get; private set; }
 
-    private async Task OnOpenInExplorerExecuteAsync(string parameter)
+    private async Task OnOpenInExplorerExecuteAsync(string? parameter)
     {
-        if (!_fileService.Exists(parameter))
+        if (!_fileService.Exists(parameter!))
         {
             await _messageService.ShowWarningAsync("The file doesn't seem to exist. Cannot open it in explorer.");
             return;
@@ -88,7 +94,7 @@ public class RecentlyUsedItemsViewModel : ViewModelBase
         return base.CloseAsync();
     }
 
-    private void OnRecentlyUsedItemsServiceUpdated(object sender, EventArgs e)
+    private void OnRecentlyUsedItemsServiceUpdated(object? sender, EventArgs e)
     {
         UpdateRecentlyUsedItems();
         UpdatePinnedItem();

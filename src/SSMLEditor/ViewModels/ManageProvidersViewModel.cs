@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Catel.Collections;
 using Catel.MVVM;
@@ -33,9 +34,9 @@ public class ManageProvidersViewModel : ViewModelBase
         Remove = new TaskCommand(serviceProvider, OnRemoveExecuteAsync, OnRemoveCanExecute);
     }
 
-    public List<ITextToSpeechProvider> Providers { get; private set; }
+    public List<ITextToSpeechProvider>? Providers { get; private set; }
 
-    public ITextToSpeechProvider SelectedProvider { get; set; }
+    public ITextToSpeechProvider? SelectedProvider { get; set; }
 
     #region Commands
     public TaskCommand Add { get; private set; }
@@ -50,7 +51,11 @@ public class ManageProvidersViewModel : ViewModelBase
         var wizard = ActivatorUtilities.CreateInstance<AddProviderWizard>(_serviceProvider);
         if ((await _wizardService.ShowWizardAsync(wizard)).DialogResult ?? false)
         {
-            Providers.Add(wizard.Provider);
+            var provider = wizard.Provider;
+            if (provider is not null)
+            {
+                Providers?.Add(provider);
+            }
         }
     }
 
@@ -63,7 +68,7 @@ public class ManageProvidersViewModel : ViewModelBase
 
     private async Task OnRemoveExecuteAsync()
     {
-        Providers.Remove(SelectedProvider);
+        Providers?.Remove(SelectedProvider!);
         SelectedProvider = null;
     }
     #endregion
@@ -77,7 +82,7 @@ public class ManageProvidersViewModel : ViewModelBase
 
     protected override async Task<bool> SaveAsync()
     {
-        _textToSpeechProviderService.Providers.ReplaceRange(Providers);
+        _textToSpeechProviderService.Providers.ReplaceRange(Providers ?? Enumerable.Empty<ITextToSpeechProvider>());
 
         await _textToSpeechProviderService.SaveAsync(); 
         

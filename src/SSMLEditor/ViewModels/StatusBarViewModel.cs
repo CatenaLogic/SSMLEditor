@@ -26,9 +26,9 @@ public class StatusBarViewModel : ViewModelBase
         _updateService = updateService;
     }
 
-    public string ReceivingAutomaticUpdates { get; private set; }
+    public string? ReceivingAutomaticUpdates { get; private set; }
     public bool IsUpdatedInstalled { get; private set; }
-    public string Version { get; private set; }
+    public string? Version { get; private set; }
 
     protected override async Task InitializeAsync()
     {
@@ -53,7 +53,7 @@ public class StatusBarViewModel : ViewModelBase
         await base.CloseAsync();
     }
 
-    private void OnConfigurationChanged(object sender, ConfigurationChangedEventArgs e)
+    private void OnConfigurationChanged(object? sender, ConfigurationChangedEventArgs e)
     {
         if (e.Key.Contains("Updates"))
         {
@@ -61,7 +61,7 @@ public class StatusBarViewModel : ViewModelBase
         }
     }
 
-    private void OnUpdateInstalled(object sender, EventArgs e)
+    private void OnUpdateInstalled(object? sender, EventArgs e)
     {
         IsUpdatedInstalled = _updateService.IsUpdatedInstalled;
     }
@@ -77,7 +77,7 @@ public class StatusBarViewModel : ViewModelBase
         }
         else
         {
-            var channel = _updateService.CurrentChannel.Name;
+            var channel = _updateService.CurrentChannel?.Name ?? string.Empty;
             updateInfo = string.Format("Automatic updates are enabled for {0} versions", channel.ToLower());
         }
 

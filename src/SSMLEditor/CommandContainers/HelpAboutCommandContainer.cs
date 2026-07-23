@@ -11,7 +11,7 @@ public class HelpAboutCommandContainer : CommandContainerBase
     {
     }
 
-    public override Task ExecuteAsync(object parameter)
+    public override Task ExecuteAsync(object? parameter)
     {
         return base.ExecuteAsync(parameter);
     }

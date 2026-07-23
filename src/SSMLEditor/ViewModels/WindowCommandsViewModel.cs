@@ -66,7 +66,7 @@ public class WindowCommandsViewModel : ViewModelBase
         await base.CloseAsync();
     }
 
-    private void OnBaseColorSchemeServiceBaseColorSchemeChanged(object sender, EventArgs e)
+    private void OnBaseColorSchemeServiceBaseColorSchemeChanged(object? sender, EventArgs e)
     {
         var baseColorScheme = _baseColorSchemeService.GetBaseColorScheme();
 

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 public interface ITextToSpeechProvider
 {
-    string Name { get; }
+    string? Name { get; }
 
-    TtsProperty this[string propertyName] { get; }
+    TtsProperty? this[string propertyName] { get; }
 
     List<TtsProperty> Properties { get; }
 

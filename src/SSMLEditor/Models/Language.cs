@@ -8,9 +8,9 @@ using SSMLEditor.Serialization.Converters;
 
 public class Language : ObservableObject
 {
-    private string _outputRelativeFileName;
+    private string? _outputRelativeFileName;
 
-    public string RelativeFileName { get; set; }
+    public string? RelativeFileName { get; set; }
 
     public string OutputRelativeFileName
     {
@@ -27,13 +27,13 @@ public class Language : ObservableObject
                 return Path.ChangeExtension(relativeFileName, ".wav");
             }
 
-            return _outputRelativeFileName;
+            return _outputRelativeFileName ?? string.Empty;
         }
         set => _outputRelativeFileName = value;
     }
 
     [JsonConverter(typeof(CultureInfoJsonConverter))]
-    public CultureInfo Culture { get; set; }
+    public CultureInfo? Culture { get; set; }
 
     [JsonIgnore]
     public bool IsDirty
@@ -48,14 +48,14 @@ public class Language : ObservableObject
     [JsonIgnore]
     public string ShortName
     {
-        get { return Culture.TwoLetterISOLanguageName; }
+        get { return Culture?.TwoLetterISOLanguageName ?? string.Empty; }
     }
 
     [JsonIgnore]
-    public string Content { get; set; }
+    public string? Content { get; set; }
 
     [JsonIgnore]
-    public string OriginalContent { get; set; }
+    public string? OriginalContent { get; set; }
 
     [JsonIgnore]
     public string Status

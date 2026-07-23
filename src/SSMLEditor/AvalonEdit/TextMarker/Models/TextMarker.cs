@@ -19,7 +19,7 @@ public sealed class TextMarker : TextSegment, ITextMarker
         _markerTypes = TextMarkerTypes.None;
     }
 
-    public event EventHandler Deleted;
+    public event EventHandler? Deleted;
 
     public bool IsDeleted
     {
@@ -102,7 +102,7 @@ public sealed class TextMarker : TextSegment, ITextMarker
         }
     }
 
-    public object Tag { get; set; }
+    public object? Tag { get; set; }
 
     private TextMarkerTypes _markerTypes;
 
@@ -134,5 +134,5 @@ public sealed class TextMarker : TextSegment, ITextMarker
         }
     }
 
-    public object ToolTip { get; set; }
+    public object? ToolTip { get; set; }
 }

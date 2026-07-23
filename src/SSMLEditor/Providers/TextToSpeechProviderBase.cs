@@ -13,11 +13,11 @@ public abstract class TextToSpeechProviderBase : ITextToSpeechProvider
         Properties = new List<TtsProperty>();
     }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     public List<TtsProperty> Properties { get; init; }
 
-    public TtsProperty this[string propertyName]
+    public TtsProperty? this[string propertyName]
     {
         get
         {

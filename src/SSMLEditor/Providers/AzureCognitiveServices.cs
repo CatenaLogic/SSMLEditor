@@ -40,17 +40,17 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
     }
 
     [JsonIgnore]
-    public string SubscriptionKey
+    public string? SubscriptionKey
     {
-        get { return this["SubscriptionKey"].Value; }
-        set { this["SubscriptionKey"].Value = value; }
+        get { return this["SubscriptionKey"]?.Value; }
+        set { var prop = this["SubscriptionKey"]; if (prop is not null) prop.Value = value; }
     }
 
     [JsonIgnore]
-    public string ServiceRegion
+    public string? ServiceRegion
     {
-        get { return this["ServiceRegion"].Value; }
-        set { this["ServiceRegion"].Value = value; }
+        get { return this["ServiceRegion"]?.Value; }
+        set { var prop = this["ServiceRegion"]; if (prop is not null) prop.Value = value; }
     }
 
     public override async Task<IReadOnlyList<TtsLanguage>> GetLanguagesAsync()
@@ -78,11 +78,11 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
     {
         var voices = new List<TtsVoice>();
 
-        var config = SpeechConfig.FromSubscription(SubscriptionKey, ServiceRegion);
+        var config = SpeechConfig.FromSubscription(SubscriptionKey!, ServiceRegion!);
 
         using (var synthesizer = new SpeechSynthesizer(config, null))
         {
-            using (var azureVoices = await synthesizer.GetVoicesAsync(language.CultureInfo.TwoLetterISOLanguageName))
+            using (var azureVoices = await synthesizer.GetVoicesAsync(language.CultureInfo?.TwoLetterISOLanguageName ?? string.Empty))
             {
                 foreach (var azureVoice in azureVoices.Voices)
                 {
@@ -122,7 +122,7 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
     [Time]
     public override async Task<Stream> ExecuteAsync(string ssml)
     {
-        var config = SpeechConfig.FromSubscription(SubscriptionKey, ServiceRegion);
+        var config = SpeechConfig.FromSubscription(SubscriptionKey!, ServiceRegion!);
 
         using (var synthesizer = new SpeechSynthesizer(config, null))
         {

@@ -29,9 +29,9 @@ public class EditorViewModel : ViewModelBase
 
     public Language Language { get; private set; }
 
-    public FlowDocument RichDocument { get; private set; }
+    public FlowDocument? RichDocument { get; private set; }
 
-    public string SsmlDocument { get; set; }
+    public string? SsmlDocument { get; set; }
 
     #region Commands
     
@@ -80,7 +80,7 @@ public class EditorViewModel : ViewModelBase
             x => x.Instance._isUpdating = true,
             x => x.Instance._isUpdating = false))
         {
-            RichDocument = _ssmlConverterService.ConvertToFlowDocument(Language.Content);
+            RichDocument = _ssmlConverterService.ConvertToFlowDocument(Language.Content ?? string.Empty);
         }
     }
 

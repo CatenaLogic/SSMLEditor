@@ -42,11 +42,11 @@ public class VideoViewModel : ViewModelBase
 
     public override string Title { get { return "Video"; } }
 
-    public Uri VideoUri { get; private set; }
+    public Uri? VideoUri { get; private set; }
 
-    public Uri AudioUri { get; private set; }
+    public Uri? AudioUri { get; private set; }
 
-    public Uri BaseAudioUri { get; private set; }
+    public Uri? BaseAudioUri { get; private set; }
 
     public TimeSpan Position { get; set; }
 
@@ -58,9 +58,9 @@ public class VideoViewModel : ViewModelBase
 
     public bool CanSelectedBaseAudioTrack { get; set; }
 
-    public List<Language> AvailableBaseAudioTracks { get; private set; }
+    public List<Language>? AvailableBaseAudioTracks { get; private set; }
 
-    public Language SelectedBaseAudioTrack { get; set; }
+    public Language? SelectedBaseAudioTrack { get; set; }
 
     #region Commands
     public TaskCommand Play { get; private set; }
@@ -155,7 +155,7 @@ public class VideoViewModel : ViewModelBase
         //UpdateProject();
     }
 
-    private void OnLanguageSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<Language> e)
+    private void OnLanguageSelectionManagerSelectionChanged(object? sender, SelectionChangedEventArgs<Language> e)
     {
         Pause.Execute();
 
@@ -195,7 +195,7 @@ public class VideoViewModel : ViewModelBase
 
     private void UpdateBaseAudio()
     {
-        Uri baseAudioUri = null;
+        Uri? baseAudioUri = null;
 
         var availableBaseAudioTracks = new List<Language>();
 
@@ -203,7 +203,7 @@ public class VideoViewModel : ViewModelBase
         if (project is not null)
         {
             availableBaseAudioTracks.AddRange(from x in project.ProjectRoot.Languages
-                                              orderby x.Culture.DisplayName
+                                              orderby x.Culture?.DisplayName
                                               select x);
 
             var selectedBaseAudioTrack = SelectedBaseAudioTrack ?? availableBaseAudioTracks.FirstOrDefault();
@@ -241,8 +241,8 @@ public class VideoViewModel : ViewModelBase
             return;
         }
 
-        Uri videoUri = null;
-        Uri audioUri = null;
+        Uri? videoUri = null;
+        Uri? audioUri = null;
 
         var project = _projectManager.GetActiveProject<Project>();
         if (project is not null)

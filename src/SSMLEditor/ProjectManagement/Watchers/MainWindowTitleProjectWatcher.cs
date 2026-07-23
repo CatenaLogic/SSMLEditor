@@ -18,7 +18,7 @@ public class MainWindowTitleProjectWatcher : ProjectWatcherBase, IConstructAtSta
         _mainWindowTitleService = mainWindowTitleService;
     }
 
-    protected override Task OnActivatedAsync(IProject oldProject, IProject newProject)
+    protected override Task OnActivatedAsync(IProject? oldProject, IProject? newProject)
     {
         _mainWindowTitleService.UpdateTitle();
 

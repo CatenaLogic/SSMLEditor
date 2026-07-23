@@ -16,5 +16,5 @@ public class ProviderPropertiesWizardPage : WizardPageBase
         Description = "Update the provider properties";
     }
 
-    public List<TtsProperty> Properties { get; set; }
+    public List<TtsProperty>? Properties { get; set; }
 }

@@ -72,11 +72,11 @@ public interface ITextMarker
     /// <summary>
     /// Gets/Sets an object with additional data for this text marker.
     /// </summary>
-    object Tag { get; set; }
+    object? Tag { get; set; }
 
     /// <summary>
     /// Gets/Sets an object that will be displayed as tooltip in the text editor.
     /// </summary>
     /// <remarks>Not supported in this sample!</remarks>
-    object ToolTip { get; set; }
+    object? ToolTip { get; set; }
 }

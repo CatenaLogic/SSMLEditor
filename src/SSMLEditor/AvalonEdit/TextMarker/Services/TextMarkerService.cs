@@ -82,7 +82,7 @@ public sealed class TextMarkerService : DocumentColorizingTransformer, IBackgrou
 
         var m = marker as TextMarker;
 
-        if (_markers is not null && _markers.Remove(m))
+        if (_markers is not null && m is not null && _markers.Remove(m))
         {
             Redraw(m);
             m.OnDeleted();
@@ -102,7 +102,7 @@ public sealed class TextMarkerService : DocumentColorizingTransformer, IBackgrou
         RedrawRequested?.Invoke(this, EventArgs.Empty);
     }
 
-    public event EventHandler RedrawRequested;
+    public event EventHandler? RedrawRequested;
     #endregion
 
     #region DocumentColorizingTransformer
@@ -118,7 +118,7 @@ public sealed class TextMarkerService : DocumentColorizingTransformer, IBackgrou
 
         foreach (var marker in _markers.FindOverlappingSegments(lineStart, line.Length))
         {
-            Brush foregroundBrush = null;
+            Brush? foregroundBrush = null;
             if (marker.ForegroundColor is not null)
             {
                 foregroundBrush = new SolidColorBrush(marker.ForegroundColor.Value);

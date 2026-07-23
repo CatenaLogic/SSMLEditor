@@ -33,20 +33,18 @@ public class ProjectReader : ProjectReaderBase
         });
     }
 
-    protected override async Task<IProject> ReadFromLocationAsync(string location)
+    protected override async Task<IProject?> ReadFromLocationAsync(string location)
     {
         try
         {
             var json = await _fileService.ReadAllTextAsync(location);
 
-            var projectRoot = _jsonSerializer.DeserializeFromString<ProjectRoot>(json);
+            var projectRoot = _jsonSerializer.DeserializeFromString<ProjectRoot>(json) ?? new ProjectRoot();
 
             var project = new Project(location)
             {
                 ProjectRoot = projectRoot
             };
-
-            var directory = Path.GetDirectoryName(location);
 
             foreach (var language in project.ProjectRoot.Languages)
             {

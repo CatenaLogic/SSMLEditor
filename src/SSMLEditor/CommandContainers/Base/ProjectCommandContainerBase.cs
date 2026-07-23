@@ -36,15 +36,15 @@ public abstract class ProjectCommandContainerBase : CommandContainerBase
         InvalidateCommand();
     }
 
-    protected virtual async Task OnProjectActivatedAsync(Project oldProject, Project newProject)
+    protected virtual async Task OnProjectActivatedAsync(Project? oldProject, Project? newProject)
     {
     }
 
-    protected virtual async Task OnProjectClosedAsync(Project project)
+    protected virtual async Task OnProjectClosedAsync(Project? project)
     {
     }
 
-    public override bool CanExecute(object parameter)
+    public override bool CanExecute(object? parameter)
     {
         if (_projectManager.ActiveProject is null)
         {

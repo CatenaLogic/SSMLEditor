@@ -30,12 +30,12 @@ public class ProjectOpenCommandContainer : ProjectCommandContainerBase
         _busyIndicatorService = busyIndicatorService;
     }
 
-    public override bool CanExecute(object parameter)
+    public override bool CanExecute(object? parameter)
     {
         return true;
     }
 
-    public override async Task ExecuteAsync(object parameter)
+    public override async Task ExecuteAsync(object? parameter)
     {
         try
         {
