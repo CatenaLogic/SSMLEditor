@@ -2,7 +2,10 @@
 
 using Catel.Windows;
 
-public partial class SettingsWindow : DataWindow
+public partial class SettingsWindow
 {
-
+    partial void OnInitializingComponent()
+    {
+        Mode = DataWindowMode.OkCancel;
+    }
 }
