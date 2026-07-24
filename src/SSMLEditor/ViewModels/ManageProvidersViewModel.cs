@@ -68,7 +68,12 @@ public class ManageProvidersViewModel : ViewModelBase
 
     private async Task OnRemoveExecuteAsync()
     {
-        Providers.Remove(SelectedProvider!);
+        if (SelectedProvider is null)
+        {
+            return;
+        }
+
+        Providers.Remove(SelectedProvider);
         RaisePropertyChanged(nameof(Providers));
         SelectedProvider = null;
     }
