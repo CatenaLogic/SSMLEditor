@@ -30,7 +30,7 @@ public class SettingsViewModel : ViewModelBase
 
     public bool IsUpdateSystemAvailable { get; private set; }
     public bool CheckForUpdates { get; set; }
-    public List<UpdateChannel>? AvailableUpdateChannels { get; private set; }
+    public List<UpdateChannel> AvailableUpdateChannels { get; private set; } = new List<UpdateChannel>();
     public UpdateChannel? UpdateChannel { get; set; }
 
     #region Commands

@@ -1,7 +1,6 @@
 ﻿namespace SSMLEditor.ViewModels;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catel.MVVM;
@@ -36,12 +35,12 @@ public class RibbonViewModel : ViewModelBase
 
         ShowKeyboardMappings = new TaskCommand(serviceProvider, OnShowKeyboardMappingsExecuteAsync);
 
-        Title = AssemblyHelper.GetEntryAssembly()?.Title() ?? string.Empty;
+        Title = AssemblyHelper.GetRequiredEntryAssembly().Title() ?? string.Empty;
     }
 
     public Project? Project { get; private set; }
 
-    public List<ITextToSpeechProvider>? AvailableProviders { get; private set; }
+    public IReadOnlyList<ITextToSpeechProvider> AvailableProviders { get; private set; } = Array.Empty<ITextToSpeechProvider>();
 
     public ITextToSpeechProvider? SelectedProvider { get; set; }
 

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using Catel.Logging;
 using Catel.MVVM;
 using Catel.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SSMLEditor.Analyzers;
 using SSMLEditor.AvalonEdit;
@@ -170,11 +171,8 @@ public partial class EditorView
         SsmlTextEditor.TextArea.TextView.BackgroundRenderers.Add(textMarkerService);
         SsmlTextEditor.TextArea.TextView.LineTransformers.Add(textMarkerService);
 
-        var services = SsmlTextEditor.Document.ServiceProvider.GetService(typeof(IServiceContainer)) as IServiceContainer;
-        if (services is not null)
-        {
-            services.AddService(typeof(ITextMarkerService), textMarkerService);
-        }
+        var services = SsmlTextEditor.Document.ServiceProvider.GetRequiredService<IServiceContainer>();
+        services.AddService(typeof(ITextMarkerService), textMarkerService);
 
         _textMarkerService = textMarkerService;
     }

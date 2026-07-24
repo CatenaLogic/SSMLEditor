@@ -58,7 +58,7 @@ public class VideoViewModel : ViewModelBase
 
     public bool CanSelectedBaseAudioTrack { get; set; }
 
-    public List<Language>? AvailableBaseAudioTracks { get; private set; }
+    public IReadOnlyList<Language> AvailableBaseAudioTracks { get; private set; } = Array.Empty<Language>();
 
     public Language? SelectedBaseAudioTrack { get; set; }
 

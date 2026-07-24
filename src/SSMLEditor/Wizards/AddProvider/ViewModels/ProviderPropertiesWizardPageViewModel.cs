@@ -23,10 +23,10 @@ public class ProviderPropertiesWizardPageViewModel : WizardPageViewModelBase<Pro
     {
         await base.InitializeAsync();
 
-        var providerWizardPage = Wizard!.FindPageByType<ProviderWizardPage>();
+        var providerWizardPage = Wizard!.FindRequiredPageByType<ProviderWizardPage>();
 
-        Name = providerWizardPage!.SelectedProvider!.Name;
-        Properties = providerWizardPage!.SelectedProvider!.Properties;
+        Name = providerWizardPage.SelectedProvider!.Name;
+        Properties = providerWizardPage.SelectedProvider!.Properties;
     }
 
     protected override async Task CloseAsync()

@@ -36,11 +36,7 @@ public class SettingsGeneralCommandContainer : CommandContainerBase
             throw Logger.LogErrorAndCreateException<InvalidOperationException>("Cannot find type '{ViewModelType}'", ViewModelType);
         }
 
-        var viewModel = _viewModelFactory.CreateViewModel(settingsViewModelType);
-        if (viewModel is null)
-        {
-            return;
-        }
+        var viewModel = _viewModelFactory.CreateRequiredViewModel(settingsViewModelType);
 
         await _uiVisualizerService.ShowDialogAsync(viewModel);
     }

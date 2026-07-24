@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Catel.Collections;
 using Catel.MVVM;
@@ -34,7 +33,7 @@ public class ManageProvidersViewModel : ViewModelBase
         Remove = new TaskCommand(serviceProvider, OnRemoveExecuteAsync, OnRemoveCanExecute);
     }
 
-    public List<ITextToSpeechProvider>? Providers { get; private set; }
+    public List<ITextToSpeechProvider> Providers { get; private set; } = new List<ITextToSpeechProvider>();
 
     public ITextToSpeechProvider? SelectedProvider { get; set; }
 
@@ -54,7 +53,8 @@ public class ManageProvidersViewModel : ViewModelBase
             var provider = wizard.Provider;
             if (provider is not null)
             {
-                Providers?.Add(provider);
+                Providers.Add(provider);
+                RaisePropertyChanged(nameof(Providers));
             }
         }
     }
@@ -68,7 +68,8 @@ public class ManageProvidersViewModel : ViewModelBase
 
     private async Task OnRemoveExecuteAsync()
     {
-        Providers?.Remove(SelectedProvider!);
+        Providers.Remove(SelectedProvider!);
+        RaisePropertyChanged(nameof(Providers));
         SelectedProvider = null;
     }
     #endregion
@@ -82,7 +83,7 @@ public class ManageProvidersViewModel : ViewModelBase
 
     protected override async Task<bool> SaveAsync()
     {
-        _textToSpeechProviderService.Providers.ReplaceRange(Providers ?? Enumerable.Empty<ITextToSpeechProvider>());
+        _textToSpeechProviderService.Providers.ReplaceRange(Providers);
 
         await _textToSpeechProviderService.SaveAsync(); 
         

@@ -47,7 +47,12 @@ public class AnalyzerService : IAnalyzerService
             yield break;
         }
 
-        var context = new AnalyzerContext(document, xmlDocument!, cancellationToken);
+        if (xmlDocument is null)
+        {
+            yield break;
+        }
+
+        var context = new AnalyzerContext(document, xmlDocument, cancellationToken);
 
         foreach (var analyzer in _analyzers)
         {

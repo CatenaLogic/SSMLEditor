@@ -35,8 +35,8 @@ public class RecentlyUsedItemsViewModel : ViewModelBase
         OpenInExplorer = new TaskCommand<string>(serviceProvider, OnOpenInExplorerExecuteAsync);
     }
 
-    public List<RecentlyUsedItem>? RecentlyUsedItems { get; private set; }
-    public List<RecentlyUsedItem>? PinnedItems { get; private set; }
+    public IReadOnlyList<RecentlyUsedItem> RecentlyUsedItems { get; private set; } = Array.Empty<RecentlyUsedItem>();
+    public IReadOnlyList<RecentlyUsedItem> PinnedItems { get; private set; } = Array.Empty<RecentlyUsedItem>();
 
     #region Commands
     public Command<string> PinItem { get; private set; }

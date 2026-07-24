@@ -23,7 +23,7 @@ public class EditorsViewModel : ViewModelBase
         _projectManager = projectManager;
     }
 
-    public List<Language>? Languages { get; private set; }
+    public List<Language> Languages { get; private set; } = new List<Language>();
 
     public Language? SelectedLanguage { get; set; }
 
