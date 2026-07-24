@@ -27,7 +27,7 @@ public class ProviderPropertiesWizardPageViewModel : WizardPageViewModelBase<Pro
 
         var selectedProvider = providerWizardPage.SelectedProvider;
         Name = selectedProvider?.Name ?? string.Empty;
-        Properties = (IReadOnlyList<TtsProperty>?)selectedProvider?.Properties ?? Array.Empty<TtsProperty>();
+        Properties = selectedProvider is not null ? selectedProvider.Properties : Array.Empty<TtsProperty>();
     }
 
     protected override async Task CloseAsync()
