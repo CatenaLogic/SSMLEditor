@@ -42,12 +42,12 @@ public class ProjectWriter : ProjectWriterBase<Project>
         {
             Logger.LogDebug("Saving project language '{Language}'", language);
 
-            var languageFileName = Path.Combine(directory, language.RelativeFileName);
+            var languageFileName = Path.Combine(directory!, language.RelativeFileName!);
             var languageDirectory = Path.GetDirectoryName(languageFileName);
 
-            _directoryService.Create(languageDirectory);
+            _directoryService.Create(languageDirectory!);
 
-            await _fileService.WriteAllTextAsync(languageFileName, language.Content);
+            await _fileService.WriteAllTextAsync(languageFileName, language.Content!);
 
             language.OriginalContent = language.Content;
         }

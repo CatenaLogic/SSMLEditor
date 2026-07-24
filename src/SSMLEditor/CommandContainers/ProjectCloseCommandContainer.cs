@@ -12,7 +12,7 @@ public class ProjectCloseCommandContainer : ProjectCommandContainerBase
     {
     }
 
-    public override async Task ExecuteAsync(object parameter)
+    public override async Task ExecuteAsync(object? parameter)
     {
         await _projectManager.CloseActiveProjectAsync();
     }

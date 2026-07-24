@@ -40,17 +40,39 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
     }
 
     [JsonIgnore]
-    public string SubscriptionKey
+    public string? SubscriptionKey
     {
-        get { return this["SubscriptionKey"].Value; }
-        set { this["SubscriptionKey"].Value = value; }
+        get
+        {
+            var prop = this["SubscriptionKey"];
+            return prop?.Value;
+        }
+        set
+        {
+            var prop = this["SubscriptionKey"];
+            if (prop is not null)
+            {
+                prop.Value = value;
+            }
+        }
     }
 
     [JsonIgnore]
-    public string ServiceRegion
+    public string? ServiceRegion
     {
-        get { return this["ServiceRegion"].Value; }
-        set { this["ServiceRegion"].Value = value; }
+        get
+        {
+            var prop = this["ServiceRegion"];
+            return prop?.Value;
+        }
+        set
+        {
+            var prop = this["ServiceRegion"];
+            if (prop is not null)
+            {
+                prop.Value = value;
+            }
+        }
     }
 
     public override async Task<IReadOnlyList<TtsLanguage>> GetLanguagesAsync()
@@ -78,11 +100,24 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
     {
         var voices = new List<TtsVoice>();
 
-        var config = SpeechConfig.FromSubscription(SubscriptionKey, ServiceRegion);
+        var subscriptionKey = SubscriptionKey;
+        var serviceRegion = ServiceRegion;
+        if (string.IsNullOrEmpty(subscriptionKey) || string.IsNullOrEmpty(serviceRegion))
+        {
+            return voices;
+        }
+
+        var config = SpeechConfig.FromSubscription(subscriptionKey, serviceRegion);
+
+        var cultureInfo = language.CultureInfo;
+        if (cultureInfo is null)
+        {
+            return voices;
+        }
 
         using (var synthesizer = new SpeechSynthesizer(config, null))
         {
-            using (var azureVoices = await synthesizer.GetVoicesAsync(language.CultureInfo.TwoLetterISOLanguageName))
+            using (var azureVoices = await synthesizer.GetVoicesAsync(cultureInfo.TwoLetterISOLanguageName))
             {
                 foreach (var azureVoice in azureVoices.Voices)
                 {
@@ -122,7 +157,14 @@ public class AzureCognitiveServices : TextToSpeechProviderBase
     [Time]
     public override async Task<Stream> ExecuteAsync(string ssml)
     {
-        var config = SpeechConfig.FromSubscription(SubscriptionKey, ServiceRegion);
+        var subscriptionKey = SubscriptionKey;
+        var serviceRegion = ServiceRegion;
+        if (string.IsNullOrEmpty(subscriptionKey) || string.IsNullOrEmpty(serviceRegion))
+        {
+            throw Logger.LogErrorAndCreateException<InvalidOperationException>("SubscriptionKey and ServiceRegion are required");
+        }
+
+        var config = SpeechConfig.FromSubscription(subscriptionKey, serviceRegion);
 
         using (var synthesizer = new SpeechSynthesizer(config, null))
         {

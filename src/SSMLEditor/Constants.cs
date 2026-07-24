@@ -35,7 +35,7 @@ public static class Commands
     public static class Help
     {
         public const string About = "Help.About";
-        public static readonly InputGesture AboutInputGesture = null;
+        public static readonly InputGesture? AboutInputGesture = null;
     }
 
     public static class Settings
@@ -47,16 +47,16 @@ public static class Commands
     public static class Providers
     {
         public const string Manage = "Providers.Manage";
-        public static readonly InputGesture ManageInputGesture = null;
+        public static readonly InputGesture? ManageInputGesture = null;
     }
 
     public static class TTS
     {
         public const string Generate = "TTS.Generate";
-        public static readonly InputGesture CloseInputGesture = null;
+        public static readonly InputGesture? CloseInputGesture = null;
 
         public const string GenerateAll = "TTS.GenerateAll";
-        public static readonly InputGesture OpenInputGesture = null;
+        public static readonly InputGesture? OpenInputGesture = null;
     }
 
     public static class Project

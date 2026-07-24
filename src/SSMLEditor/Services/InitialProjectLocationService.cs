@@ -11,8 +11,8 @@ public class InitialProjectLocationService : Orc.ProjectManagement.IInitialProje
 
     }
 
-    public Task<string> GetInitialProjectLocationAsync()
+    public Task<string?> GetInitialProjectLocationAsync()
     {
-        return Task.FromResult(string.Empty);
+        return Task.FromResult<string?>(string.Empty);
     }
 }

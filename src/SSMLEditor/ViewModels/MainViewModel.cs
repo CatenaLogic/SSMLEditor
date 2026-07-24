@@ -19,7 +19,7 @@ public class MainViewModel : ViewModelBase
 
     //[Model]
     //[Expose(nameof(Project.Text))]
-    public Project Project { get; set; }
+    public Project? Project { get; set; }
 
     protected override Task InitializeAsync()
     {

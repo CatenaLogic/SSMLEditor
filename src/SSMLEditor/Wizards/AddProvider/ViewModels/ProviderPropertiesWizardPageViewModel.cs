@@ -15,18 +15,19 @@ public class ProviderPropertiesWizardPageViewModel : WizardPageViewModelBase<Pro
 
     }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
-    public List<TtsProperty> Properties { get; private set; }
+    public IReadOnlyList<TtsProperty> Properties { get; private set; } = Array.Empty<TtsProperty>();
 
     protected override async Task InitializeAsync()
     {
         await base.InitializeAsync();
 
-        var providerWizardPage = Wizard.FindPageByType<ProviderWizardPage>();
+        var providerWizardPage = Wizard!.FindRequiredPageByType<ProviderWizardPage>();
 
-        Name = providerWizardPage.SelectedProvider.Name;
-        Properties = providerWizardPage.SelectedProvider.Properties;
+        var selectedProvider = providerWizardPage.SelectedProvider;
+        Name = selectedProvider?.Name ?? string.Empty;
+        Properties = selectedProvider is not null ? selectedProvider.Properties : Array.Empty<TtsProperty>();
     }
 
     protected override async Task CloseAsync()

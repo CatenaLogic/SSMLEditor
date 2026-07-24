@@ -83,7 +83,11 @@ public class TextToSpeechProviderService : ITextToSpeechProviderService
         {
             var json = await _fileService.ReadAllTextAsync(filename);
 
-            providers.AddRange(_serializer.DeserializeFromString<ITextToSpeechProvider[]>(json));
+            var deserialized = _serializer.DeserializeFromString<ITextToSpeechProvider[]>(json);
+            if (deserialized is not null)
+            {
+                providers.AddRange(deserialized);
+            }
         }
 
         providers.ForEach(x => x.RemoveDuplicateProperties());

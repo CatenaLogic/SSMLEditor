@@ -2,5 +2,5 @@
 
 public class Video
 {
-    public string RelativeFileName { get; set; }
+    public string? RelativeFileName { get; set; }
 }

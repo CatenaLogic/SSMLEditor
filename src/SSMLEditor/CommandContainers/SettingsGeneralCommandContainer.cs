@@ -28,7 +28,7 @@ public class SettingsGeneralCommandContainer : CommandContainerBase
         _viewModelFactory = viewModelFactory;
     }
 
-    public override async Task ExecuteAsync(object parameter)
+    public override async Task ExecuteAsync(object? parameter)
     {
         var settingsViewModelType = TypeCache.GetTypes(x => string.Equals(x.Name, ViewModelType)).FirstOrDefault();
         if (settingsViewModelType is null)
@@ -36,7 +36,7 @@ public class SettingsGeneralCommandContainer : CommandContainerBase
             throw Logger.LogErrorAndCreateException<InvalidOperationException>("Cannot find type '{ViewModelType}'", ViewModelType);
         }
 
-        var viewModel = _viewModelFactory.CreateViewModel(settingsViewModelType);
+        var viewModel = _viewModelFactory.CreateRequiredViewModel(settingsViewModelType, null);
 
         await _uiVisualizerService.ShowDialogAsync(viewModel);
     }

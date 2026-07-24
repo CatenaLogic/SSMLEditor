@@ -19,7 +19,13 @@ public class BreakAnalyzer : IAnalyzer
 
         var document = context.Document;
 
-        await foreach (var item in AnalyzeAsync(context, document.Root))
+        var root = document.Root;
+        if (root is null)
+        {
+            yield break;
+        }
+
+        await foreach (var item in AnalyzeAsync(context, root))
         {
             yield return item;
         }

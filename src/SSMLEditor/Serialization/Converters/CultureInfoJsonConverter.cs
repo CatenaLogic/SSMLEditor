@@ -6,7 +6,7 @@ using System.Text.Json;
 
 internal class CultureInfoJsonConverter : System.Text.Json.Serialization.JsonConverter<System.Globalization.CultureInfo>
 {
-    public override CultureInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CultureInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.Null)
         {

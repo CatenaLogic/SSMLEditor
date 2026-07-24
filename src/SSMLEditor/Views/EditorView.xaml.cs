@@ -12,6 +12,7 @@ using System.Windows.Media;
 using Catel.Logging;
 using Catel.MVVM;
 using Catel.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SSMLEditor.Analyzers;
 using SSMLEditor.AvalonEdit;
@@ -27,9 +28,9 @@ public partial class EditorView
     [Catel.InjectedService]
     private readonly IAnalyzerService _analyzerService = null!;
 
-    private CancellationTokenSource _cancellationTokenSource;
+    private CancellationTokenSource? _cancellationTokenSource;
     private bool _isUpdatingFromSsmlEditor;
-    private TextMarkerService _textMarkerService;
+    private TextMarkerService _textMarkerService = null!;
 
     partial void OnInitializedComponent()
     {
@@ -160,7 +161,7 @@ public partial class EditorView
         if (e.HasPropertyChanged(nameof(EditorViewModel.SsmlDocument)) &&
             !_isUpdatingFromSsmlEditor)
         {
-            SsmlTextEditor.Text = ((EditorViewModel)ViewModel).SsmlDocument;
+            SsmlTextEditor.Text = ((EditorViewModel?)ViewModel)?.SsmlDocument ?? string.Empty;
         }
     }
 
@@ -170,11 +171,8 @@ public partial class EditorView
         SsmlTextEditor.TextArea.TextView.BackgroundRenderers.Add(textMarkerService);
         SsmlTextEditor.TextArea.TextView.LineTransformers.Add(textMarkerService);
 
-        var services = (IServiceContainer)SsmlTextEditor.Document.ServiceProvider.GetService(typeof(IServiceContainer));
-        if (services is not null)
-        {
-            services.AddService(typeof(ITextMarkerService), textMarkerService);
-        }
+        var services = SsmlTextEditor.Document.ServiceProvider.GetRequiredService<IServiceContainer>();
+        services.AddService(typeof(ITextMarkerService), textMarkerService);
 
         _textMarkerService = textMarkerService;
     }
@@ -219,8 +217,13 @@ public partial class EditorView
         }
     }
 
-    private void AddEmphasis(EmphasisOption emphasisOption)
+    private void AddEmphasis(EmphasisOption? emphasisOption)
     {
+        if (emphasisOption is null)
+        {
+            return;
+        }
+
         var startIndex = SsmlTextEditor.SelectionStart;
         if (startIndex < 0)
         {
@@ -308,8 +311,13 @@ public partial class EditorView
         }
     }
 
-    private void AddBreak(BreakOption breakOption)
+    private void AddBreak(BreakOption? breakOption)
     {
+        if (breakOption is null)
+        {
+            return;
+        }
+
         var offset = SsmlTextEditor.CaretOffset;
         if (offset < 0)
         {

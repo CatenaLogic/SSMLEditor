@@ -22,14 +22,14 @@ public class ProviderWizardPage : WizardPageBase
 
     public List<ITextToSpeechProvider> Providers { get; private set; }
 
-    public ITextToSpeechProvider SelectedProvider { get; set; }
+    public ITextToSpeechProvider? SelectedProvider { get; set; }
 
     public override ISummaryItem GetSummary()
     {
         return new SummaryItem
         {
             Title = "Provider",
-            Summary = SelectedProvider.Name
+            Summary = SelectedProvider?.Name ?? string.Empty
         };
     }
 }

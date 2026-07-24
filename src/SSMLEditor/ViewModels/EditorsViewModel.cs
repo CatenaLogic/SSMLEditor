@@ -23,9 +23,9 @@ public class EditorsViewModel : ViewModelBase
         _projectManager = projectManager;
     }
 
-    public List<Language> Languages { get; private set; }
+    public List<Language> Languages { get; private set; } = new List<Language>();
 
-    public Language SelectedLanguage { get; set; }
+    public Language? SelectedLanguage { get; set; }
 
     protected override async Task InitializeAsync()
     {
@@ -47,7 +47,7 @@ public class EditorsViewModel : ViewModelBase
         await base.CloseAsync();
     }
 
-    private void OnLanguageSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<Language> e)
+    private void OnLanguageSelectionManagerSelectionChanged(object? sender, SelectionChangedEventArgs<Language> e)
     {
         UpdateTabs();
     }
@@ -74,7 +74,7 @@ public class EditorsViewModel : ViewModelBase
         var project = _projectManager.GetActiveProject<Project>();
         if (project is not null)
         {
-            languages.AddRange(project.ProjectRoot.Languages.OrderBy(x => x.Culture.TwoLetterISOLanguageName));
+            languages.AddRange(project.ProjectRoot.Languages.OrderBy(x => x.Culture?.TwoLetterISOLanguageName));
         }
 
         Languages = languages;

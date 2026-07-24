@@ -47,7 +47,7 @@ public partial class VideoView
 
         if (e.HasPropertyChanged(nameof(VideoViewModel.VideoUri)))
         {
-            var vm = (VideoViewModel)ViewModel;
+            var vm = (VideoViewModel)ViewModel!;
             if (vm.VideoUri is null)
             {
                 ProgressSlider.SetCurrentValue(System.Windows.Controls.Primitives.RangeBase.MaximumProperty, 0d);
@@ -63,7 +63,7 @@ public partial class VideoView
                 return;
             }
 
-            var vm = (VideoViewModel)ViewModel;
+            var vm = (VideoViewModel)ViewModel!;
 
             UpdateMediaElements(x => x.Position = vm.Position);
 
@@ -75,7 +75,7 @@ public partial class VideoView
         }
         else if (e.HasPropertyChanged(nameof(VideoViewModel.BaseAudioUri)))
         {
-            var vm = (VideoViewModel)ViewModel;
+            var vm = (VideoViewModel)ViewModel!;
             if (vm.IsPlaying && vm.BaseAudioUri is not null)
             {
                 // Ensure that base audio starts playing on the right position
@@ -85,7 +85,7 @@ public partial class VideoView
         }
         else if (e.HasPropertyChanged(nameof(VideoViewModel.IsPlaying)))
         {
-            var vm = (VideoViewModel)ViewModel;
+            var vm = (VideoViewModel)ViewModel!;
             if (vm.IsPlaying)
             {
                 _positionDispatcherTimer.Start();
@@ -99,7 +99,7 @@ public partial class VideoView
         }
     }
 
-    private void OnPositionDispatcherTimerTick(object sender, EventArgs e)
+    private void OnPositionDispatcherTimerTick(object? sender, EventArgs e)
     {
         if (_isUserUpdatingSlider)
         {
@@ -122,7 +122,7 @@ public partial class VideoView
         }
     }
 
-    private void OnPositionUpdateDispatcherTimerTick(object sender, EventArgs e)
+    private void OnPositionUpdateDispatcherTimerTick(object? sender, EventArgs e)
     {
         _positionUpdateDispatcherTimer.Stop();
 
@@ -163,7 +163,7 @@ public partial class VideoView
     {
         var duration = VideoMediaElement.NaturalDuration.TimeSpan;
 
-        ((VideoViewModel)ViewModel).TotalDuration = duration;
+        ((VideoViewModel)ViewModel!).TotalDuration = duration;
         ProgressSlider.SetCurrentValue(RangeBase.MaximumProperty, duration.TotalSeconds);
     }
 

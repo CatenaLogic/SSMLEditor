@@ -18,7 +18,7 @@ public class MainWindowTitleService : IMainWindowTitleService
         _projectManager = projectManager;
         _shellActivatedActionQueue = shellActivatedActionQueue;
 
-        _defaulTitle = AssemblyHelper.GetEntryAssembly().Title();
+        _defaulTitle = AssemblyHelper.GetRequiredEntryAssembly().Title() ?? string.Empty;
     }
 
     public void UpdateTitle()

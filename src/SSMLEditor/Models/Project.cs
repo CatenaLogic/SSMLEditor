@@ -19,9 +19,9 @@ public sealed class Project : ProjectBase, IProject, IEquatable<Project>
 
     public ProjectRoot ProjectRoot { get; init; }
 
-    public bool Equals(Project other)
+    public bool Equals(Project? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }
@@ -34,9 +34,9 @@ public sealed class Project : ProjectBase, IProject, IEquatable<Project>
         return string.Equals(Location, other.Location);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj))
+        if (obj is null)
         {
             return false;
         }

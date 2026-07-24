@@ -36,14 +36,14 @@ public class RibbonViewModel : ViewModelBase
 
         ShowKeyboardMappings = new TaskCommand(serviceProvider, OnShowKeyboardMappingsExecuteAsync);
 
-        Title = AssemblyHelper.GetEntryAssembly().Title();
+        Title = AssemblyHelper.GetRequiredEntryAssembly().Title() ?? string.Empty;
     }
 
-    public Project Project { get; private set; }
+    public Project? Project { get; private set; }
 
-    public List<ITextToSpeechProvider> AvailableProviders { get; private set; }
+    public IReadOnlyList<ITextToSpeechProvider> AvailableProviders { get; private set; } = Array.Empty<ITextToSpeechProvider>();
 
-    public ITextToSpeechProvider SelectedProvider { get; set; }
+    public ITextToSpeechProvider? SelectedProvider { get; set; }
 
     #region Commands
     public TaskCommand ShowKeyboardMappings { get; private set; }
@@ -73,14 +73,14 @@ public class RibbonViewModel : ViewModelBase
         await base.CloseAsync();
     }
 
-    private Task OnProjectActivatedAsync(object sender, ProjectUpdatedEventArgs e)
+    private Task OnProjectActivatedAsync(object? sender, ProjectUpdatedEventArgs e)
     {
-        Project = (Project)e.NewProject;
+        Project = e.NewProject as Project;
 
         return Task.CompletedTask;
     }
 
-    private void OnTextToSpeechProviderSelectionManagerSelectionChanged(object sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
+    private void OnTextToSpeechProviderSelectionManagerSelectionChanged(object? sender, SelectionChangedEventArgs<ITextToSpeechProvider> e)
     {
         SelectedProvider = _textToSpeechProviderSelectionManager.GetSelectedItem();
     }

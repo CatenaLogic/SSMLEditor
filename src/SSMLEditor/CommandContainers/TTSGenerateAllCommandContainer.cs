@@ -23,7 +23,7 @@ public class TTSGenerateAllCommandContainer : TTSCommandContainerBase
     {
     }
 
-    public override async Task ExecuteAsync(object parameter)
+    public override async Task ExecuteAsync(object? parameter)
     {
         var project = _projectManager.GetActiveProject<Project>();
         if (project is null)

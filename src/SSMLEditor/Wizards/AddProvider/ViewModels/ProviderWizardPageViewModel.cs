@@ -22,7 +22,7 @@ public class ProviderWizardPageViewModel : WizardPageViewModelBase<ProviderWizar
 
     public List<ITextToSpeechProvider> Providers { get; private set; }
 
-    public ITextToSpeechProvider SelectedProvider { get; set; }
+    public ITextToSpeechProvider? SelectedProvider { get; set; }
 
     protected override void ValidateFields(List<IFieldValidationResult> validationResults)
     {

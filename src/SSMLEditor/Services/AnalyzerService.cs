@@ -23,7 +23,7 @@ public class AnalyzerService : IAnalyzerService
     public async IAsyncEnumerable<AnalyzerResult> AnalyzeAsync(string document, [EnumeratorCancellation]CancellationToken cancellationToken)
     {
         var failed = false;
-        XDocument xmlDocument = null;
+        XDocument? xmlDocument = null;
 
         try
         {
@@ -43,6 +43,13 @@ public class AnalyzerService : IAnalyzerService
                 StartIndex = 0,
                 Length = document.Length
             };
+
+            yield break;
+        }
+
+        if (xmlDocument is null)
+        {
+            yield break;
         }
 
         var context = new AnalyzerContext(document, xmlDocument, cancellationToken);

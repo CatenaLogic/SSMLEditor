@@ -11,7 +11,7 @@ public static class ProjectExtensions
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(language);
 
-        return project.GetFullPath(language.RelativeFileName);
+        return project.GetFullPath(language.RelativeFileName!);
     }
 
     public static string GetFullAudioPath(this Project project, Language language)
@@ -28,7 +28,7 @@ public static class ProjectExtensions
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(video);
 
-        return project.GetFullPath(video.RelativeFileName);
+        return project.GetFullPath(video.RelativeFileName!);
     }
 
     public static string GetFullPath(this Project project, string relativeFileName)
@@ -37,7 +37,7 @@ public static class ProjectExtensions
         Argument.IsNotNullOrWhitespace(() => relativeFileName);
 
         var directory = Path.GetDirectoryName(project.Location);
-        var fileName = Path.Combine(directory, relativeFileName);
+        var fileName = Path.Combine(directory!, relativeFileName);
 
         fileName = fileName.Replace("/", "\\");
 

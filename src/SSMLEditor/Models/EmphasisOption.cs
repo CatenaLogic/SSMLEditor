@@ -7,5 +7,5 @@ public class EmphasisOption
 
     }
 
-    public string Level { get; set; }
+    public string? Level { get; set; }
 }

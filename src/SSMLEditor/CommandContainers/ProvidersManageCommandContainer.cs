@@ -23,7 +23,7 @@ public class ProvidersManageCommandContainer : CommandContainerBase
         _wizardService = wizardService;
     }
 
-    public override async Task ExecuteAsync(object parameter)
+    public override async Task ExecuteAsync(object? parameter)
     {
         await _uiVisualizerService.ShowDialogAsync<ManageProvidersViewModel>();
     }

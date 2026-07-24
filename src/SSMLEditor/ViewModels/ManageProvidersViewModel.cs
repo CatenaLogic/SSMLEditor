@@ -33,9 +33,9 @@ public class ManageProvidersViewModel : ViewModelBase
         Remove = new TaskCommand(serviceProvider, OnRemoveExecuteAsync, OnRemoveCanExecute);
     }
 
-    public List<ITextToSpeechProvider> Providers { get; private set; }
+    public List<ITextToSpeechProvider> Providers { get; private set; } = new List<ITextToSpeechProvider>();
 
-    public ITextToSpeechProvider SelectedProvider { get; set; }
+    public ITextToSpeechProvider? SelectedProvider { get; set; }
 
     #region Commands
     public TaskCommand Add { get; private set; }
@@ -50,7 +50,12 @@ public class ManageProvidersViewModel : ViewModelBase
         var wizard = ActivatorUtilities.CreateInstance<AddProviderWizard>(_serviceProvider);
         if ((await _wizardService.ShowWizardAsync(wizard)).DialogResult ?? false)
         {
-            Providers.Add(wizard.Provider);
+            var provider = wizard.Provider;
+            if (provider is not null)
+            {
+                Providers.Add(provider);
+                RaisePropertyChanged(nameof(Providers));
+            }
         }
     }
 
@@ -63,7 +68,13 @@ public class ManageProvidersViewModel : ViewModelBase
 
     private async Task OnRemoveExecuteAsync()
     {
+        if (SelectedProvider is null)
+        {
+            return;
+        }
+
         Providers.Remove(SelectedProvider);
+        RaisePropertyChanged(nameof(Providers));
         SelectedProvider = null;
     }
     #endregion
