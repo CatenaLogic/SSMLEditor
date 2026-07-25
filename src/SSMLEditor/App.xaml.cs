@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using Catel;
 using Catel.Configuration;
@@ -14,7 +15,10 @@ using Orc;
 using Orc.ProjectManagement;
 using Orc.SelectionManagement;
 using Orchestra;
+using Orchestra.Logging;
 using Orchestra.Views;
+using Serilog;
+using Serilog.Core;
 using SSMLEditor.Analyzers;
 using SSMLEditor.ProjectManagement;
 using SSMLEditor.Providers;
@@ -37,6 +41,37 @@ public partial class App : Application
         var hostBuilder = new HostBuilder()
             .ConfigureServices((hostContext, services) =>
             {
+                services.AddLogging(x =>
+                {
+                    x.SetMinimumLevel(LogLevel.Debug);
+
+                    x.AddSerilog();
+                    x.AddInMemory();
+                });
+
+                services.AddKeyedSingleton("logging", (sp, k) => new InitializeAtStartup(() =>
+                {
+                    var logDirectoryProvider = sp.GetRequiredService<LogDirectoryProvider>();
+
+#pragma warning disable IDISP003 // Dispose previous before re-assigning
+                    Log.Logger = new LoggerConfiguration()
+                        .Enrich.FromLogContext()
+                        .MinimumLevel.Debug()
+                        .WriteTo.File(Path.Combine(logDirectoryProvider.ProvideDirectory(), "Application-.log"),
+                            fileSizeLimitBytes: 25 * 1000 * 1024, // 25 MB
+                            rollingInterval: RollingInterval.Hour,
+                            rollOnFileSizeLimit: true,
+                            levelSwitch: new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Debug))
+#if DEBUG
+                        .WriteTo.Debug()
+#endif
+                        .CreateLogger();
+#pragma warning restore IDISP003 // Dispose previous before re-assigning
+
+                    var appLogger = sp.GetRequiredService<ILogger<App>>();
+                    appLogger.LogApplicationInfo<App>();
+                }));
+
                 services.AddCatelCore();
                 services.AddCatelMvvm();
 
@@ -79,11 +114,6 @@ public partial class App : Application
                 services.AddSingleton<ProjectManagementCloseApplicationWatcher>();
                 services.AddTransient<WindowCommandsView>();
 
-                services.AddLogging(x =>
-                {
-                    x.AddConsole();
-                    x.AddDebug();
-                });
             });
 
         _host = hostBuilder.Build();
