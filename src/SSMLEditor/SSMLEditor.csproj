@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+    <PackageReference Include="Catel.Core" Version="7.0.0" />
     <PackageReference Include="Catel.MVVM" Version="7.0.0-alpha0451" />
     <PackageReference Include="Catel.Fody" Version="7.1.0-alpha0016" PrivateAssets="all" />
     <PackageReference Include="Catel.SourceGenerators" Version="7.1.0-alpha0134" PrivateAssets="all" />
