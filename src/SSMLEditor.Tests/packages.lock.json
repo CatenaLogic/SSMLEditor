@@ -10,13 +10,13 @@
       },
       "Catel.Core": {
         "type": "Direct",
-        "requested": "[7.0.0-alpha0392, )",
-        "resolved": "7.0.0-alpha0392",
-        "contentHash": "Dbn5NJrGl7OzxYMZdbn/yRCFMTXNMJ4IIAXbgmR9Q6nmjmUxJGCtbjKMbbDAGnwLPMWXyN47j8FkYYOTy3QZQw==",
+        "requested": "[7.0.1, )",
+        "resolved": "7.0.1",
+        "contentHash": "5qPz48rEmScoxaSDbwjJlEKOfSvmWgY7WaZnpl2OtmXS/8sgRgCtTaJIomJ41+I1E90ln7230lW1ldUOLghGoA==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Json": "10.0.9",
-          "Microsoft.Extensions.DependencyInjection": "10.0.9",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.9"
+          "Microsoft.Extensions.Configuration.Json": "10.0.11",
+          "Microsoft.Extensions.DependencyInjection": "10.0.11",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.11"
         }
       },
       "Catel.Fody": {
@@ -642,8 +642,8 @@
       },
       "Microsoft.CognitiveServices.Speech": {
         "type": "Transitive",
-        "resolved": "1.51.2",
-        "contentHash": "UMHlvd9X/sxoqihRP2tE4QsJWRvkREq7/K4hjcxrfP4RGkH4aKaLv48czmiypTHIPbPzSRifMdJW2d2Daupmng==",
+        "resolved": "1.52.0",
+        "contentHash": "7DeNULGitPuo0Kxosj2ug9oS3MA0kM0o7Bj+rTqer2LrWdGDouvYFHyXVPIBzV5UESx+QHFlgFeHF0q7aGcbJg==",
         "dependencies": {
           "Azure.Core": "1.44.1"
         }
@@ -1105,10 +1105,10 @@
       },
       "Orchestra.Core": {
         "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "l6Ru/Fo2ES8bNGW2FG84aYb9qIs4GdkiThbH767WjecE8LC/vINvIvisIf2NjX06GxwiAYole2pE2WIDxWEHEA==",
+        "resolved": "8.1.2",
+        "contentHash": "CScZc0cmR+YZF5z4eySEXbTcOapcCsuOhDG4vwVg5U60OiF2kZHXchB3QUGzUSged/lk+kcEm/tUEte4PgN11w==",
         "dependencies": {
-          "Catel.MVVM": "7.0.0",
+          "Catel.MVVM": "7.0.1",
           "Microsoft-WindowsAPICodePack-Core": "1.1.5",
           "Microsoft-WindowsAPICodePack-Shell": "1.1.5",
           "Orc.Controls": "6.0.0",
@@ -1120,11 +1120,11 @@
       },
       "Orchestra.Shell.Ribbon.Fluent": {
         "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "Reqv8fhYXJYcEum9mpFeaz5KdOYh2iY+mP3rpsB3FkWwbwb0bM+6nG7dGxDjtjsZcwusa4S5/er4PlnFE4JbHw==",
+        "resolved": "8.1.2",
+        "contentHash": "t6Paru7D0A33lAI9xmYWNO+8FK9DVhE/SbGqCRpPIxn5qFbbe0oocvrHuG5nO7CTMOR1Iayki0p6QxhvqWYXLQ==",
         "dependencies": {
           "Fluent.Ribbon": "11.0.2",
-          "Orchestra.Core": "8.0.0"
+          "Orchestra.Core": "8.1.2"
         }
       },
       "Serilog": {
@@ -1203,7 +1203,7 @@
           "AvalonEdit": "[6.3.1.120, )",
           "Catel.MVVM": "[7.0.1, )",
           "Humanizer": "[3.0.10, )",
-          "Microsoft.CognitiveServices.Speech": "[1.51.2, )",
+          "Microsoft.CognitiveServices.Speech": "[1.52.0, )",
           "Microsoft.Extensions.Hosting": "[10.0.*, )",
           "Microsoft.Extensions.Logging.Console": "[10.0.*, )",
           "Microsoft.Extensions.Logging.Debug": "[10.0.*, )",
@@ -1215,7 +1215,7 @@
           "Orc.Serialization.Json": "[6.0.0, )",
           "Orc.Squirrel.Xaml": "[6.0.0, )",
           "Orc.Wizard": "[6.0.0, )",
-          "Orchestra.Shell.Ribbon.Fluent": "[8.0.0, )",
+          "Orchestra.Shell.Ribbon.Fluent": "[8.1.2, )",
           "Serilog": "[4.4.0, )",
           "Serilog.Extensions.Hosting": "[10.0.0, )",
           "Serilog.Sinks.Debug": "[3.0.0, )",

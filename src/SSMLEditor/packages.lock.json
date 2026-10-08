@@ -274,12 +274,12 @@
       },
       "Orchestra.Shell.Ribbon.Fluent": {
         "type": "Direct",
-        "requested": "[8.0.0, )",
-        "resolved": "8.0.0",
-        "contentHash": "Reqv8fhYXJYcEum9mpFeaz5KdOYh2iY+mP3rpsB3FkWwbwb0bM+6nG7dGxDjtjsZcwusa4S5/er4PlnFE4JbHw==",
+        "requested": "[8.1.2, )",
+        "resolved": "8.1.2",
+        "contentHash": "t6Paru7D0A33lAI9xmYWNO+8FK9DVhE/SbGqCRpPIxn5qFbbe0oocvrHuG5nO7CTMOR1Iayki0p6QxhvqWYXLQ==",
         "dependencies": {
           "Fluent.Ribbon": "11.0.2",
-          "Orchestra.Core": "8.0.0"
+          "Orchestra.Core": "8.1.2"
         }
       },
       "Serilog": {
@@ -1076,10 +1076,10 @@
       },
       "Orchestra.Core": {
         "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "l6Ru/Fo2ES8bNGW2FG84aYb9qIs4GdkiThbH767WjecE8LC/vINvIvisIf2NjX06GxwiAYole2pE2WIDxWEHEA==",
+        "resolved": "8.1.2",
+        "contentHash": "CScZc0cmR+YZF5z4eySEXbTcOapcCsuOhDG4vwVg5U60OiF2kZHXchB3QUGzUSged/lk+kcEm/tUEte4PgN11w==",
         "dependencies": {
-          "Catel.MVVM": "7.0.0",
+          "Catel.MVVM": "7.0.1",
           "Microsoft-WindowsAPICodePack-Core": "1.1.5",
           "Microsoft-WindowsAPICodePack-Shell": "1.1.5",
           "Orc.Controls": "6.0.0",
