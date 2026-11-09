@@ -14,6 +14,17 @@
         "resolved": "7.0.0-alpha0322",
         "contentHash": "4/PrJ7+VKG3ngtntGdJcI9R5mv4Q9lC3AtO3e25i4OyKwB7t1L7qeVno/g/zO+l/brhW8kQ7O0b9ibCLMGEI2Q=="
       },
+      "Catel.Core": {
+        "type": "Direct",
+        "requested": "[7.1.0, )",
+        "resolved": "7.1.0",
+        "contentHash": "Rdk78wUyNMa6HSdRWQwUjQFduoWlITKKLV2P1XQbA+5rQ+xjjEhIMk7QB50wABHApuDV1ePFQO0g/c2zhwygzA==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Json": "10.0.14",
+          "Microsoft.Extensions.DependencyInjection": "10.0.14",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.14"
+        }
+      },
       "Catel.Fody": {
         "type": "Direct",
         "requested": "[7.1.0, )",
@@ -339,16 +350,6 @@
           "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
           "System.ClientModel": "1.1.0",
           "System.Memory.Data": "6.0.0"
-        }
-      },
-      "Catel.Core": {
-        "type": "Transitive",
-        "resolved": "7.0.1",
-        "contentHash": "5qPz48rEmScoxaSDbwjJlEKOfSvmWgY7WaZnpl2OtmXS/8sgRgCtTaJIomJ41+I1E90ln7230lW1ldUOLghGoA==",
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Json": "10.0.11",
-          "Microsoft.Extensions.DependencyInjection": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11"
         }
       },
       "ControlzEx": {
